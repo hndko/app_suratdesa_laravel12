@@ -3,17 +3,18 @@
 @section('title', $title)
 
 @section('content')
-<div class="d-flex align-items-center mb-3 no-print">
+<div class="d-flex justify-content-between align-items-center mb-4 no-print bg-light p-3 rounded border">
     <div>
-        <ul class="breadcrumb">
+        <h1 class="h3 mb-1 text-gray-800">Detail Surat #{{ $surat->no_surat }}</h1>
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
             <li class="breadcrumb-item"><a href="{{ route('surat.index') }}">Arsip Surat</a></li>
-            <li class="breadcrumb-item active">Detail Surat</li>
-        </ul>
-        <h1 class="page-header mb-0">Detail Surat #{{ $surat->no_surat }}</h1>
+            <li class="breadcrumb-item active" aria-current="page">Preview & Cetak</li>
+        </ol>
     </div>
-    <div class="ms-auto">
-        <a href="{{ route('surat.index') }}" class="btn btn-secondary"><i class="fa fa-arrow-left me-1"></i> Kembali</a>
+    <div class="d-flex gap-2">
+        <a href="{{ route('surat.index') }}" class="btn btn-secondary mr-2"><i class="fa fa-arrow-left me-1"></i>
+            Kembali</a>
         <button onclick="window.print()" class="btn btn-primary"><i class="fa fa-print me-1"></i> Cetak</button>
     </div>
 </div>
