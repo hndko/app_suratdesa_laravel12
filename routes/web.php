@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\SuratController::class)->prefix('surat')->name('surat.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
+        Route::post('/preview', 'preview')->name('preview');
         Route::post('/', 'store')->name('store');
         Route::get('/{id}', 'show')->name('show');
         Route::delete('/{id}', 'destroy')->name('destroy');

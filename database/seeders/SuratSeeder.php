@@ -27,14 +27,16 @@ class SuratSeeder extends Seeder
             return; // Cannot seed text without parents
         }
 
-        // Generate 15 Dummy Surat
-        for ($i = 0; $i < 15; $i++) {
+        // Generate 30 Dummy Surat for Demo (Full Year Coverage)
+        for ($i = 0; $i < 30; $i++) {
             $pendudukId = $faker->randomElement($penduduks);
             $jenisSurat = $jenisSurats->random();
-            $tanggal = $faker->dateTimeBetween('-1 year', 'now');
+
+            // Random date within current year (Jan - Dec)
+            $tanggal = $faker->dateTimeBetween('first day of January ' . date('Y'), 'last day of December ' . date('Y'));
 
             // Format No Surat sederhana
-            $bulan = $tanggal->format('m'); // Should be roman
+            $bulan = $tanggal->format('m');
             $tahun = $tanggal->format('Y');
             $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $i + 1, $bulan, $tahun);
 

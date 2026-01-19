@@ -13,6 +13,7 @@
 </h1>
 
 <div class="row">
+    <!-- Stat Card: Total Penduduk -->
     <div class="col-xl-3 col-md-6">
         <div class="card mb-3">
             <div class="card-body">
@@ -22,13 +23,8 @@
                             class="fa fa-fw fa-expand"></i></a>
                 </div>
                 <div class="row align-items-center mb-2">
-                    <div class="col-7">
-                        <h3 class="mb-0">0</h3>
-                    </div>
-                    <div class="col-5">
-                        <div class="mt-n2" data-render="apexchart" data-type="bar" data-title="Visitors"
-                            data-alt-title="20% more than last week" data-plot-type="bar"
-                            data-data="[10,20,30,40,50,20]" data-units="m" data-height="30"></div>
+                    <div class="col-12">
+                        <h3 class="mb-0">{{ $totalPenduduk }}</h3>
                     </div>
                 </div>
                 <div class="small text-body text-opacity-50 text-truncate">
@@ -37,6 +33,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Stat Card: Total Surat -->
     <div class="col-xl-3 col-md-6">
         <div class="card mb-3">
             <div class="card-body">
@@ -46,13 +44,8 @@
                             class="fa fa-fw fa-expand"></i></a>
                 </div>
                 <div class="row align-items-center mb-2">
-                    <div class="col-7">
-                        <h3 class="mb-0">0</h3>
-                    </div>
-                    <div class="col-5">
-                        <div class="mt-n2" data-render="apexchart" data-type="line" data-title="Visitors"
-                            data-alt-title="20% more than last week" data-plot-type="line"
-                            data-data="[10,20,30,40,50,20]" data-units="m" data-height="30"></div>
+                    <div class="col-12">
+                        <h3 class="mb-0">{{ $totalSurat }}</h3>
                     </div>
                 </div>
                 <div class="small text-body text-opacity-50 text-truncate">
@@ -62,4 +55,110 @@
         </div>
     </div>
 </div>
+
+<!-- Charts Row -->
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-3">Statistik Surat Keluar ({{ $year }})</h6>
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="mb-3">Komposisi Jenis Surat</h6>
+                <div class="h-300px w-300px mx-auto">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('js')
+<script src="{{ asset('assets/plugins/chart.js/dist/chart.umd.js') }}"></script>
+<script>
+    // Global defaults from template
+    Chart.defaults.font.family = app.font.bodyFontFamily;
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = app.color.bodyColor;
+    Chart.defaults.borderColor = app.color.borderColor;
+    Chart.defaults.plugins.legend.display = false;
+    Chart.defaults.plugins.tooltip.padding = { left: 8, right: 12, top: 8, bottom: 8 };
+    Chart.defaults.plugins.tooltip.cornerRadius = 8;
+    Chart.defaults.plugins.tooltip.titleMarginBottom = 6;
+    Chart.defaults.plugins.tooltip.color = app.color.componentBg;
+    Chart.defaults.plugins.tooltip.multiKeyBackground = app.color.componentColor;
+    Chart.defaults.plugins.tooltip.backgroundColor = app.color.componentColor;
+    Chart.defaults.plugins.tooltip.titleFont.family = app.font.bodyFontFamily;
+    Chart.defaults.plugins.tooltip.titleFont.weight = app.font.bodyFontWeight;
+    Chart.defaults.plugins.tooltip.footerFont.family = app.font.bodyFontFamily;
+    Chart.defaults.plugins.tooltip.displayColors = true;
+    Chart.defaults.plugins.tooltip.boxPadding = 6;
+    Chart.defaults.scale.grid.color = app.color.borderColor;
+    Chart.defaults.scale.beginAtZero = true;
+
+    // Manual Color Palette
+    var themeColor = '#0d6efd';
+    var themeColorRgb = '13, 110, 253';
+    var colors = [
+        'rgba(13, 110, 253, 0.75)',  // Blue
+        'rgba(25, 135, 84, 0.75)',   // Green
+        'rgba(255, 193, 7, 0.75)',   // Yellow
+        'rgba(220, 53, 69, 0.75)',   // Red
+        'rgba(13, 202, 240, 0.75)',  // Cyan
+        'rgba(108, 117, 125, 0.75)'  // Gray
+    ];
+    var hoverColors = [
+        'rgba(13, 110, 253, 0.5)',
+        'rgba(25, 135, 84, 0.5)',
+        'rgba(255, 193, 7, 0.5)',
+        'rgba(220, 53, 69, 0.5)',
+        'rgba(13, 202, 240, 0.5)',
+        'rgba(108, 117, 125, 0.5)'
+    ];
+
+    // Bar Chart
+    var ctxBar = document.getElementById('barChart');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($chartSuratBulanLbl) !!},
+            datasets: [{
+                label: 'Total Surat',
+                data: {!! json_encode($chartSuratBulanVal) !!},
+                backgroundColor: 'rgba(13, 110, 253, 0.5)',
+                borderColor: '#0d6efd',
+                borderWidth: 1.5
+            }]
+        }
+    });
+
+    // Doughnut Chart
+    var ctxDoughnut = document.getElementById('doughnutChart');
+    var doughnutChart = new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($chartJenisLbl) !!},
+            datasets: [{
+                data: {!! json_encode($chartJenisVal) !!},
+                backgroundColor: colors,
+                borderColor: app.color.componentBg,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+@endpush
 @endsection

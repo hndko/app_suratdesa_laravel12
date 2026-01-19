@@ -12,6 +12,8 @@
     <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
     <!-- ================== END core-css ================== -->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     @stack('css')
 </head>
 
