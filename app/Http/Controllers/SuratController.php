@@ -119,6 +119,9 @@ class SuratController extends Controller
 
     private function processTemplate($template, $penduduk, $extraData = [])
     {
+        // Force Indonesian Locale for Date Formatting
+        \Carbon\Carbon::setLocale('id');
+
         $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
         $replace = [
             $penduduk->nama,
@@ -132,13 +135,19 @@ class SuratController extends Controller
 
         $content = str_replace($search, $replace, $template);
 
-        // Auto-append Keperluan & Keterangan if not empty
-        if (!empty($extraData['keperluan'])) {
-            $content .= "<br><p><strong>Keperluan:</strong> " . $extraData['keperluan'] . "</p>";
-        }
+        // Auto-append Keperluan & Keterangan using a neat table
+        if (!empty($extraData['keperluan']) || !empty($extraData['keterangan'])) {
+            $content .= "<br><table style='width: 100%; border: none; font-size: 12pt;'>";
 
-        if (!empty($extraData['keterangan'])) {
-            $content .= "<br><p><strong>Keterangan:</strong> " . $extraData['keterangan'] . "</p>";
+            if (!empty($extraData['keperluan'])) {
+                $content .= "<tr><td style='width: 30%; vertical-align: top;'>Keperluan</td><td style='width: 2%; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keperluan'] . "</td></tr>";
+            }
+
+            if (!empty($extraData['keterangan'])) {
+                $content .= "<tr><td style='width: 30%; vertical-align: top;'>Keterangan</td><td style='width: 2%; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keterangan'] . "</td></tr>";
+            }
+
+            $content .= "</table>";
         }
 
         return $content;
