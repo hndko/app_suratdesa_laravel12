@@ -66,7 +66,6 @@ class SuratController extends Controller
     }
 
     // NOTE: Preview Surat (AJAX)
-    // NOTE: Preview Surat (AJAX)
     public function preview(Request $request)
     {
         $request->validate([
@@ -78,7 +77,13 @@ class SuratController extends Controller
         $jenisSurat = JenisSurat::findOrFail($request->jenis_surat_id);
         $penduduk = Penduduk::findOrFail($request->penduduk_id);
 
-        $content = $this->processTemplate($jenisSurat->template_isi, $penduduk);
+        // Inject Keperluan & Keterangan from Request
+        $extraData = [
+            'keperluan' => $request->keperluan,
+            'keterangan' => $request->keterangan,
+        ];
+
+        $content = $this->processTemplate($jenisSurat->template_isi, $penduduk, $extraData);
 
         // Render Partial View
         $previewHtml = view('backend.surat.print_template', [
@@ -97,7 +102,13 @@ class SuratController extends Controller
         $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
         $penduduk = $surat->penduduk;
 
-        $content = $this->processTemplate($surat->jenisSurat->template_isi, $penduduk);
+        // Inject Keperluan & Keterangan from Saved Surat
+        $extraData = [
+            'keperluan' => $surat->keperluan,
+            'keterangan' => $surat->keterangan,
+        ];
+
+        $content = $this->processTemplate($surat->jenisSurat->template_isi, $penduduk, $extraData);
 
         return view('backend.surat.show', [
             'title' => 'Cetak Surat',
@@ -106,7 +117,7 @@ class SuratController extends Controller
         ]);
     }
 
-    private function processTemplate($template, $penduduk)
+    private function processTemplate($template, $penduduk, $extraData = [])
     {
         $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
         $replace = [
@@ -119,7 +130,18 @@ class SuratController extends Controller
             $penduduk->pekerjaan
         ];
 
-        return str_replace($search, $replace, $template);
+        $content = str_replace($search, $replace, $template);
+
+        // Auto-append Keperluan & Keterangan if not empty
+        if (!empty($extraData['keperluan'])) {
+            $content .= "<br><p><strong>Keperluan:</strong> " . $extraData['keperluan'] . "</p>";
+        }
+
+        if (!empty($extraData['keterangan'])) {
+            $content .= "<br><p><strong>Keterangan:</strong> " . $extraData['keterangan'] . "</p>";
+        }
+
+        return $content;
     }
 
     public function destroy($id)
