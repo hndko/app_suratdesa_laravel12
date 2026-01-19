@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title', 'Surat Desa')</title>
+    <title>@yield('title', config('app.name', 'Surat Desa'))</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -39,14 +39,15 @@
                 </div>
 
                 <a href="{{ route('dashboard') }}" class="brand-logo">
-                    <img src="{{ asset('assets/img/logo.png') }}" class="invert-dark" alt="" height="20">
-                    <span class="fw-bold ms-2">Surat Desa</span>
+                    <span class="fw-bold ms-2">{{ config('app.name') }}</span>
                 </a>
             </div>
             <!-- END brand -->
 
             <!-- BEGIN menu -->
             <div class="menu">
+                <div class="menu-search">
+                </div>
                 <div class="menu-item dropdown">
                     <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
                         <div class="menu-img online">
@@ -83,48 +84,35 @@
                     </div>
 
                     <div class="menu-header">Master Data</div>
-                    <div class="menu-item has-sub {{ request()->is('penduduk*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('penduduk*') ? 'active' : '' }}">
+                        <a href="{{ route('penduduk.index') }}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-users"></i></span>
                             <span class="menu-text">Data Penduduk</span>
-                            <span class="menu-caret"><b class="caret"></b></span>
                         </a>
-                        <div class="menu-submenu">
-                            <div class="menu-item {{ request()->routeIs('penduduk.index') ? 'active' : '' }}">
-                                <a href="#" class="menu-link">
-                                    <span class="menu-text">List Penduduk</span>
-                                </a>
-                            </div>
-                            <div class="menu-item {{ request()->routeIs('penduduk.create') ? 'active' : '' }}">
-                                <a href="#" class="menu-link">
-                                    <span class="menu-text">Tambah Penduduk</span>
-                                </a>
-                            </div>
-                        </div>
                     </div>
-                    <div class="menu-item request()->is('jenis-surat*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->is('jenis-surat*') ? 'active' : '' }}">
+                        <a href="{{ route('jenis-surat.index') }}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-file-alt"></i></span>
                             <span class="menu-text">Jenis Surat</span>
                         </a>
                     </div>
 
                     <div class="menu-header">Transaksi</div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->routeIs('surat.create') ? 'active' : '' }}">
+                        <a href="{{ route('surat.create') }}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-print"></i></span>
                             <span class="menu-text">Buat Surat</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="#" class="menu-link">
+                    <div class="menu-item {{ request()->routeIs('surat.index') ? 'active' : '' }}">
+                        <a href="{{ route('surat.index') }}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-archive"></i></span>
                             <span class="menu-text">Arsip Surat</span>
                         </a>
                     </div>
 
                     <div class="p-3 px-4 mt-auto hide-on-minified">
-                        <div class="text-body-emphasis fs-12px fw-bold">Surat Desa App</div>
+                        <div class="text-body-emphasis fs-12px fw-bold">{{ config('app.name') }} App</div>
                         <div class="text-muted fs-10px">v1.0.0</div>
                     </div>
                 </div>

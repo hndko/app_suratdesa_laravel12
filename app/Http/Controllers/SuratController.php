@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\JenisSurat;
+use App\Models\Penduduk;
+use App\Models\Surat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PDF; // Assuming we use dompdf or similar later, but for now just view
+
+class SuratController extends Controller
+{
+    // NOTE: Arsip Surat (Index)
+    public function index()
+    {
+        $data = [
+            'title' => 'Arsip Surat',
+            'surats' => Surat::with(['penduduk', 'jenisSurat'])->latest()->get(),
+        ];
+
+        return view('backend.surat.index', $data);
+    }
+
+    // NOTE: Form Buat Surat
+    public function create()
+    {
+        $data = [
+            'title' => 'Buat Surat Baru',
+            'penduduks' => Penduduk::latest()->get(), // Optimize with Select2 AJAX later if many records
+            'jenis_surats' => JenisSurat::all(),
+        ];
+
+        return view('backend.surat.create', $data);
+    }
+
+    // NOTE: Simpan Surat
+    public function store(Request $request)
+    {
+        $request->validate([
+            'penduduk_id' => 'required|exists:penduduks,id',
+            'jenis_surat_id' => 'required|exists:jenis_surats,id',
+            'tanggal_surat' => 'required|date',
+            'keperluan' => 'required|string',
+        ]);
+
+        // Generate No Surat (Simple format for now: KodeSurat/NoUrut/Bulan/Tahun)
+        $jenisSurat = JenisSurat::find($request->jenis_surat_id);
+        $count = Surat::whereYear('tanggal_surat', date('Y', strtotime($request->tanggal_surat)))->count() + 1;
+        $bulan = date('m', strtotime($request->tanggal_surat)); // Romawi converter needed typically, use standard first
+        $tahun = date('Y', strtotime($request->tanggal_surat));
+
+        $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $count, $bulan, $tahun);
+
+        $surat = Surat::create([
+            'no_surat' => $no_surat,
+            'penduduk_id' => $request->penduduk_id,
+            'jenis_surat_id' => $request->jenis_surat_id,
+            'user_id' => Auth::id(),
+            'tanggal_surat' => $request->tanggal_surat,
+            'keperluan' => $request->keperluan,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->route('surat.show', $surat->id)->with('success', 'Surat berhasil dibuat.');
+    }
+
+    // NOTE: Detail / Cetak Surat
+    public function show($id)
+    {
+        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
+
+        // Replace placeholders in template
+        $template = $surat->jenisSurat->template_isi;
+        $penduduk = $surat->penduduk;
+
+        $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
+        $replace = [
+            $penduduk->nama,
+            $penduduk->nik,
+            $penduduk->tempat_lahir,
+            $penduduk->tgl_lahir,
+            $penduduk->alamat,
+            $penduduk->agama,
+            $penduduk->pekerjaan
+        ];
+
+        $content = str_replace($search, $replace, $template);
+
+        return view('backend.surat.show', [
+            'title' => 'Cetak Surat',
+            'surat' => $surat,
+            'content' => $content
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        Surat::findOrFail($id)->delete();
+        return redirect()->route('surat.index')->with('success', 'Surat berhasil dihapus.');
+    }
+}
