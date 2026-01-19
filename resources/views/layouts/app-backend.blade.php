@@ -3,191 +3,207 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title', config('app.name', 'Surat Desa'))</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>@yield('title', config('app.name', 'Surat Desa'))</title>
 
-    <!-- ================== BEGIN core-css ================== -->
-    <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
-    <!-- ================== END core-css ================== -->
-
-    <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 
     @stack('css')
 </head>
 
-<body>
-    <!-- BEGIN #app -->
-    <div id="app" class="app">
-        <!-- BEGIN #header -->
-        <div id="header" class="app-header">
-            <!-- BEGIN mobile-toggler -->
-            <div class="mobile-toggler">
-                <button type="button" class="menu-toggler" data-toggle="sidebar-mobile">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-            </div>
-            <!-- END mobile-toggler -->
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
 
-            <!-- BEGIN brand -->
-            <div class="brand">
-                <div class="desktop-toggler">
-                    <button type="button" class="menu-toggler" data-toggle="sidebar-minify">
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                    </button>
-                </div>
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
+                </li>
+            </ul>
 
-                <a href="{{ route('dashboard') }}" class="brand-logo">
-                    <span class="fw-bold ms-2">{{ config('app.name') }}</span>
-                </a>
-            </div>
-            <!-- END brand -->
-
-            <!-- BEGIN menu -->
-            <div class="menu">
-                <div class="menu-search">
-                </div>
-                <div class="menu-item dropdown">
-                    <a href="#" data-bs-toggle="dropdown" data-display="static" class="menu-link">
-                        <div class="menu-img online">
-                            <img src="{{ asset('assets/img/user/user.jpg') }}" alt=""
-                                class="ms-100 mh-100 rounded-circle">
-                        </div>
-                        <div class="menu-text">{{ Auth::user()->name ?? 'User' }}</div>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- User Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-user"></i>
+                        {{ Auth::user()->name ?? 'User' }}
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end me-lg-3">
-                        <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-header">Menu Pengguna</span>
+                        <div class="dropdown-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="dropdown-item d-flex align-items-center">Log Out <i
-                                    class="fa fa-toggle-off fa-fw ms-auto text-body text-opacity-50"></i></button>
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </button>
                         </form>
                     </div>
-                </div>
-            </div>
-            <!-- END menu -->
-        </div>
-        <!-- END #header -->
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
 
-        <!-- BEGIN #sidebar -->
-        <div id="sidebar" class="app-sidebar">
-            <!-- BEGIN scrollbar -->
-            <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
-                <!-- BEGIN menu -->
-                <div class="menu">
-                    <div class="menu-header">Navigation</div>
-                    <div class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('dashboard') }}" class="menu-link">
-                            <span class="menu-icon"><i class="fa fa-laptop"></i></span>
-                            <span class="menu-text">Dashboard</span>
-                        </a>
-                    </div>
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="{{ route('dashboard') }}" class="brand-link">
+                <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminSK Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
+            </a>
 
-                    <div class="menu-header">Master Data</div>
-                    <div class="menu-item {{ request()->is('penduduk*') ? 'active' : '' }}">
-                        <a href="{{ route('penduduk.index') }}" class="menu-link">
-                            <span class="menu-icon"><i class="fa fa-users"></i></span>
-                            <span class="menu-text">Data Penduduk</span>
-                        </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="{{ asset('adminlte/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                            alt="User Image">
                     </div>
-                    <div class="menu-item {{ request()->is('jenis-surat*') ? 'active' : '' }}">
-                        <a href="{{ route('jenis-surat.index') }}" class="menu-link">
-                            <span class="menu-icon"><i class="fa fa-file-alt"></i></span>
-                            <span class="menu-text">Jenis Surat</span>
-                        </a>
-                    </div>
-
-                    <div class="menu-header">Transaksi</div>
-                    <div class="menu-item {{ request()->routeIs('surat.create') ? 'active' : '' }}">
-                        <a href="{{ route('surat.create') }}" class="menu-link">
-                            <span class="menu-icon"><i class="fa fa-print"></i></span>
-                            <span class="menu-text">Buat Surat</span>
-                        </a>
-                    </div>
-                    <div class="menu-item {{ request()->routeIs('surat.index') ? 'active' : '' }}">
-                        <a href="{{ route('surat.index') }}" class="menu-link">
-                            <span class="menu-icon"><i class="fa fa-archive"></i></span>
-                            <span class="menu-text">Arsip Surat</span>
-                        </a>
-                    </div>
-
-                    <div class="p-3 px-4 mt-auto hide-on-minified">
-                        <div class="text-body-emphasis fs-12px fw-bold">{{ config('app.name') }} App</div>
-                        <div class="text-muted fs-10px">v1.0.0</div>
+                    <div class="info">
+                        <a href="#" class="d-block">{{ Auth::user()->name ?? 'Administrator' }}</a>
                     </div>
                 </div>
-                <!-- END menu -->
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard') }}"
+                                class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">MASTER DATA</li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('penduduk.index') }}"
+                                class="nav-link {{ request()->is('penduduk*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Data Penduduk</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('jenis-surat.index') }}"
+                                class="nav-link {{ request()->is('jenis-surat*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>Jenis Surat</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">TRANSAKSI</li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('surat.create') }}"
+                                class="nav-link {{ request()->routeIs('surat.create') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-pen"></i>
+                                <p>Buat Surat</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('surat.index') }}"
+                                class="nav-link {{ request()->routeIs('surat.index') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-archive"></i>
+                                <p>Arsip Surat</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
             </div>
-            <!-- END scrollbar -->
+            <!-- /.sidebar -->
+        </aside>
 
-            <!-- BEGIN mobile-sidebar-backdrop -->
-            <button class="app-sidebar-mobile-backdrop" data-dismiss="sidebar-mobile"></button>
-            <!-- END mobile-sidebar-backdrop -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <div class="content pt-3">
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+            </div>
+            <!-- /.content -->
         </div>
-        <!-- END #sidebar -->
+        <!-- /.content-wrapper -->
 
-        <!-- BEGIN #content -->
-        <div id="content" class="app-content">
-            @yield('content')
+        <!-- Toasts Container (Fixed Top Right) -->
+        <div style="position: fixed; top: 1rem; right: 1rem; z-index: 9999;">
+            @if(session('success'))
+            <div class="toast bg-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+                <div class="toast-header">
+                    <strong class="mr-auto">Sukses</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body text-white">
+                    {{ session('success') }}
+                </div>
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+                <div class="toast-header">
+                    <strong class="mr-auto">Error</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body text-white">
+                    {{ session('error') }}
+                </div>
+            </div>
+            @endif
         </div>
-        <!-- END #content -->
 
-        <!-- BEGIN btn-scroll-top -->
-        <a href="#" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
-        <!-- END btn-scroll-top -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-inline">
+                v1.0.0
+            </div>
+            <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
+            reserved.
+        </footer>
     </div>
-    <!-- END #app -->
+    <!-- ./wrapper -->
 
-    <!-- BEGIN toasts-container -->
-    <div class="toasts-container">
-        @if(session('success'))
-        <div class="toast fade show mb-3" data-autohide="true" id="toast-success">
-            <div class="toast-header">
-                <i class="far fa-check-circle text-success me-2"></i>
-                <strong class="me-auto">Sukses</strong>
-                <small>Baru saja</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                {{ session('success') }}
-            </div>
-        </div>
-        @endif
-        @if(session('error'))
-        <div class="toast fade show mb-3" data-autohide="true" id="toast-error">
-            <div class="toast-header">
-                <i class="far fa-times-circle text-danger me-2"></i>
-                <strong class="me-auto">Error</strong>
-                <small>Baru saja</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                {{ session('error') }}
-            </div>
-        </div>
-        @endif
-    </div>
-    <!-- END toasts-container -->
+    <!-- REQUIRED SCRIPTS -->
 
-    <!-- ================== BEGIN core-js ================== -->
-    <script src="{{ asset('assets/js/app.min.js') }}"></script>
-    <!-- ================== END core-js ================== -->
+    <!-- jQuery -->
+    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 
     <script>
-        // Auto show toasts
         $(document).ready(function() {
-            $('.toast').each(function() {
-                var toast = new bootstrap.Toast($(this));
-                toast.show();
-            });
-        });
+      // Auto show toasts
+      $('.toast').toast('show');
+  });
     </script>
 
     @stack('js')
-
 </body>
 
 </html>

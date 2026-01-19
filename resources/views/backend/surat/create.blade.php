@@ -1,40 +1,47 @@
-```
 @extends('layouts.app-backend')
 
 @section('title', $title)
 
 @push('css')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
-    rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
-<div class="d-flex align-items-center mb-3">
-    <div>
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('surat.index') }}">Arsip Surat</a></li>
-            <li class="breadcrumb-item active">Buat Surat</li>
-        </ul>
-        <h1 class="page-header mb-0">Buat Surat Baru</h1>
+<!-- Content Header -->
+<div class="content-header ps-0 pe-0">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Buat Surat Baru</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Transaksi</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('surat.index') }}">Arsip Surat</a></li>
+                    <li class="breadcrumb-item active">Buat Surat</li>
+                </ol>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <!-- Left Column: Form -->
-    <div class="col-xl-6">
-        <div class="card h-100">
-            <div class="card-header bg-none fw-bold">
-                <i class="fa fa-edit me-1"></i> Form Data Surat
+    <div class="col-md-6">
+        <div class="card card-primary card-outline h-100">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-edit mr-1"></i> Form Data Surat
+                </h3>
             </div>
             <div class="card-body">
                 <form action="{{ route('surat.store') }}" method="POST" id="formSurat">
                     @csrf
 
-                    <div class="mb-3">
-                        <label class="form-label">Jenis Surat <span class="text-danger">*</span></label>
-                        <select class="form-control select2" name="jenis_surat_id" required>
+                    <div class="form-group">
+                        <label>Jenis Surat <span class="text-danger">*</span></label>
+                        <select class="form-control select2" name="jenis_surat_id" style="width: 100%;" required>
                             <option value="">-- Pilih Jenis Surat --</option>
                             @foreach($jenis_surats as $js)
                             <option value="{{ $js->id }}" {{ old('jenis_surat_id')==$js->id ? 'selected' : '' }}>
@@ -44,15 +51,20 @@
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Tanggal Surat <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" name="tanggal_surat"
-                            value="{{ old('tanggal_surat', date('Y-m-d')) }}" required>
+                    <div class="form-group">
+                        <label>Tanggal Surat <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="date" class="form-control" name="tanggal_surat"
+                                value="{{ old('tanggal_surat', date('Y-m-d')) }}" required>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Penduduk <span class="text-danger">*</span></label>
-                        <select class="form-control select2" name="penduduk_id" required>
+                    <div class="form-group">
+                        <label>Penduduk <span class="text-danger">*</span></label>
+                        <select class="form-control select2" name="penduduk_id" style="width: 100%;" required>
                             <option value="">-- Cari Penduduk (Nama / NIK) --</option>
                             @foreach($penduduks as $p)
                             <option value="{{ $p->id }}" {{ old('penduduk_id')==$p->id ? 'selected' : '' }}>
@@ -62,25 +74,24 @@
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Keperluan <span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <label>Keperluan <span class="text-danger">*</span></label>
                         <textarea class="form-control" name="keperluan" rows="3"
                             placeholder="Contoh: Persyaratan Administrasi Bank"
                             required>{{ old('keperluan') }}</textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Keterangan Tambahan (Opsional)</label>
+                    <div class="form-group">
+                        <label>Keterangan Tambahan (Opsional)</label>
                         <textarea class="form-control" name="keterangan" rows="3"
                             placeholder="Tambahkan catatan jika perlu...">{{ old('keterangan') }}</textarea>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a href="{{ route('surat.index') }}" class="btn btn-secondary">Batal</a>
-                        <button type="button" class="btn btn-info text-white" id="btnPreview"><i
-                                class="fa fa-eye me-1"></i> Lihat Preview</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save me-1"></i> Simpan
-                            Surat</button>
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="{{ route('surat.index') }}" class="btn btn-default mr-2">Batal</a>
+                        <button type="button" class="btn btn-info mr-2" id="btnPreview"><i class="fas fa-eye mr-1"></i>
+                            Preview</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Simpan</button>
                     </div>
                 </form>
             </div>
@@ -88,15 +99,17 @@
     </div>
 
     <!-- Right Column: Preview -->
-    <div class="col-xl-6">
-        <div class="card h-100">
-            <div class="card-header bg-none fw-bold">
-                <i class="fa fa-file-alt me-1"></i> Preview Dokumen
+    <div class="col-md-6">
+        <div class="card card-info card-outline h-100">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-file-alt mr-1"></i> Preview Dokumen
+                </h3>
             </div>
             <div class="card-body bg-light overflow-auto" id="previewContainer" style="max-height: 800px;">
                 <div class="text-center p-5 text-muted" id="previewPlaceholder">
-                    <i class="fa fa-file-circle-question fa-4x mb-3 text-opacity-25 text-body"></i>
-                    <p>Silahkan lengkapi form dan klik tombol <b>Lihat Preview</b> untuk melihat hasil surat.</p>
+                    <i class="fas fa-file-invoice fa-4x mb-3 text-secondary"></i>
+                    <p>Silahkan lengkapi form dan klik tombol <b>Preview</b>.</p>
                 </div>
                 <div id="previewContent" class="d-none"></div>
             </div>
@@ -106,11 +119,11 @@
 @endsection
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2({
-            theme: 'bootstrap-5',
+            theme: 'bootstrap4',
             width: '100%'
         });
 
@@ -142,4 +155,4 @@
         });
     });
 </script>
-```
+@endpush
