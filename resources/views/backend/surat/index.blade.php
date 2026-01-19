@@ -4,6 +4,7 @@
 
 @push('css')
 <link href="{{ asset('assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/plugins/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}"
     rel="stylesheet" />
 @endpush
@@ -30,10 +31,10 @@
 </div>
 @endif
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered text-nowrap w-100" id="table-surat">
+<div id="datatable" class="mb-5">
+    <div class="card">
+        <div class="card-body">
+            <table id="datatableDefault" class="table text-nowrap w-100">
                 <thead class="table-light">
                     <tr>
                         <th width="1%">No</th>
@@ -78,14 +79,25 @@
 @endsection
 
 @push('js')
-<script src="{{ asset('assets/plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net/js/dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
 <script>
-    $('#table-surat').DataTable({
+    $('#datatableDefault').DataTable({
+        dom: "<'row mb-3'<'col-md-4 mb-3 mb-md-0'l><'col-md-8 text-right'<'d-flex justify-content-end'f<'ms-2'B>>>>t<'row align-items-center mt-3'<'mr-auto col-md-6'i><'mb-0 col-md-6'p>>",
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
         responsive: true,
-        order: [[ 4, "desc" ]] // Sort by Date desc by default
+        order: [[ 4, "desc" ]], // Keep sort by date
+        buttons: [
+            { extend: 'print', className: 'btn btn-default btn-sm' },
+            { extend: 'csv', className: 'btn btn-default btn-sm' }
+        ]
     });
 </script>
 @endpush
