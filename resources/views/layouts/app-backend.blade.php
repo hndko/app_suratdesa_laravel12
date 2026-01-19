@@ -13,7 +13,8 @@
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
     <!-- ================== END core-css ================== -->
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
+
     @stack('css')
 </head>
 
@@ -172,7 +173,6 @@
     <!-- END toasts-container -->
 
     <!-- ================== BEGIN core-js ================== -->
-    <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
     <!-- ================== END core-js ================== -->
 
