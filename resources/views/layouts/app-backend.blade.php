@@ -138,10 +138,52 @@
     </div>
     <!-- END #app -->
 
+    <!-- BEGIN toasts-container -->
+    <div class="toasts-container">
+        @if(session('success'))
+        <div class="toast fade show mb-3" data-autohide="true" id="toast-success">
+            <div class="toast-header">
+                <i class="far fa-check-circle text-success me-2"></i>
+                <strong class="me-auto">Sukses</strong>
+                <small>Baru saja</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                {{ session('success') }}
+            </div>
+        </div>
+        @endif
+        @if(session('error'))
+        <div class="toast fade show mb-3" data-autohide="true" id="toast-error">
+            <div class="toast-header">
+                <i class="far fa-times-circle text-danger me-2"></i>
+                <strong class="me-auto">Error</strong>
+                <small>Baru saja</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+                {{ session('error') }}
+            </div>
+        </div>
+        @endif
+    </div>
+    <!-- END toasts-container -->
+
     <!-- ================== BEGIN core-js ================== -->
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
     <!-- ================== END core-js ================== -->
+
+    <script>
+        // Auto show toasts
+        $(document).ready(function() {
+            $('.toast').each(function() {
+                var toast = new bootstrap.Toast($(this));
+                toast.show();
+            });
+        });
+    </script>
+
     @stack('js')
 
 </body>
