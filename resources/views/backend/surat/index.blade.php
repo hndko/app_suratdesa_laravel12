@@ -85,7 +85,7 @@
 <script src="{{ asset('assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
 <script>
     $('#datatableDefault').DataTable({
-        dom: "<'row mb-3'<'col-md-4 mb-3 mb-md-0'l><'col-md-8 text-right'<'d-flex justify-content-end'f<'ms-2'B>>>>t<'row align-items-center mt-3'<'mr-auto col-md-6'i><'mb-0 col-md-6'p>>",
+        dom: "<'row mb-3'<'col-md-4 mb-3 mb-md-0'l><'col-md-8'<'d-flex justify-content-center justify-content-md-end'f<'ms-2'B>>>>t<'row align-items-center mt-3'<'mr-auto col-md-6'i><'mb-0 col-md-6'p>>",
         lengthMenu: [ 10, 20, 30, 40, 50 ],
         responsive: true,
         order: [[ 4, "desc" ]], // Keep sort by date
