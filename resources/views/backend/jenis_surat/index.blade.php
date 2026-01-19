@@ -2,6 +2,21 @@
 
 @section('title', $title)
 
+@push('css')
+<link href="{{ asset('assets/plugins/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/plugins/datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('assets/plugins/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}"
+    rel="stylesheet" />
+<style>
+    /* Force wrap on mobile detail view */
+    table.dataTable>tbody>tr.child span.dtr-data {
+        white-space: normal !important;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="d-flex align-items-center mb-3">
     <div>
@@ -17,25 +32,10 @@
     </div>
 </div>
 
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
-<div class="card">
-    <div class="card-body">
-        <form action="{{ route('jenis-surat.index') }}" method="GET" class="mb-3">
-            <div class="input-group">
-                <input type="text" class="form-control" name="search" placeholder="Cari Kode atau Nama Surat..."
-                    value="{{ request('search') }}">
-                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Cari</button>
-            </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered text-nowrap">
+<div id="datatable" class="mb-5">
+    <div class="card">
+        <div class="card-body">
+            <table id="datatableDefault" class="table text-nowrap w-100">
                 <thead class="table-light">
                     <tr>
                         <th width="1%">No</th>
@@ -46,9 +46,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($jenis_surats as $key => $item)
+                    @foreach($jenis_surats as $key => $item)
                     <tr>
-                        <td>{{ $jenis_surats->firstItem() + $key }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->kode_surat }}</td>
                         <td>{{ $item->nama_surat }}</td>
                         <td>{{ $item->kop_judul }}</td>
@@ -63,18 +63,33 @@
                             </form>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center">Data tidak ditemukan.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
-        </div>
-
-        <div class="d-flex justify-content-end mt-3">
-            {{ $jenis_surats->links() }}
         </div>
     </div>
 </div>
 @endsection
+
+@push('js')
+<script src="{{ asset('assets/plugins/datatables.net/js/dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+<script>
+    $('#datatableDefault').DataTable({
+        dom: "<'row mb-3'<'col-12 col-md-6 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0'l><'col-12 col-md-6 d-flex justify-content-center justify-content-md-end align-items-center gap-2 flex-wrap'fB>>t<'row align-items-center mt-3'<'mr-auto col-md-6'i><'mb-0 col-md-6'p>>",
+        lengthMenu: [ 10, 20, 30, 40, 50 ],
+        responsive: true,
+        buttons: [
+            { extend: 'print', className: 'btn btn-default btn-sm' },
+            { extend: 'csv', className: 'btn btn-default btn-sm' }
+        ]
+    });
+</script>
+@endpush

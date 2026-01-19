@@ -10,19 +10,9 @@ class JenisSuratController extends Controller
     // NOTE: Tampilkan daftar jenis surat
     public function index(Request $request)
     {
-        $query = JenisSurat::query();
-
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('kode_surat', 'like', "%{$search}%")
-                    ->orWhere('nama_surat', 'like', "%{$search}%");
-            });
-        }
-
         $data = [
             'title' => 'Jenis Surat',
-            'jenis_surats' => $query->latest()->paginate(10),
+            'jenis_surats' => JenisSurat::latest()->get(),
         ];
 
         return view('backend.jenis_surat.index', $data);
