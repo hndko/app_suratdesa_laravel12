@@ -90,7 +90,7 @@
 @endsection
 
 @push('js')
-<script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 <script>
     // Manual Color Palette (Vibrant)
     var colors = [
