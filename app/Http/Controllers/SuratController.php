@@ -133,18 +133,72 @@ class SuratController extends Controller
             $penduduk->pekerjaan
         ];
 
+        // 1. Replace Placeholders
         $content = str_replace($search, $replace, $template);
 
-        // Auto-append Keperluan & Keterangan using a neat table
+        // 2. Format Identity Section (Nama, NIK, etc.) into a Table
+        // Pattern to look for lines starting with "Label: Value"
+        $lines = explode("\n", $content);
+        $formattedLines = [];
+        $inTable = false;
+
+        $identityLabels = ['Nama', 'NIK', 'Tempat/Tgl Lahir', 'TTL', 'Alamat', 'Agama', 'Pekerjaan', 'Status Perkawinan'];
+
+        foreach ($lines as $line) {
+            $trimLine = trim($line);
+            $isIdentityLine = false;
+
+            foreach ($identityLabels as $label) {
+                if (stripos($trimLine, $label . ':') === 0) {
+                    $isIdentityLine = true;
+                    // Extract value
+                    $parts = explode(':', $trimLine, 2);
+                    $value = isset($parts[1]) ? trim($parts[1]) : '';
+
+                    if (!$inTable) {
+                        $formattedLines[] = '<table style="width: 100%; margin-bottom: 10px; border: none;">';
+                        $inTable = true;
+                    }
+
+                    $formattedLines[] = '<tr>
+                        <td style="width: 180px; vertical-align: top;">' . $label . '</td>
+                        <td style="width: 10px; vertical-align: top;">:</td>
+                        <td style="vertical-align: top;">' . $value . '</td>
+                    </tr>';
+                    break;
+                }
+            }
+
+            if (!$isIdentityLine) {
+                if ($inTable) {
+                    $formattedLines[] = '</table>';
+                    $inTable = false;
+                }
+                // Regular line, preserve empty lines as br
+                if (empty($trimLine)) {
+                    $formattedLines[] = '<br>';
+                } else {
+                    $formattedLines[] = '<p style="margin-bottom: 5px; text-align: justify;">' . $trimLine . '</p>';
+                }
+            }
+        }
+
+        if ($inTable) {
+            $formattedLines[] = '</table>';
+        }
+
+        $content = implode("", $formattedLines);
+
+        // 3. Auto-append Keperluan & Keterangan using a neat table
         if (!empty($extraData['keperluan']) || !empty($extraData['keterangan'])) {
             $content .= "<br><table style='width: 100%; border: none; font-size: 12pt;'>";
 
             if (!empty($extraData['keperluan'])) {
-                $content .= "<tr><td style='width: 30%; vertical-align: top;'>Keperluan</td><td style='width: 2%; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keperluan'] . "</td></tr>";
+                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keperluan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keperluan'] . "</td></tr>";
             }
 
             if (!empty($extraData['keterangan'])) {
-                $content .= "<tr><td style='width: 30%; vertical-align: top;'>Keterangan</td><td style='width: 2%; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keterangan'] . "</td></tr>";
+                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keterangan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keterangan'] . "</td></tr>";
             }
 
             $content .= "</table>";
