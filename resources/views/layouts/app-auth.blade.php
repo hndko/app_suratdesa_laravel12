@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
-	<title>@yield('title', 'Surat Desa')</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<title>@yield('title', 'Login - Surat Desa')</title>
 
-	<!-- ================== BEGIN core-css ================== -->
-	<link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
-	<!-- ================== END core-css ================== -->
-    @stack('css')
+	<!-- Google Font: Source Sans Pro -->
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
+	<!-- icheck bootstrap -->
+	<link rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+
+	@stack('css')
 </head>
-<body>
-	<!-- BEGIN #app -->
-	<div id="app" class="app app-full-height app-without-header">
-		@yield('content')
-	</div>
-	<!-- END #app -->
 
-	<!-- ================== BEGIN core-js ================== -->
-	<script src="{{ asset('assets/js/vendor.min.js') }}"></script>
-	<script src="{{ asset('assets/js/app.min.js') }}"></script>
-	<!-- ================== END core-js ================== -->
-    @stack('js')
+<body class="hold-transition login-page">
+
+	@yield('content')
+
+	<!-- jQuery -->
+	<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+	<!-- Bootstrap 4 -->
+	<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+	<!-- AdminLTE App -->
+	<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+
+	@stack('js')
 </body>
+
 </html>

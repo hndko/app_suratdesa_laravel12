@@ -66,18 +66,48 @@ class SuratController extends Controller
     }
 
     // NOTE: Preview Surat (AJAX)
+    // NOTE: Preview Surat (AJAX)
     public function preview(Request $request)
     {
         $request->validate([
             'penduduk_id' => 'required|exists:penduduks,id',
             'jenis_surat_id' => 'required|exists:jenis_surats,id',
+            'tanggal_surat' => 'required|date',
         ]);
 
         $jenisSurat = JenisSurat::findOrFail($request->jenis_surat_id);
         $penduduk = Penduduk::findOrFail($request->penduduk_id);
 
-        // Replace placeholders
-        $template = $jenisSurat->template_isi;
+        $content = $this->processTemplate($jenisSurat->template_isi, $penduduk);
+
+        // Render Partial View
+        $previewHtml = view('backend.surat.print_template', [
+            'header' => $jenisSurat->kop_judul,
+            'nomor_surat' => 'XXX/000/' . date('m', strtotime($request->tanggal_surat)) . '/' . date('Y', strtotime($request->tanggal_surat)),
+            'tanggal_surat' => $request->tanggal_surat,
+            'content' => $content
+        ])->render();
+
+        return response()->json(['html' => $previewHtml]);
+    }
+
+    // NOTE: Detail / Cetak Surat
+    public function show($id)
+    {
+        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
+        $penduduk = $surat->penduduk;
+
+        $content = $this->processTemplate($surat->jenisSurat->template_isi, $penduduk);
+
+        return view('backend.surat.show', [
+            'title' => 'Cetak Surat',
+            'surat' => $surat,
+            'content' => $content
+        ]);
+    }
+
+    private function processTemplate($template, $penduduk)
+    {
         $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
         $replace = [
             $penduduk->nama,
@@ -89,44 +119,7 @@ class SuratController extends Controller
             $penduduk->pekerjaan
         ];
 
-        $content = str_replace($search, $replace, $template);
-
-        // Simple letter head/body wrapper for preview
-        $previewHtml = '<div class="letter-preview p-4 border bg-white" style="min-height: 500px;">';
-        $previewHtml .= '<h3 class="text-center mb-4">' . $jenisSurat->kop_judul . '</h3>';
-        $previewHtml .= $content;
-        $previewHtml .= '</div>';
-
-        return response()->json(['html' => $previewHtml]);
-    }
-
-    // NOTE: Detail / Cetak Surat
-    public function show($id)
-    {
-        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
-
-        // Replace placeholders in template
-        $template = $surat->jenisSurat->template_isi;
-        $penduduk = $surat->penduduk;
-
-        $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
-        $replace = [
-            $penduduk->nama,
-            $penduduk->nik,
-            $penduduk->tempat_lahir,
-            $penduduk->tgl_lahir,
-            $penduduk->alamat,
-            $penduduk->agama,
-            $penduduk->pekerjaan
-        ];
-
-        $content = str_replace($search, $replace, $template);
-
-        return view('backend.surat.show', [
-            'title' => 'Cetak Surat',
-            'surat' => $surat,
-            'content' => $content
-        ]);
+        return str_replace($search, $replace, $template);
     }
 
     public function destroy($id)

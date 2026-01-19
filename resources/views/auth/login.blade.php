@@ -3,23 +3,24 @@
 @section('title', 'Login - Surat Desa')
 
 @section('content')
-<!-- BEGIN login -->
-<div class="login">
-    <!-- BEGIN login-content -->
-    <div class="login-content">
-        <form action="{{ route('login.post') }}" method="POST" name="login_form">
-            @csrf
-            <h1 class="text-center">Surat Desa</h1>
-            <div class="text-muted text-center mb-4">
-                Silahkan login untuk melanjutkan.
-            </div>
+<div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <a href="{{ url('/') }}" class="h1"><b>Surat</b>Desa</a>
+        </div>
+        <div class="card-body">
+            <p class="login-box-msg">Silahkan login untuk melanjutkan</p>
 
             @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
             @endif
+
             @if($errors->any())
             <div class="alert alert-danger">
-                <ul class="mb-0 ps-3">
+                <ul class="mb-0 pl-3">
                     @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                     @endforeach
@@ -27,34 +28,45 @@
             </div>
             @endif
 
-            <div class="mb-3">
-                <label class="form-label">Email Address</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                    <input type="email" name="email" class="form-control form-control-lg fs-15px"
-                        value="{{ old('email') }}" placeholder="username@address.com">
+            <form action="{{ route('login.post') }}" method="post">
+                @csrf
+                <div class="input-group mb-3">
+                    <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}"
+                        required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="d-flex">
-                    <label class="form-label">Password</label>
+                <div class="input-group mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                    <input type="password" name="password" class="form-control form-control-lg fs-15px"
-                        placeholder="Enter your password">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" name="remember" id="remember">
+                            <label for="remember">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </div>
+                    <!-- /.col -->
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="remember" id="customCheck1">
-                    <label class="form-check-label fw-500" for="customCheck1">Remember me</label>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-theme btn-lg d-block w-100 fw-500 mb-3">Sign In</button>
-        </form>
+            </form>
+        </div>
+        <!-- /.card-body -->
     </div>
-    <!-- END login-content -->
+    <!-- /.card -->
 </div>
-<!-- END login -->
+<!-- /.login-box -->
 @endsection

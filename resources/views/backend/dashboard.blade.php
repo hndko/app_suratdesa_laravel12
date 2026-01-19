@@ -145,4 +145,3 @@
     });
 </script>
 @endpush
-@endsection
