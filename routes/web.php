@@ -44,38 +44,37 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     // NOTE: Master Data Penduduk Group
-    Route::controller(App\Http\Controllers\PendudukController::class)->prefix('penduduk')->name('penduduk.')->group(function () {
+    Route::controller(App\Http\Controllers\PendudukController::class)->prefix('penduduk')->name('penduduk.')->middleware('permission:penduduk-index')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/create', 'create')->name('create')->middleware('permission:penduduk-create');
+        Route::post('/', 'store')->name('store')->middleware('permission:penduduk-create');
+        Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:penduduk-edit');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:penduduk-edit');
+        Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:penduduk-destroy');
     });
 
     // NOTE: Master Data Jenis Surat Group
-    Route::controller(App\Http\Controllers\JenisSuratController::class)->prefix('jenis-surat')->name('jenis-surat.')->group(function () {
+    Route::controller(App\Http\Controllers\JenisSuratController::class)->prefix('jenis-surat')->name('jenis-surat.')->middleware('permission:jenis-surat-index')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::get('/{id}/template', 'template')->name('template');
-        Route::put('/{id}/template', 'updateTemplate')->name('template.update');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/create', 'create')->name('create')->middleware('permission:jenis-surat-create');
+        Route::post('/', 'store')->name('store')->middleware('permission:jenis-surat-create');
+        Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:jenis-surat-edit');
+        Route::get('/{id}/template', 'template')->name('template')->middleware('permission:jenis-surat-template');
+        Route::put('/{id}/template', 'updateTemplate')->name('template.update')->middleware('permission:jenis-surat-template');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:jenis-surat-edit');
+        Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:jenis-surat-destroy');
     });
 
     // NOTE: Transaksi Surat Group
-    Route::controller(App\Http\Controllers\SuratController::class)->prefix('surat')->name('surat.')->group(function () {
+    Route::controller(App\Http\Controllers\SuratController::class)->prefix('surat')->name('surat.')->middleware('permission:surat-index')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/preview', 'preview')->name('preview');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}', 'show')->name('show');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/create', 'create')->name('create')->middleware('permission:surat-create');
+        Route::post('/preview', 'preview')->name('preview')->middleware('permission:surat-create');
+        Route::post('/', 'store')->name('store')->middleware('permission:surat-create');
+        Route::get('/{id}', 'show')->name('show')->middleware('permission:surat-show');
+        Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:surat-edit');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:surat-edit');
+        Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:surat-destroy');
     });
 
     // NOTE: Informasi & Pengumuman Group
@@ -89,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 
     // NOTE: User Management (Super Admin Only)
-    Route::middleware(['role:super-admin'])->group(function () {
+    Route::middleware(['permission:user-index'])->group(function () {
         Route::resource('user', App\Http\Controllers\UserController::class);
         Route::resource('role', App\Http\Controllers\RoleController::class);
         Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
