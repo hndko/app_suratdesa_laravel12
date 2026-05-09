@@ -159,6 +159,12 @@
                                 <p>Manajemen User</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('role*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-key"></i>
+                                <p>Role & Permission</p>
+                            </a>
+                        </li>
                         @endrole
 
                     </ul>
