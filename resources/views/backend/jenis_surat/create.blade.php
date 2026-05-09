@@ -46,15 +46,7 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Template Isi Surat <span class="text-danger">*</span></label>
-                <textarea class="form-control @error('template_isi') is-invalid @enderror" name="template_isi" rows="10"
-                    placeholder="Tulis template surat disini...">{{ old('template_isi') }}</textarea>
-                <small class="text-muted">Gunakan variabel seperti [nama], [nik], [alamat] untuk data dinamis.</small>
-                @error('template_isi')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+
 
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('jenis-surat.index') }}" class="btn btn-secondary">Batal</a>

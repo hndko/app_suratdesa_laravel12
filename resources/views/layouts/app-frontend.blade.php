@@ -9,6 +9,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    
     <!-- Bootstrap 5 CSS (via CDN for simplicity & speed in this phase) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
@@ -103,8 +106,9 @@
 
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('public.home') }}">
-                <i class="fas fa-landmark me-2 text-primary"></i>SIMADES
+            <a class="navbar-brand d-flex align-items-center" href="{{ route('public.home') }}">
+                <img src="{{ asset('assets/img/favicon.png') }}" alt="Logo" width="35" height="35" class="me-2">
+                SIMADES
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

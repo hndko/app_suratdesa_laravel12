@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
         Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::get('/{id}/template', 'template')->name('template');
+        Route::put('/{id}/template', 'updateTemplate')->name('template.update');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
     });
@@ -81,4 +83,13 @@ Route::middleware('auth')->group(function () {
 
     // NOTE: Pengaduan Warga Group
     Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class)->only(['index', 'edit', 'update', 'destroy']);
+
+    // NOTE: Edit Profile
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
+    // NOTE: User Management (Super Admin Only)
+    Route::middleware(['role:super-admin'])->group(function () {
+        Route::resource('user', App\Http\Controllers\UserController::class);
+    });
 });

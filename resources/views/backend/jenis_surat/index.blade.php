@@ -55,6 +55,8 @@
                             <td>{{ $item->nama_surat }}</td>
                             <td>{{ $item->kop_judul }}</td>
                             <td>
+                                <a href="{{ route('jenis-surat.template', $item->id) }}" class="btn btn-sm btn-info" title="Atur Template"><i
+                                        class="fas fa-file-code"></i></a>
                                 <a href="{{ route('jenis-surat.edit', $item->id) }}" class="btn btn-sm btn-warning"><i
                                         class="fas fa-edit"></i></a>
                                 <form action="{{ route('jenis-surat.destroy', $item->id) }}" method="POST"

@@ -31,7 +31,7 @@ class JenisSuratController extends Controller
             'kode_surat' => 'required|unique:jenis_surats,kode_surat|max:50',
             'nama_surat' => 'required|max:255',
             'kop_judul' => 'required|max:255',
-            'template_isi' => 'required',
+            'template_isi' => 'nullable',
         ]);
 
         JenisSurat::create($request->all());
@@ -59,13 +59,37 @@ class JenisSuratController extends Controller
             'kode_surat' => 'required|max:50|unique:jenis_surats,kode_surat,' . $id,
             'nama_surat' => 'required|max:255',
             'kop_judul' => 'required|max:255',
-            'template_isi' => 'required',
         ]);
 
         $jenis_surat = JenisSurat::findOrFail($id);
         $jenis_surat->update($request->all());
 
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil diperbarui.');
+    }
+
+    public function template($id)
+    {
+        $jenis_surat = JenisSurat::findOrFail($id);
+        $data = [
+            'title' => 'Atur Template: ' . $jenis_surat->nama_surat,
+            'jenis_surat' => $jenis_surat,
+        ];
+
+        return view('backend.jenis_surat.template', $data);
+    }
+
+    public function updateTemplate(Request $request, $id)
+    {
+        $request->validate([
+            'template_isi' => 'required',
+        ]);
+
+        $jenis_surat = JenisSurat::findOrFail($id);
+        $jenis_surat->update([
+            'template_isi' => $request->template_isi
+        ]);
+
+        return redirect()->route('jenis-surat.index')->with('success', 'Template surat berhasil diperbarui.');
     }
 
     // NOTE: Hapus jenis surat
