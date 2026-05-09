@@ -94,6 +94,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
         Route::put('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
 
+        // Report Management
+        Route::prefix('report')->name('report.')->group(function () {
+            Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
+            Route::get('/penduduk/excel', [App\Http\Controllers\ReportController::class, 'pendudukExcel'])->name('penduduk.excel');
+            Route::get('/surat/excel', [App\Http\Controllers\ReportController::class, 'suratExcel'])->name('surat.excel');
+            Route::get('/surat/pdf', [App\Http\Controllers\ReportController::class, 'suratPdf'])->name('surat.pdf');
+            Route::get('/pengaduan/excel', [App\Http\Controllers\ReportController::class, 'pengaduanExcel'])->name('pengaduan.excel');
+        });
+
         // WhatsApp Test
         Route::middleware('permission:whatsapp-test')->group(function () {
             Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index');

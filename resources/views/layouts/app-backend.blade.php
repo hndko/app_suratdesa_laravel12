@@ -198,9 +198,16 @@
                         </li>
                         @endcan
 
+                        <li class="nav-item">
+                            <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-invoice"></i>
+                                <p>Laporan & Rekap</p>
+                            </a>
+                        </li>
+
                         @can('whatsapp-test')
                         <li class="nav-item">
-                            <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.index') ? 'active' : '' }}">
+                            <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.*') ? 'active' : '' }}">
                                 <i class="nav-icon fab fa-whatsapp"></i>
                                 <p>Test WA Gateway</p>
                             </a>
