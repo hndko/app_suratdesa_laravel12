@@ -44,6 +44,20 @@ class PengaduanController extends Controller
 
         $pengaduan->update($input);
 
+        // WhatsApp Notification
+        if ($pengaduan->phone) {
+            $statusText = $pengaduan->status === 'resolved' ? 'SELESAI' : 'DIPROSES';
+            $message = "Halo {$pengaduan->name}, pengaduan Anda (#{$pengaduan->ticket_code}) saat ini berstatus: {$statusText}.";
+            
+            if ($request->filled('reply')) {
+                $message .= "\n\nTanggapan Admin: " . $request->reply;
+            }
+            
+            $message .= "\n\nTerima kasih atas laporan Anda.";
+            
+            \App\Services\WhatsAppService::send($pengaduan->phone, $message);
+        }
+
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil ditanggapi.');
     }
 

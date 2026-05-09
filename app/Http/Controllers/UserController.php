@@ -31,17 +31,26 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', Password::defaults()],
+            'phone' => 'nullable|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // Hashed by model cast
+            'phone' => $request->phone,
+            'password' => $request->password,
         ]);
 
         $user->assignRole($request->role);
+
+        // WhatsApp Notification
+        if ($user->phone) {
+            $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+            $message = "Halo {$user->name}, akun Anda di {$siteName} telah berhasil dibuat.\n\nEmail: {$user->email}\nRole: {$request->role}\n\nSilakan login ke sistem untuk mulai bertugas. Terima kasih.";
+            \App\Services\WhatsAppService::send($user->phone, $message);
+        }
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
     }
@@ -63,12 +72,14 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'password' => ['nullable', Password::defaults()],
+            'phone' => 'nullable|string|max:20',
+            'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
 
         if ($request->password) {
             $user->password = $request->password;
@@ -76,7 +87,7 @@ class UserController extends Controller
 
         $user->save();
 
-        $user->syncRoles($request->role);
+        $user->syncRoles([$request->role]);
 
         return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
     }

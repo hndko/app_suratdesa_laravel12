@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', config('app.name', 'Surat Desa'))</title>
+    <title>@yield('title', \App\Facades\Setting::get('site_name', config('app.name', 'Surat Desa')))</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -65,9 +65,9 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('dashboard') }}" class="brand-link">
-                <img src="{{ asset('assets/img/favicon.png') }}" alt="SIMADES Logo"
+                <img src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}" alt="Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">SIMADES</span>
+                <span class="brand-text font-weight-light">{{ \App\Facades\Setting::get('site_name', 'SIMADES') }}</span>
             </a>
 
             <!-- Sidebar -->
@@ -194,6 +194,15 @@
                             <a href="{{ route('setting.index') }}" class="nav-link {{ request()->is('setting*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>Pengaturan Web</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('whatsapp-test')
+                        <li class="nav-item">
+                            <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.index') ? 'active' : '' }}">
+                                <i class="nav-icon fab fa-whatsapp"></i>
+                                <p>Test WA Gateway</p>
                             </a>
                         </li>
                         @endcan

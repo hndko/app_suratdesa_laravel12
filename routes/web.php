@@ -93,5 +93,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('role', App\Http\Controllers\RoleController::class);
         Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
         Route::put('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
+
+        // WhatsApp Test
+        Route::middleware('permission:whatsapp-test')->group(function () {
+            Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index');
+            Route::post('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'send'])->name('whatsapp.test.send');
+        });
     });
 });

@@ -8,6 +8,10 @@ class WhatsAppService
 {
     public static function send(string $target, string $message)
     {
+        if (empty($target)) {
+            return false;
+        }
+
         $token = config('services.fonnte.token');
 
         if (empty($token) || $token === 'your_token_here') {

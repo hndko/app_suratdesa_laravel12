@@ -47,6 +47,12 @@ class PublicController extends Controller
             'keterangan' => 'Pengajuan Mandiri Online',
         ]);
 
+        // WhatsApp Notification
+        if ($penduduk->phone) {
+            $message = "Halo {$penduduk->nama}, pengajuan surat {$jenisSurat->nama_surat} Anda telah kami terima. Silakan pantau statusnya atau tunggu informasi selanjutnya. Terima kasih.";
+            \App\Services\WhatsAppService::send($penduduk->phone, $message);
+        }
+
         return redirect()->back()->with('success', 'Pengajuan surat berhasil dikirim. Silakan hubungi kantor desa untuk pengambilan.');
     }
 
@@ -77,6 +83,12 @@ class PublicController extends Controller
         }
 
         \App\Models\Pengaduan::create($input);
+
+        // WhatsApp Notification
+        if ($request->phone) {
+            $message = "Halo {$request->name}, pengaduan Anda telah kami terima dengan Kode Tiket: {$input['ticket_code']}. Gunakan kode ini untuk melacak status aduan Anda di website kami. Terima kasih.";
+            \App\Services\WhatsAppService::send($request->phone, $message);
+        }
 
         return redirect()->route('public.pengaduan.track')->with('success', 'Pengaduan berhasil dikirim. Simpan Kode Tiket Anda: ' . $input['ticket_code']);
     }

@@ -61,6 +61,7 @@ class RolePermissionSeeder extends Seeder
             'pengaduan-destroy',
 
             'setting-index',
+            'whatsapp-test',
 
             'profile-edit'
         ];

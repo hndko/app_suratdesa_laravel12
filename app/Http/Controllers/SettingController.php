@@ -35,7 +35,8 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'village_logo'], ['value' => 'assets/img/logo.png']);
         }
 
-        // Clear cache if you implement one
+        // Clear cache
+        \App\Facades\Setting::clearCache();
         
         return back()->with('success', 'Pengaturan berhasil diperbarui.');
     }

@@ -11,7 +11,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton('setting', function () {
+            return new \App\Services\SettingService();
+        });
     }
 
     /**
@@ -21,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
+        });
+
+        // Blade Directive: @setting('key', 'default')
+        \Illuminate\Support\Facades\Blade::directive('setting', function ($expression) {
+            return "<?php echo \App\Facades\Setting::get($expression); ?>";
         });
     }
 }

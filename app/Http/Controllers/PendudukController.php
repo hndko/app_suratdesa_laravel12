@@ -59,6 +59,13 @@ class PendudukController extends Controller
 
         Penduduk::create($input);
 
+        // WhatsApp Notification
+        if ($request->phone) {
+            $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+            $message = "Halo {$request->nama}, data kependudukan Anda di {$siteName} telah berhasil ditambahkan.";
+            \App\Services\WhatsAppService::send($request->phone, $message);
+        }
+
         return redirect()->route('penduduk.index')->with('success', 'Data Penduduk berhasil ditambahkan.');
     }
 
@@ -127,7 +134,6 @@ class PendudukController extends Controller
         }
 
         $penduduk->delete();
-
-        return redirect()->route('penduduk.index')->with('success', 'Data Penduduk berhasil dihapus.');
+        return redirect()->route('penduduk.index')->with('success', 'Penduduk berhasil dihapus.');
     }
 }
