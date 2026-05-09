@@ -96,8 +96,10 @@
                             </a>
                         </li>
 
+                        @canany(['penduduk-index', 'jenis-surat-index'])
                         <li class="nav-header">MASTER DATA</li>
 
+                        @can('penduduk-index')
                         <li class="nav-item">
                             <a href="{{ route('penduduk.index') }}"
                                 class="nav-link {{ request()->is('penduduk*') ? 'active' : '' }}">
@@ -105,7 +107,9 @@
                                 <p>Data Penduduk</p>
                             </a>
                         </li>
+                        @endcan
 
+                        @can('jenis-surat-index')
                         <li class="nav-item">
                             <a href="{{ route('jenis-surat.index') }}"
                                 class="nav-link {{ request()->is('jenis-surat*') ? 'active' : '' }}">
@@ -113,9 +117,13 @@
                                 <p>Jenis Surat</p>
                             </a>
                         </li>
+                        @endcan
+                        @endcanany
 
+                        @canany(['surat-create', 'surat-index'])
                         <li class="nav-header">TRANSAKSI</li>
 
+                        @can('surat-create')
                         <li class="nav-item">
                             <a href="{{ route('surat.create') }}"
                                 class="nav-link {{ request()->routeIs('surat.create') ? 'active' : '' }}">
@@ -123,7 +131,9 @@
                                 <p>Buat Surat</p>
                             </a>
                         </li>
+                        @endcan
 
+                        @can('surat-index')
                         <li class="nav-item">
                             <a href="{{ route('surat.index') }}"
                                 class="nav-link {{ request()->routeIs('surat.index') ? 'active' : '' }}">
@@ -131,9 +141,13 @@
                                 <p>Arsip Surat</p>
                             </a>
                         </li>
+                        @endcan
+                        @endcanany
 
+                        @canany(['post-index', 'pengaduan-index'])
                         <li class="nav-header">INFORMASI & LAYANAN</li>
 
+                        @can('post-index')
                         <li class="nav-item">
                             <a href="{{ route('post.index') }}"
                                 class="nav-link {{ request()->is('post*') ? 'active' : '' }}">
@@ -141,7 +155,9 @@
                                 <p>Pengumuman Desa</p>
                             </a>
                         </li>
+                        @endcan
 
+                        @can('pengaduan-index')
                         <li class="nav-item">
                             <a href="{{ route('pengaduan.index') }}"
                                 class="nav-link {{ request()->is('pengaduan*') ? 'active' : '' }}">
@@ -149,29 +165,39 @@
                                 <p>Pengaduan Warga</p>
                             </a>
                         </li>
+                        @endcan
+                        @endcanany
 
-                        @role('super-admin')
+                        @canany(['user-index', 'role-index', 'setting-index'])
                         <li class="nav-header">PENGATURAN</li>
 
+                        @can('user-index')
                         <li class="nav-item">
                             <a href="{{ route('user.index') }}" class="nav-link {{ request()->is('user*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user-shield"></i>
                                 <p>Manajemen User</p>
                             </a>
                         </li>
+                        @endcan
+
+                        @can('role-index')
                         <li class="nav-item">
                             <a href="{{ route('role.index') }}" class="nav-link {{ request()->is('role*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-key"></i>
                                 <p>Role & Permission</p>
                             </a>
                         </li>
+                        @endcan
+
+                        @can('setting-index')
                         <li class="nav-item">
                             <a href="{{ route('setting.index') }}" class="nav-link {{ request()->is('setting*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>Pengaturan Web</p>
                             </a>
                         </li>
-                        @endrole
+                        @endcan
+                        @endcanany
 
                     </ul>
                 </nav>

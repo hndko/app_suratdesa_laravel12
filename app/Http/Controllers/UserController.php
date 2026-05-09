@@ -46,7 +46,7 @@ class UserController extends Controller
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $user = User::findOrFail($id);
         return view('backend.user.edit', [
@@ -56,7 +56,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
 
@@ -81,7 +81,7 @@ class UserController extends Controller
         return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $user = User::findOrFail($id);
 

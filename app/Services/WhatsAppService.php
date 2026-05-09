@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class WhatsAppService
 {
-    public static function send($target, $message)
+    public static function send(string $target, string $message)
     {
         $token = config('services.fonnte.token');
 

@@ -60,6 +60,8 @@ class RolePermissionSeeder extends Seeder
             'pengaduan-edit',
             'pengaduan-destroy',
 
+            'setting-index',
+
             'profile-edit'
         ];
 
@@ -99,6 +101,7 @@ class RolePermissionSeeder extends Seeder
             'post-create',
             'post-edit',
             'pengaduan-index',
+            'setting-index',
             'profile-edit'
         ]);
 

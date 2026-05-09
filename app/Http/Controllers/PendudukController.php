@@ -63,7 +63,7 @@ class PendudukController extends Controller
     }
 
     // NOTE: Form edit penduduk
-    public function edit($id)
+    public function edit(string $id)
     {
         $penduduk = Penduduk::findOrFail($id);
         $data = [
@@ -74,7 +74,7 @@ class PendudukController extends Controller
     }
 
     // NOTE: Proses update penduduk
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $penduduk = Penduduk::findOrFail($id);
 
@@ -118,7 +118,7 @@ class PendudukController extends Controller
     }
 
     // NOTE: Hapus penduduk
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $penduduk = Penduduk::findOrFail($id);
 

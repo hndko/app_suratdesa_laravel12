@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Penduduk;
+use App\Models\Pengaduan;
+use App\Models\Post;
+use App\Models\Surat;
+use Illuminate\View\View;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         // Statistik Card
-        $totalPenduduk = \App\Models\Penduduk::count();
-        $totalSurat = \App\Models\Surat::count();
-        $totalPengaduan = \App\Models\Pengaduan::count();
-        $totalPost = \App\Models\Post::count();
+        $totalPenduduk = Penduduk::count();
+        $totalSurat = Surat::count();
+        $totalPengaduan = Pengaduan::count();
+        $totalPost = Post::count();
 
         // Pengaduan Status Stats
-        $pengaduanStats = \App\Models\Pengaduan::selectRaw('status, COUNT(*) as total')
+        $pengaduanStats = Pengaduan::selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')->toArray();
 
@@ -27,10 +32,10 @@ class DashboardController extends Controller
         $chartPengaduanLbl = ['Pending', 'Diproses', 'Selesai'];
 
         // Chart Data: Surat per Bulan (Dynamic Year)
-        $latestSurat = \App\Models\Surat::latest('tanggal_surat')->first();
-        $year = $latestSurat ? \Carbon\Carbon::parse($latestSurat->tanggal_surat)->year : date('Y');
+        $latestSurat = Surat::latest('tanggal_surat')->first();
+        $year = $latestSurat ? Carbon::parse($latestSurat->tanggal_surat)->year : date('Y');
 
-        $suratPerBulan = \App\Models\Surat::selectRaw('MONTH(tanggal_surat) as bulan, COUNT(*) as total')
+        $suratPerBulan = Surat::selectRaw('MONTH(tanggal_surat) as bulan, COUNT(*) as total')
             ->whereYear('tanggal_surat', $year)
             ->groupBy('bulan')
             ->orderBy('bulan')
@@ -46,7 +51,7 @@ class DashboardController extends Controller
         }
 
         // Chart Data: Komposisi Jenis Surat
-        $suratPerJenis = \App\Models\Surat::selectRaw('jenis_surat_id, COUNT(*) as total')
+        $suratPerJenis = Surat::selectRaw('jenis_surat_id, COUNT(*) as total')
             ->groupBy('jenis_surat_id')
             ->with('jenisSurat')
             ->get();

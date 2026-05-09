@@ -40,7 +40,7 @@ class JenisSuratController extends Controller
     }
 
     // NOTE: Form edit jenis surat
-    public function edit($id)
+    public function edit(string $id)
     {
         $jenis_surat = JenisSurat::findOrFail($id);
 
@@ -53,7 +53,7 @@ class JenisSuratController extends Controller
     }
 
     // NOTE: Proses update jenis surat
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'kode_surat' => 'required|max:50|unique:jenis_surats,kode_surat,' . $id,
@@ -67,7 +67,7 @@ class JenisSuratController extends Controller
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil diperbarui.');
     }
 
-    public function template($id)
+    public function template(string $id)
     {
         $jenis_surat = JenisSurat::findOrFail($id);
         $data = [
@@ -78,7 +78,7 @@ class JenisSuratController extends Controller
         return view('backend.jenis_surat.template', $data);
     }
 
-    public function updateTemplate(Request $request, $id)
+    public function updateTemplate(Request $request, string $id)
     {
         $request->validate([
             'template_isi' => 'required',
@@ -93,7 +93,7 @@ class JenisSuratController extends Controller
     }
 
     // NOTE: Hapus jenis surat
-    public function destroy($id)
+    public function destroy(string $id)
     {
         JenisSurat::findOrFail($id)->delete();
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil dihapus.');

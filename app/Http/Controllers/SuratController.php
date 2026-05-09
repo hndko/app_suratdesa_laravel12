@@ -97,7 +97,7 @@ class SuratController extends Controller
     }
 
     // NOTE: Detail / Cetak Surat
-    public function show($id)
+    public function show(string $id)
     {
         $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
         $penduduk = $surat->penduduk;
@@ -117,7 +117,7 @@ class SuratController extends Controller
         ]);
     }
 
-    private function processTemplate($template, $penduduk, $extraData = [])
+    private function processTemplate(string $template, Penduduk $penduduk, array $extraData = [])
     {
         // Force Indonesian Locale for Date Formatting
         \Carbon\Carbon::setLocale('id');
@@ -207,7 +207,7 @@ class SuratController extends Controller
         return $content;
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
         $data = [
@@ -218,7 +218,7 @@ class SuratController extends Controller
         return view('backend.surat.edit', $data);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $surat = Surat::findOrFail($id);
         $request->validate([
@@ -245,7 +245,7 @@ class SuratController extends Controller
         return redirect()->route('surat.index')->with('success', 'Status surat berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         Surat::findOrFail($id)->delete();
         return redirect()->route('surat.index')->with('success', 'Surat berhasil dihapus.');

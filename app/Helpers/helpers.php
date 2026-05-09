@@ -4,7 +4,7 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 
 if (!function_exists('get_setting')) {
-    function get_setting($key, $default = null)
+    function get_setting(string $key, $default = null)
     {
         return Cache::rememberForever('setting_' . $key, function () use ($key, $default) {
             $setting = Setting::where('key', $key)->first();
