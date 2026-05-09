@@ -1,79 +1,105 @@
-@extends('layouts.app-frontend')
+@extends('layouts.app-frontend-sandbox')
 
-@section('title', 'Lapor Pengaduan - SIMADES')
+@section('title', 'Kirim Pengaduan Warga - ' . \App\Facades\Setting::get('site_name', 'SIMADES'))
 
 @section('content')
-<section class="py-5 bg-white border-bottom">
-    <div class="container text-center py-4">
-        <h1 class="fw-bold">Pusat Pengaduan Masyarakat</h1>
-        <p class="text-secondary">Sampaikan keluhan, saran, atau laporan Anda secara langsung kepada pemerintah desa.</p>
+<section class="wrapper bg-soft-primary">
+  <div class="container pt-10 pb-12 pt-md-14 pb-md-16 text-center">
+    <div class="row">
+      <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <h1 class="display-1 mb-3">Layanan Pengaduan Online</h1>
+        <p class="lead px-xxl-10">Sampaikan keluhan, aspirasi, atau laporan Anda secara langsung kepada kami. Kami berkomitmen untuk menindaklanjuti setiap aduan demi kemajuan desa.</p>
+      </div>
+      <!-- /column -->
     </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
 </section>
 
-<section class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow-lg p-4 p-md-5 border-0">
-                    <form action="{{ route('public.pengaduan.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Nama Lengkap</label>
-                                <input type="text" name="name" class="form-control bg-light border-0 @error('name') is-invalid @enderror" 
-                                    placeholder="Nama sesuai KTP" value="{{ old('name') }}" required>
-                                @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">NIK</label>
-                                <input type="text" name="nik" class="form-control bg-light border-0 @error('nik') is-invalid @enderror" 
-                                    placeholder="16 digit NIK" value="{{ old('nik') }}" required>
-                                @error('nik') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Nomor WhatsApp/HP</label>
-                                <input type="text" name="phone" class="form-control bg-light border-0 @error('phone') is-invalid @enderror" 
-                                    placeholder="Contoh: 0812..." value="{{ old('phone') }}" required>
-                                @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label class="form-label fw-semibold">Kategori Laporan</label>
-                                <select name="category" class="form-select bg-light border-0 @error('category') is-invalid @enderror" required>
-                                    <option value="" disabled selected>Pilih kategori...</option>
-                                    <option value="Infrastruktur">Infrastruktur (Jalan, Jembatan, dll)</option>
-                                    <option value="Pelayanan">Pelayanan Publik</option>
-                                    <option value="Keamanan">Keamanan & Ketertiban</option>
-                                    <option value="Bantuan Sosial">Bantuan Sosial</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
-                                @error('category') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Isi Laporan / Pengaduan</label>
-                            <textarea name="content" rows="6" class="form-control bg-light border-0 @error('content') is-invalid @enderror" 
-                                placeholder="Jelaskan detail laporan Anda secara rinci..." required>{{ old('content') }}</textarea>
-                            @error('content') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Lampiran Foto (Opsional)</label>
-                            <input type="file" name="image" class="form-control bg-light border-0 @error('image') is-invalid @enderror">
-                            <div class="form-text">Gunakan foto untuk memperkuat laporan Anda (Bukti fisik, lokasi, dll).</div>
-                            @error('image') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="d-grid mt-5">
-                            <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold">Kirim Laporan Pengaduan</button>
-                        </div>
-                    </form>
-                </div>
+<section class="wrapper bg-light">
+  <div class="container pb-14 pb-md-16">
+    <div class="row">
+      <div class="col-lg-10 col-xl-8 mx-auto mt-n10">
+        <div class="card shadow-lg">
+          <div class="card-body p-11">
+            
+            <div class="text-center mb-8">
+                <a href="{{ route('public.pengaduan.track') }}" class="btn btn-sm btn-soft-primary rounded-pill">Lacak Status Aduan Sebelumnya</a>
             </div>
+
+            @if(session('success'))
+            <div class="alert alert-success alert-icon" role="alert">
+              <i class="uil uil-check-circle"></i> {{ session('success') }}
+            </div>
+            @endif
+
+            <form action="{{ route('public.pengaduan.store') }}" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="row gx-4">
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input id="name" type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Nama Lengkap" value="{{ old('name') }}" required>
+                    <label for="name">Nama Lengkap</label>
+                  </div>
+                </div>
+                
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input id="nik" type="text" name="nik" class="form-control @error('nik') is-invalid @enderror" placeholder="NIK" value="{{ old('nik') }}" required>
+                    <label for="nik">NIK (Sesuai KTP)</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-floating mb-4">
+                    <input id="phone" type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" placeholder="No. WhatsApp" value="{{ old('phone') }}" required>
+                    <label for="phone">No. WhatsApp Aktif</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-select-wrapper mb-4">
+                    <select class="form-select @error('category') is-invalid @enderror" id="category" name="category" required>
+                      <option selected disabled value="">Kategori Aduan</option>
+                      <option value="infrastruktur">Infrastruktur / Jalan</option>
+                      <option value="keamanan">Keamanan / Ketertiban</option>
+                      <option value="pelayanan">Pelayanan Publik</option>
+                      <option value="sosial">Sosial / Ekonomi</option>
+                      <option value="lainnya">Lainnya</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-floating mb-4">
+                    <textarea id="content" name="content" class="form-control @error('content') is-invalid @enderror" placeholder="Isi Aduan" style="height: 150px" required>{{ old('content') }}</textarea>
+                    <label for="content">Detail Pengaduan / Masalah</label>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="mb-4">
+                    <label class="form-label text-muted">Foto Bukti (Opsional)</label>
+                    <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                  </div>
+                </div>
+
+                <div class="col-12 text-center mt-3">
+                  <button type="submit" class="btn btn-primary rounded-pill btn-send mb-3">Kirim Aduan</button>
+                  <p class="text-muted small">Dengan mengirim aduan, Anda setuju bahwa data yang Anda berikan adalah benar dan dapat dipertanggungjawabkan.</p>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- /.card-body -->
         </div>
+        <!-- /.card -->
+      </div>
+      <!-- /column -->
     </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
 </section>
 @endsection
