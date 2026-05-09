@@ -84,7 +84,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        
+
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak bisa menghapus diri sendiri.');
         }

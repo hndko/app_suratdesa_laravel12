@@ -36,7 +36,7 @@ class PengaduanController extends Controller
         ]);
 
         $input = $request->only(['status', 'reply']);
-        
+
         if ($request->filled('reply')) {
             $input['replied_by'] = auth()->id();
             $input['replied_at'] = now();

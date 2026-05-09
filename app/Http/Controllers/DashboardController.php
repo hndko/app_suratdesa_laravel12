@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $pengaduanStats = \App\Models\Pengaduan::selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')->toArray();
-        
+
         $chartPengaduanVal = [
             $pengaduanStats['pending'] ?? 0,
             $pengaduanStats['process'] ?? 0,

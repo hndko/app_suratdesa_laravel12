@@ -27,13 +27,13 @@ class PublicController extends Controller
         ]);
 
         $penduduk = \App\Models\Penduduk::where('nik', $request->nik)->first();
-        
+
         // In public submission, status is usually 'pending' or similar if implemented.
-        // Based on PRD FR-4.05: Admin can change status. 
-        // But our Surat model doesn't have status yet. Let's add it via migration if needed, 
-        // or just store it as is for now. 
+        // Based on PRD FR-4.05: Admin can change status.
+        // But our Surat model doesn't have status yet. Let's add it via migration if needed,
+        // or just store it as is for now.
         // Let's assume for now we just create the record and admin will see it in Arsip.
-        
+
         $jenisSurat = \App\Models\JenisSurat::find($request->jenis_surat_id);
         $count = \App\Models\Surat::whereYear('tanggal_surat', date('Y'))->count() + 1;
         $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $count, date('m'), date('Y'));

@@ -232,13 +232,13 @@ class SuratController extends Controller
         if ($request->status === 'done' && $oldStatus !== 'done') {
             $penduduk = $surat->penduduk;
             $message = "Halo {$penduduk->nama}, pengajuan surat {$surat->jenisSurat->nama_surat} Anda telah SELESAI diproses. Silakan ambil di kantor desa pada jam kerja. Terima kasih.";
-            
+
             // Assuming we have a phone field in penduduk, if not we skip or use a default
-            // Let's check Penduduk model fields. 
-            // In PendudukController store, there is no phone field. 
+            // Let's check Penduduk model fields.
+            // In PendudukController store, there is no phone field.
             // PRD doesn't explicitly mention phone in Penduduk, but FR-7.01 says integrate with Fonnte.
             // Let's add phone to Penduduk too? Or just log it for now.
-            
+
             \App\Services\WhatsAppService::send($penduduk->phone ?? '', $message);
         }
 

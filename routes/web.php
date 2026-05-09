@@ -92,5 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:super-admin'])->group(function () {
         Route::resource('user', App\Http\Controllers\UserController::class);
         Route::resource('role', App\Http\Controllers\RoleController::class);
+        Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index');
+        Route::put('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update');
     });
 });

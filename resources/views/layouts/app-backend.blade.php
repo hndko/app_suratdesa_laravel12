@@ -165,6 +165,12 @@
                                 <p>Role & Permission</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('setting.index') }}" class="nav-link {{ request()->is('setting*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Pengaturan Web</p>
+                            </a>
+                        </li>
                         @endrole
 
                     </ul>

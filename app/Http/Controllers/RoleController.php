@@ -33,7 +33,7 @@ class RoleController extends Controller
         ]);
 
         $role = Role::create(['name' => $request->name]);
-        
+
         if ($request->permissions) {
             $role->syncPermissions($request->permissions);
         }
@@ -41,7 +41,7 @@ class RoleController extends Controller
         return redirect()->route('role.index')->with('success', 'Role berhasil ditambahkan.');
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $role = Role::with('permissions')->findOrFail($id);
         $data = [
@@ -51,7 +51,7 @@ class RoleController extends Controller
         return view('backend.role.show', $data);
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $role = Role::findOrFail($id);
 
@@ -66,7 +66,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $role = Role::findOrFail($id);
 
@@ -91,10 +91,10 @@ class RoleController extends Controller
         return redirect()->route('role.index')->with('success', 'Role berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $role = Role::findOrFail($id);
-        
+
         // Prevent deleting core roles
         if (in_array($role->name, ['super-admin', 'kades', 'operator'])) {
             return back()->with('error', 'Role inti sistem tidak dapat dihapus.');
