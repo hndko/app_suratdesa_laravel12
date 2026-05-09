@@ -6,9 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>@yield('title', 'Login - Surat Desa')</title>
 
-	<!-- Google Font: Source Sans Pro -->
-	<link rel="stylesheet"
-		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<!-- Google Font: Inter -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
 	<!-- icheck bootstrap -->
@@ -16,10 +15,17 @@
 	<!-- Theme style -->
 	<link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
 
+	<style>
+		body {
+			font-family: 'Inter', sans-serif;
+			background: #f4f7f6;
+		}
+	</style>
+
 	@stack('css')
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition">
 
 	@yield('content')
 
