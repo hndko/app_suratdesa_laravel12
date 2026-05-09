@@ -131,7 +131,7 @@
                         <li class="nav-item">
                             <a href="{{ route('post.index') }}"
                                 class="nav-link {{ request()->is('post*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-news"></i>
+                                <i class="nav-icon fas fa-newspaper"></i>
                                 <p>Pengumuman Desa</p>
                             </a>
                         </li>
