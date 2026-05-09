@@ -129,6 +129,10 @@ class PendudukController extends Controller
     {
         $penduduk = Penduduk::findOrFail($id);
 
+        if ($penduduk->surats()->exists()) {
+            return redirect()->route('penduduk.index')->with('error', 'Gagal: Penduduk ini memiliki riwayat surat. Hapus riwayat surat terlebih dahulu.');
+        }
+
         if ($penduduk->foto_ktp && Storage::disk('public')->exists($penduduk->foto_ktp)) {
             Storage::disk('public')->delete($penduduk->foto_ktp);
         }
