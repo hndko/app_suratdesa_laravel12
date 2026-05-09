@@ -40,19 +40,19 @@ class RolePermissionSeeder extends Seeder
         $users = [
             [
                 'name' => 'Super Admin',
-                'email' => 'admin@mail.com',
+                'email' => 'admin@example.com',
                 'password' => 'password',
                 'role' => 'super-admin',
             ],
             [
                 'name' => 'Kepala Desa',
-                'email' => 'kades@mail.com',
+                'email' => 'kades@example.com',
                 'password' => 'password',
                 'role' => 'kades',
             ],
             [
                 'name' => 'Operator Desa',
-                'email' => 'operator@mail.com',
+                'email' => 'operator@example.com',
                 'password' => 'password',
                 'role' => 'operator',
             ],
@@ -61,7 +61,7 @@ class RolePermissionSeeder extends Seeder
         foreach ($users as $userData) {
             $roleName = $userData['role'];
             unset($userData['role']);
-            
+
             $user = \App\Models\User::updateOrCreate(
                 ['email' => $userData['email']],
                 $userData
