@@ -17,6 +17,7 @@ class Surat extends Model
         'tanggal_surat',
         'keperluan',
         'keterangan',
+        'status',
         'file_arsip',
     ];
 

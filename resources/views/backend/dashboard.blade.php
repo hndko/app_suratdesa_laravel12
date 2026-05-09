@@ -22,7 +22,7 @@
 
 <!-- Small boxes (Stat box) -->
 <div class="row">
-    <div class="col-lg-6 col-6">
+    <div class="col-lg-3 col-6">
         <!-- small box -->
         <div class="small-box bg-info">
             <div class="inner">
@@ -32,23 +32,43 @@
             <div class="icon">
                 <i class="fas fa-users"></i>
             </div>
-            <a href="{{ route('penduduk.index') }}" class="small-box-footer">Lihat Detail <i
-                    class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('penduduk.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
-    <!-- ./col -->
-    <div class="col-lg-6 col-6">
-        <!-- small box -->
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>{{ $totalSurat }}</h3>
-                <p>Total Surat Keluar</p>
+                <p>Total Surat</p>
             </div>
             <div class="icon">
                 <i class="fas fa-envelope"></i>
             </div>
-            <a href="{{ route('surat.index') }}" class="small-box-footer">Lihat Detail <i
-                    class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('surat.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner text-white">
+                <h3>{{ $totalPengaduan }}</h3>
+                <p>Pengaduan Warga</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <a href="{{ route('pengaduan.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{ $totalPost }}</h3>
+                <p>Pengumuman</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <a href="{{ route('post.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>
@@ -77,12 +97,25 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-chart-pie mr-1"></i>
-                    Komposisi Jenis Surat
+                    Jenis Surat
                 </h3>
             </div>
             <div class="card-body">
                 <canvas id="chartJenis"
-                    style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+
+        <div class="card card-warning card-outline">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    Status Pengaduan
+                </h3>
+            </div>
+            <div class="card-body">
+                <canvas id="chartPengaduan"
+                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
             </div>
         </div>
     </div>
@@ -133,6 +166,25 @@
             datasets: [{
                 data: {!! json_encode($chartJenisVal) !!},
                 backgroundColor: colors,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            }
+        }
+    });
+
+    var ctxPengaduan = document.getElementById('chartPengaduan').getContext('2d');
+    var chartPengaduan = new Chart(ctxPengaduan, {
+        type: 'pie',
+        data: {
+            labels: {!! json_encode($chartPengaduanLbl) !!},
+            datasets: [{
+                data: {!! json_encode($chartPengaduanVal) !!},
+                backgroundColor: ['#dc3545', '#ffc107', '#198754'],
             }]
         },
         options: {

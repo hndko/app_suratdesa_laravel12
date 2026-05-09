@@ -34,6 +34,7 @@ class PendudukController extends Controller
         $request->validate([
             'nik' => 'required|unique:penduduks,nik|digits:16|numeric',
             'nama' => 'required|string|max:255',
+            'phone' => 'required',
             'tempat_lahir' => 'required',
             'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:L,P',
@@ -80,6 +81,7 @@ class PendudukController extends Controller
         $request->validate([
             'nik' => 'required|digits:16|numeric|unique:penduduks,nik,' . $id,
             'nama' => 'required|string|max:255',
+            'phone' => 'required',
             'tempat_lahir' => 'required',
             'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:L,P',

@@ -32,7 +32,7 @@
             @endif
 
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="form-label">NIK <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-id-card"></i></span>
@@ -40,12 +40,20 @@
                             value="{{ old('nik') }}" required>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-user"></i></span>
                         <input type="text" name="nama" class="form-control" placeholder="Nama Lengkap sesuai KTP"
                             value="{{ old('nama') }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Nomor HP/WhatsApp <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                        <input type="text" name="phone" class="form-control" placeholder="Contoh: 0812..."
+                            value="{{ old('phone') }}" required>
                     </div>
                 </div>
             </div>

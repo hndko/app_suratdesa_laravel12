@@ -14,8 +14,17 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('login');
+Route::get('/', [App\Http\Controllers\PublicController::class, 'home'])->name('public.home');
+
+// NOTE: Public Services (No Login)
+Route::name('public.')->group(function () {
+    Route::get('/layanan-surat', [App\Http\Controllers\PublicController::class, 'suratCreate'])->name('surat.create');
+    Route::post('/layanan-surat', [App\Http\Controllers\PublicController::class, 'suratStore'])->name('surat.store');
+
+    Route::get('/kirim-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanCreate'])->name('pengaduan.create');
+    Route::post('/kirim-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanStore'])->name('pengaduan.store');
+    Route::get('/lacak-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanTrack'])->name('pengaduan.track');
+    Route::post('/lacak-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanStatus'])->name('pengaduan.status');
 });
 
 // NOTE: Middleware Guest Group
@@ -62,6 +71,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/preview', 'preview')->name('preview');
         Route::post('/', 'store')->name('store');
         Route::get('/{id}', 'show')->name('show');
+        Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
     });
+
+    // NOTE: Informasi & Pengumuman Group
+    Route::resource('post', App\Http\Controllers\PostController::class)->except(['show']);
+
+    // NOTE: Pengaduan Warga Group
+    Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class)->only(['index', 'edit', 'update', 'destroy']);
 });

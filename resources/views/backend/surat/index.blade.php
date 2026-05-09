@@ -45,8 +45,9 @@
                             <th>Jenis Surat</th>
                             <th>Penduduk</th>
                             <th>Tanggal</th>
+                            <th>Status</th>
                             <th>Keperluan</th>
-                            <th width="10%">Aksi</th>
+                            <th width="15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,12 +60,24 @@
                                 <div>{{ $item->penduduk->nama }}</div>
                                 <small class="text-muted">{{ $item->penduduk->nik }}</small>
                             </td>
-                            <td>{{ $item->tanggal_surat->format('d/m/Y') }}</td>
-                            <td>{{ $item->keperluan }}</td>
+                             <td>{{ $item->tanggal_surat->format('d/m/Y') }}</td>
+                             <td>
+                                 @if($item->status == 'pending')
+                                 <span class="badge badge-danger">Pending</span>
+                                 @elseif($item->status == 'process')
+                                 <span class="badge badge-warning">Proses</span>
+                                 @else
+                                 <span class="badge badge-success">Selesai</span>
+                                 @endif
+                             </td>
+                             <td>{{ $item->keperluan }}</td>
                             <td>
                                 <a href="{{ route('surat.show', $item->id) }}"
                                     class="btn btn-sm btn-info text-white mr-1" title="Lihat/Cetak"><i
                                         class="fas fa-print"></i></a>
+                                <a href="{{ route('surat.edit', $item->id) }}"
+                                    class="btn btn-sm btn-warning text-white mr-1" title="Update Status"><i
+                                        class="fas fa-edit"></i></a>
                                 <form action="{{ route('surat.destroy', $item->id) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('Yakin ingin menghapus arsip ini?')">
                                     @csrf

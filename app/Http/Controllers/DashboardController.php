@@ -11,6 +11,20 @@ class DashboardController extends Controller
         // Statistik Card
         $totalPenduduk = \App\Models\Penduduk::count();
         $totalSurat = \App\Models\Surat::count();
+        $totalPengaduan = \App\Models\Pengaduan::count();
+        $totalPost = \App\Models\Post::count();
+
+        // Pengaduan Status Stats
+        $pengaduanStats = \App\Models\Pengaduan::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')->toArray();
+        
+        $chartPengaduanVal = [
+            $pengaduanStats['pending'] ?? 0,
+            $pengaduanStats['process'] ?? 0,
+            $pengaduanStats['resolved'] ?? 0,
+        ];
+        $chartPengaduanLbl = ['Pending', 'Diproses', 'Selesai'];
 
         // Chart Data: Surat per Bulan (Dynamic Year)
         $latestSurat = \App\Models\Surat::latest('tanggal_surat')->first();
@@ -45,10 +59,14 @@ class DashboardController extends Controller
             'year' => $year,
             'totalPenduduk' => $totalPenduduk,
             'totalSurat' => $totalSurat,
+            'totalPengaduan' => $totalPengaduan,
+            'totalPost' => $totalPost,
             'chartSuratBulanLbl' => $chartSuratBulanLbl,
             'chartSuratBulanVal' => $chartSuratBulanVal,
             'chartJenisLbl' => $chartJenisLbl,
             'chartJenisVal' => $chartJenisVal,
+            'chartPengaduanLbl' => $chartPengaduanLbl,
+            'chartPengaduanVal' => $chartPengaduanVal,
         ];
         return view('backend.dashboard', $data);
     }

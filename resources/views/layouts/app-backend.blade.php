@@ -126,6 +126,35 @@
                             </a>
                         </li>
 
+                        <li class="nav-header">INFORMASI & LAYANAN</li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('post.index') }}"
+                                class="nav-link {{ request()->is('post*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-news"></i>
+                                <p>Pengumuman Desa</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('pengaduan.index') }}"
+                                class="nav-link {{ request()->is('pengaduan*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-comments"></i>
+                                <p>Pengaduan Warga</p>
+                            </a>
+                        </li>
+
+                        @role('super-admin')
+                        <li class="nav-header">PENGATURAN</li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-user-shield"></i>
+                                <p>Manajemen User</p>
+                            </a>
+                        </li>
+                        @endrole
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

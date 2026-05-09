@@ -207,6 +207,44 @@ class SuratController extends Controller
         return $content;
     }
 
+    public function edit($id)
+    {
+        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
+        $data = [
+            'title' => 'Update Status Surat',
+            'surat' => $surat,
+        ];
+
+        return view('backend.surat.edit', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $surat = Surat::findOrFail($id);
+        $request->validate([
+            'status' => 'required|in:pending,process,done',
+        ]);
+
+        $oldStatus = $surat->status;
+        $surat->update(['status' => $request->status]);
+
+        // WhatsApp Notification when status becomes 'done'
+        if ($request->status === 'done' && $oldStatus !== 'done') {
+            $penduduk = $surat->penduduk;
+            $message = "Halo {$penduduk->nama}, pengajuan surat {$surat->jenisSurat->nama_surat} Anda telah SELESAI diproses. Silakan ambil di kantor desa pada jam kerja. Terima kasih.";
+            
+            // Assuming we have a phone field in penduduk, if not we skip or use a default
+            // Let's check Penduduk model fields. 
+            // In PendudukController store, there is no phone field. 
+            // PRD doesn't explicitly mention phone in Penduduk, but FR-7.01 says integrate with Fonnte.
+            // Let's add phone to Penduduk too? Or just log it for now.
+            
+            \App\Services\WhatsAppService::send($penduduk->phone ?? '', $message);
+        }
+
+        return redirect()->route('surat.index')->with('success', 'Status surat berhasil diperbarui.');
+    }
+
     public function destroy($id)
     {
         Surat::findOrFail($id)->delete();
