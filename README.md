@@ -1,36 +1,71 @@
-# SIMADES - Sistem Informasi Manajemen Desa
+# SIMADES
 
-SIMADES adalah aplikasi manajemen administrasi desa berbasis web untuk membantu pelayanan surat, data penduduk, pengaduan warga, publikasi informasi desa, laporan, dan pengaturan role/permission.
+**Sistem Informasi Manajemen Desa berbasis Laravel untuk digitalisasi layanan administrasi desa.**
 
-Aplikasi ini dibangun dengan Laravel 12, Blade, AdminLTE 3, Bootstrap, Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, queue Laravel, dan integrasi WhatsApp Fonnte.
+SIMADES adalah aplikasi web yang dirancang untuk membantu pemerintah desa mengelola data penduduk, kartu keluarga, layanan surat, pengaduan warga, publikasi informasi, laporan, serta kontrol akses pengguna dalam satu sistem yang terpusat.
+
+Project ini dibuat sebagai solusi administrasi desa yang praktis untuk kebutuhan operasional harian: warga dapat mengajukan layanan secara online, operator dapat memproses data dan surat, kepala desa dapat memantau laporan, dan admin dapat mengatur role serta permission secara granular.
+
+## Short Description GitHub
+
+Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, pengaduan, laporan, RBAC, dan tracking layanan publik.
+
+## Tujuan Project
+
+- Mendigitalisasi proses administrasi desa yang sebelumnya manual.
+- Mempermudah warga mengajukan surat dan pengaduan dari portal publik.
+- Membantu operator desa mengelola data penduduk, KK, arsip surat, dan pengumuman.
+- Memberi kepala desa akses monitoring terhadap surat, pengaduan, dan laporan.
+- Menjaga akses fitur menggunakan role dan permission yang terstruktur.
 
 ## Fitur Utama
 
-- Dashboard administrasi desa.
-- Manajemen penduduk.
+- Dashboard statistik administrasi desa.
+- Manajemen Kartu Keluarga.
+- Manajemen data penduduk.
 - Manajemen jenis surat dan template surat.
 - Pengajuan surat online dari warga.
-- Arsip dan status surat.
-- Pengaduan warga dengan tracking kode tiket.
-- Informasi dan pengumuman desa.
-- Setting identitas aplikasi/desa.
-- Export laporan Excel/PDF.
-- RBAC berbasis role dan permission granular.
-- Notifikasi WhatsApp melalui queue.
+- Tracking status surat publik menggunakan kode tracking.
+- Pengaduan warga dengan kode tiket.
+- Pengumuman dan informasi desa.
+- Export laporan Excel dan PDF.
+- Activity log untuk audit aktivitas sistem.
+- Manajemen user, role, dan permission granular.
+- Pengaturan identitas desa dan aplikasi.
+- Integrasi notifikasi WhatsApp melalui Fonnte dan queue Laravel.
 
-## Role Default
+## Role Pengguna
 
-- `super-admin`
-- `kades`
-- `operator`
-- Warga publik tanpa login untuk layanan pengajuan dan pengaduan.
+| Role | Fungsi |
+| --- | --- |
+| `super-admin` | Mengelola seluruh modul, user, role, permission, setting, dan data master. |
+| `kades` | Melihat dashboard, memantau surat/pengaduan, mengakses laporan, dan melakukan monitoring. |
+| `operator` | Mengelola data teknis seperti penduduk, KK, surat, pengaduan, pengumuman, dan setting tertentu. |
+| Warga publik | Mengajukan surat, mengirim pengaduan, dan melacak status layanan tanpa login. |
 
-## Kebutuhan
+## Tech Stack
 
-- PHP 8.2+
-- Composer 2
-- MySQL/MariaDB
-- Web server Apache/Nginx untuk hosting
+| Area | Teknologi |
+| --- | --- |
+| Backend | PHP 8.2+, Laravel 12 |
+| Frontend backend | Blade, AdminLTE 3, Bootstrap 4 |
+| Frontend publik | Blade, Sandbox Bootstrap 5 |
+| Database | MySQL/MariaDB |
+| Auth & RBAC | Spatie Laravel Permission |
+| Audit log | Spatie Activitylog |
+| Export | Maatwebsite Excel, DomPDF |
+| Queue | Laravel Queue |
+| Integrasi | Fonnte WhatsApp API |
+
+## Highlight Implementasi
+
+- Permission dibuat granular sampai level aksi seperti `create`, `store`, `edit`, `update`, `destroy`, `preview`, `export`, dan `send`.
+- Nomor surat menggunakan service counter agar lebih aman dari duplikasi dibanding pola `count()+1`.
+- Form publik memakai validasi server-side dan CSRF.
+- Flash message dan konfirmasi aksi memakai SweetAlert2/toast.
+- Upload file memakai storage publik Laravel dan validasi file.
+- Export dan laporan dipisahkan dalam class export agar lebih mudah dirawat.
+- Dokumentasi development, deployment, command, dan PRD tersedia di folder `docs/`.
 
 ## Instalasi Lokal Singkat
 
@@ -44,31 +79,25 @@ php artisan storage:link
 php artisan serve
 ```
 
-Panduan lengkap: [docs/02. development.md](docs/02.%20development.md).
+Panduan lengkap tersedia di [docs/02. development.md](docs/02.%20development.md).
 
 ## Deployment
 
-Panduan deployment tersedia untuk:
+Dokumentasi deployment mencakup shared hosting, VPS, queue worker, update production, dan rollback ringkas.
 
-- Shared hosting
-- VPS dengan Nginx/Apache, PHP-FPM, dan Supervisor
-- Update production
-- Queue worker
-- Rollback ringkas
-
-Baca: [docs/03. deployment.md](docs/03.%20deployment.md).
+Baca panduan di [docs/03. deployment.md](docs/03.%20deployment.md).
 
 ## Command Penting
 
-Sinkronkan permission SIMADES setelah perubahan RBAC atau deployment:
+Sinkronkan permission setelah deployment, perubahan role, atau update fitur:
 
 ```bash
 php artisan simades:sync-permissions
 ```
 
-Daftar command operasional: [docs/04. commands.md](docs/04.%20commands.md).
+Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20commands.md).
 
-## Dokumentasi Project
+## Dokumentasi
 
 - [AGENTS.md](AGENTS.md): aturan kerja, coding standard, RBAC, versioning, dan git workflow.
 - [docs/01. prd.md](docs/01.%20prd.md): dokumen kebutuhan produk.
@@ -103,7 +132,11 @@ php artisan optimize
 php artisan queue:restart
 ```
 
-Backup database sebelum migration atau perubahan RBAC besar.
+Selalu backup database sebelum menjalankan migration atau perubahan RBAC besar di production.
+
+## Status Project
+
+Project berada pada versi `v2.0.0` dan ditujukan sebagai MVP production untuk sistem administrasi desa. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
 
 ## Lisensi
 
