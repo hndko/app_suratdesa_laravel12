@@ -50,9 +50,22 @@
                         <select name="status" class="form-control" required>
                             <option value="pending" {{ $surat->status == 'pending' ? 'selected' : '' }}>Menunggu (Pending)</option>
                             <option value="process" {{ $surat->status == 'process' ? 'selected' : '' }}>Sedang Diproses</option>
+                            @can('surat-verify')
+                            <option value="verified" {{ $surat->status == 'verified' ? 'selected' : '' }}>Diverifikasi Operator</option>
+                            @endcan
+                            @can('surat-approve')
+                            <option value="approved" {{ $surat->status == 'approved' ? 'selected' : '' }}>Disetujui Kades</option>
+                            @endcan
                             <option value="done" {{ $surat->status == 'done' ? 'selected' : '' }}>Selesai (Siap Diambil)</option>
+                            @can('surat-reject')
+                            <option value="rejected" {{ $surat->status == 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                            @endcan
                         </select>
-                        <small class="text-muted">Notifikasi WhatsApp otomatis akan dikirim ke warga jika status diubah ke 'Selesai'.</small>
+                        <small class="text-muted">Notifikasi WhatsApp otomatis dikirim saat status berubah.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan Approval</label>
+                        <textarea name="note" class="form-control" rows="4">{{ old('note', $surat->approval_note) }}</textarea>
                     </div>
                 </div>
                 <div class="card-footer text-right">
@@ -63,4 +76,26 @@
         </form>
     </div>
 </div>
+
+@if($surat->approvals->isNotEmpty())
+<div class="card card-outline card-info">
+    <div class="card-header"><h3 class="card-title">Riwayat Approval</h3></div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-sm">
+            <thead><tr><th>Waktu</th><th>User</th><th>Dari</th><th>Ke</th><th>Catatan</th></tr></thead>
+            <tbody>
+                @foreach($surat->approvals as $approval)
+                <tr>
+                    <td>{{ $approval->created_at->format('d/m/Y H:i') }}</td>
+                    <td>{{ $approval->user->name ?? '-' }}</td>
+                    <td>{{ $approval->from_status ?? '-' }}</td>
+                    <td>{{ $approval->to_status }}</td>
+                    <td>{{ $approval->note ?? '-' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
 @endsection

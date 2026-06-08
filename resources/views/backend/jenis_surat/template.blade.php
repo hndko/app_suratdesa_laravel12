@@ -49,10 +49,58 @@
                 </div>
                 <div class="card-footer text-right">
                     <a href="{{ route('jenis-surat.index') }}" class="btn btn-secondary">Kembali</a>
+                    @can('jenis-surat-template-export')
+                    <a href="{{ route('jenis-surat.template.export', $jenis_surat->id) }}" class="btn btn-default"><i class="fas fa-download mr-1"></i> Export</a>
+                    @endcan
+                    @can('jenis-surat-template-ai')
+                    <button type="submit" form="aiSuggestForm" class="btn btn-info"><i class="fas fa-robot mr-1"></i> Saran AI</button>
+                    @endcan
                     <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save mr-1"></i> Simpan Template</button>
                 </div>
             </div>
         </form>
+        <form id="aiSuggestForm" action="{{ route('jenis-surat.template.ai-suggest', $jenis_surat->id) }}" method="POST">
+            @csrf
+        </form>
+
+        @can('jenis-surat-template-import')
+        <form action="{{ route('jenis-surat.template.import', $jenis_surat->id) }}" method="POST" enctype="multipart/form-data" class="card card-outline card-secondary">
+            @csrf
+            <div class="card-header"><h3 class="card-title">Import Template</h3></div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="file" name="template_file" class="form-control" accept=".txt,.html" required>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary"><i class="fas fa-upload mr-1"></i> Import</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @endcan
+
+        @if($latestSuggestion)
+        <div class="card card-outline card-info">
+            <div class="card-header"><h3 class="card-title">Saran AI Terbaru</h3></div>
+            <div class="card-body">
+                <textarea class="form-control" rows="10" readonly>{{ $latestSuggestion->suggested_text }}</textarea>
+                @if($latestSuggestion->placeholder_report)
+                <div class="mt-3 small">
+                    <strong>Placeholder ditemukan:</strong> {{ implode(', ', $latestSuggestion->placeholder_report['found'] ?? []) ?: '-' }}<br>
+                    <strong>Rekomendasi belum ada:</strong> {{ implode(', ', $latestSuggestion->placeholder_report['missing_recommended'] ?? []) ?: '-' }}
+                </div>
+                @endif
+            </div>
+            @can('jenis-surat-template-ai-apply')
+            <div class="card-footer text-right">
+                <form action="{{ route('jenis-surat.template.ai-apply', $jenis_surat->id) }}" method="POST" class="js-confirm-submit" data-confirm-text="Terapkan saran AI ke template ini?">
+                    @csrf
+                    <textarea name="suggested_text" class="d-none">{{ $latestSuggestion->suggested_text }}</textarea>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-check mr-1"></i> Terapkan Saran</button>
+                </form>
+            </div>
+            @endcan
+        </div>
+        @endif
     </div>
 
     <div class="col-md-3">

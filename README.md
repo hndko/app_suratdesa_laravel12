@@ -30,6 +30,10 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 - Pengumuman dan informasi desa.
 - Export laporan Excel dan PDF.
 - Activity log untuk audit aktivitas sistem.
+- AI Adapter Gateway untuk OpenAI, OpenRouter, DeepSeek, Gemini, Claude, dan custom base URL.
+- AI pengaduan, AI template surat, dan assistant internal backend.
+- Import Excel data penduduk dan Kartu Keluarga dengan preview validasi.
+- Approval surat bertingkat dan QR verifikasi surat publik.
 - Manajemen user, role, dan permission granular.
 - Pengaturan identitas desa dan aplikasi.
 - Integrasi notifikasi WhatsApp melalui Fonnte dan queue Laravel.
@@ -55,7 +59,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 | Audit log | Spatie Activitylog |
 | Export | Maatwebsite Excel, DomPDF |
 | Queue | Laravel Queue |
-| Integrasi | Fonnte WhatsApp API |
+| Integrasi | Fonnte WhatsApp API, AI provider gateway |
 
 ## Highlight Implementasi
 
@@ -65,6 +69,8 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 - Flash message dan konfirmasi aksi memakai SweetAlert2/toast.
 - Upload file memakai storage publik Laravel dan validasi file.
 - Export dan laporan dipisahkan dalam class export agar lebih mudah dirawat.
+- API key AI disimpan terenkripsi dan semua request AI melewati gateway service dengan timeout, retry, dan log.
+- QR verifikasi surat publik membatasi data yang tampil agar tidak membuka NIK/alamat lengkap.
 - Dokumentasi development, deployment, command, dan PRD tersedia di folder `docs/`.
 
 ## Instalasi Lokal Singkat
@@ -110,7 +116,7 @@ Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20command
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v2.0.0
+APP_VERSION=v3.0.0
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
@@ -136,7 +142,7 @@ Selalu backup database sebelum menjalankan migration atau perubahan RBAC besar d
 
 ## Status Project
 
-Project berada pada versi `v2.0.0` dan ditujukan sebagai MVP production untuk sistem administrasi desa. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
+Project berada pada versi `v3.0.0` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, dan notifikasi queue. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
 
 ## Lisensi
 

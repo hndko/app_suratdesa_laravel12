@@ -30,11 +30,18 @@ class Surat extends Model
         'keperluan',
         'keterangan',
         'status',
+        'verified_at',
+        'approved_at',
+        'rejected_at',
+        'approval_note',
         'file_arsip',
     ];
 
     protected $casts = [
         'tanggal_surat' => 'date',
+        'verified_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
     public function penduduk()
@@ -50,5 +57,15 @@ class Surat extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(SuratApproval::class);
+    }
+
+    public function verification()
+    {
+        return $this->hasOne(SuratVerification::class);
     }
 }

@@ -72,7 +72,7 @@
                             </a>
                         </li>
 
-                        @canany(['kartu-keluarga-index', 'penduduk-index', 'jenis-surat-index'])
+                        @canany(['kartu-keluarga-index', 'penduduk-index', 'jenis-surat-index', 'import-penduduk-index'])
                         <li class="nav-header">MASTER DATA</li>
 
                         @can('kartu-keluarga-index')
@@ -91,6 +91,16 @@
                                 class="nav-link {{ request()->is('penduduk*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Data Penduduk</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('import-penduduk-index')
+                        <li class="nav-item">
+                            <a href="{{ route('import-penduduk.index') }}"
+                                class="nav-link {{ request()->routeIs('import-penduduk.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-import"></i>
+                                <p>Import Penduduk</p>
                             </a>
                         </li>
                         @endcan
@@ -154,7 +164,7 @@
                         @endcan
                         @endcanany
 
-                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index', 'activity-log-index'])
+                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index', 'activity-log-index', 'ai-setting-index', 'ai-log-index', 'ai-playground-send'])
                         <li class="nav-header">PENGATURAN</li>
 
                         @can('user-index')
@@ -210,6 +220,33 @@
                             </a>
                         </li>
                         @endcan
+
+                        @can('ai-setting-index')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-settings.index') }}" class="nav-link {{ request()->routeIs('ai-settings.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-robot"></i>
+                                <p>AI Gateway</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('ai-log-index')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-logs.index') }}" class="nav-link {{ request()->routeIs('ai-logs.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>AI Usage Log</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('ai-playground-send')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-assistant.index') }}" class="nav-link {{ request()->routeIs('ai-assistant.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-comments"></i>
+                                <p>AI Assistant</p>
+                            </a>
+                        </li>
+                        @endcan
                         @endcanany
 
                         <li class="nav-header">AKUN</li>
@@ -255,7 +292,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v2.0.0') }}
+                {{ config('app.version', 'v3.0.0') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.

@@ -105,8 +105,55 @@
             @endcan
         </div>
     </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-indigo">
+            <div class="inner">
+                <h3>{{ $suratMenungguApproval }}</h3>
+                <p>Surat Menunggu Tindak Lanjut</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            @can('surat-index')
+            <a href="{{ route('surat.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-teal">
+            <div class="inner">
+                <h3>{{ $pengaduanSelesai }}</h3>
+                <p>Pengaduan Selesai</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            @can('pengaduan-index')
+            <a href="{{ route('pengaduan.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
+        </div>
+    </div>
 </div>
 <!-- /.row -->
+
+@can('ai-playground-send')
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-robot mr-1"></i> Ringkasan AI Dashboard</h3>
+        <div class="card-tools">
+            <form action="{{ route('dashboard.ai-summary') }}" method="POST">
+                @csrf
+                <button class="btn btn-info btn-sm"><i class="fas fa-magic mr-1"></i> Buat Ringkasan</button>
+            </form>
+        </div>
+    </div>
+    @if(session('dashboard_ai_summary'))
+    <div class="card-body">
+        <div class="bg-light border rounded p-3" style="white-space: pre-wrap;">{{ session('dashboard_ai_summary') }}</div>
+    </div>
+    @endif
+</div>
+@endcan
 
 <div class="row">
     <!-- Bar Chart -->
@@ -150,6 +197,22 @@
             <div class="card-body">
                 <canvas id="chartPengaduan"
                     style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+
+        <div class="card card-success card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-list mr-1"></i> Top Kategori Pengaduan</h3>
+            </div>
+            <div class="card-body">
+                @forelse($pengaduanPerKategori as $kategori => $total)
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <span>{{ ucfirst($kategori) }}</span>
+                    <strong>{{ $total }}</strong>
+                </div>
+                @empty
+                <p class="text-muted mb-0">Belum ada data.</p>
+                @endforelse
             </div>
         </div>
     </div>

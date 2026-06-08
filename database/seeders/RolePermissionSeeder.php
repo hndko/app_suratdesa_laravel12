@@ -53,6 +53,11 @@ class RolePermissionSeeder extends Seeder
             'penduduk-update',
             'penduduk-destroy',
 
+            'import-penduduk-index',
+            'import-penduduk-upload',
+            'import-penduduk-preview',
+            'import-penduduk-process',
+
             'jenis-surat-index',
             'jenis-surat-create',
             'jenis-surat-store',
@@ -61,6 +66,10 @@ class RolePermissionSeeder extends Seeder
             'jenis-surat-destroy',
             'jenis-surat-template',
             'jenis-surat-template-update',
+            'jenis-surat-template-ai',
+            'jenis-surat-template-ai-apply',
+            'jenis-surat-template-export',
+            'jenis-surat-template-import',
 
             'surat-index',
             'surat-create',
@@ -71,6 +80,9 @@ class RolePermissionSeeder extends Seeder
             'surat-destroy',
             'surat-show',
             'surat-print',
+            'surat-verify',
+            'surat-approve',
+            'surat-reject',
 
             'post-index',
             'post-create',
@@ -83,6 +95,7 @@ class RolePermissionSeeder extends Seeder
             'pengaduan-edit',
             'pengaduan-update',
             'pengaduan-destroy',
+            'pengaduan-ai-analyze',
 
             'setting-index',
             'setting-update',
@@ -103,6 +116,16 @@ class RolePermissionSeeder extends Seeder
             'profile-edit',
 
             'activity-log-index',
+
+            'ai-setting-index',
+            'ai-setting-create',
+            'ai-setting-store',
+            'ai-setting-edit',
+            'ai-setting-update',
+            'ai-setting-destroy',
+            'ai-setting-test',
+            'ai-log-index',
+            'ai-playground-send',
         ];
 
         foreach ($permissions as $permission) {
@@ -118,12 +141,19 @@ class RolePermissionSeeder extends Seeder
             'dashboard-index',
             'kartu-keluarga-index',
             'kartu-keluarga-show',
+            'import-penduduk-index',
+            'import-penduduk-preview',
             'surat-index',
             'surat-show',
             'surat-print',
+            'surat-edit',
+            'surat-update-status',
+            'surat-approve',
+            'surat-reject',
             'pengaduan-index',
             'pengaduan-edit',
             'pengaduan-update',
+            'pengaduan-ai-analyze',
             'post-index',
             'report-index',
             'report-export',
@@ -135,6 +165,8 @@ class RolePermissionSeeder extends Seeder
             'profile-update',
             'profile-edit',
             'activity-log-index',
+            'ai-log-index',
+            'ai-playground-send',
         ]);
 
         // Operator: Input data teknis
@@ -151,6 +183,10 @@ class RolePermissionSeeder extends Seeder
             'penduduk-store',
             'penduduk-edit',
             'penduduk-update',
+            'import-penduduk-index',
+            'import-penduduk-upload',
+            'import-penduduk-preview',
+            'import-penduduk-process',
             'surat-index',
             'surat-create',
             'surat-preview',
@@ -159,13 +195,23 @@ class RolePermissionSeeder extends Seeder
             'surat-update-status',
             'surat-show',
             'surat-print',
+            'surat-verify',
             'jenis-surat-index',
+            'jenis-surat-template',
+            'jenis-surat-template-update',
+            'jenis-surat-template-ai',
+            'jenis-surat-template-ai-apply',
+            'jenis-surat-template-export',
+            'jenis-surat-template-import',
             'post-index',
             'post-create',
             'post-store',
             'post-edit',
             'post-update',
             'pengaduan-index',
+            'pengaduan-edit',
+            'pengaduan-update',
+            'pengaduan-ai-analyze',
             'setting-index',
             'setting-update',
             'report-index',
@@ -176,7 +222,8 @@ class RolePermissionSeeder extends Seeder
             'report-pengaduan-excel',
             'profile-index',
             'profile-update',
-            'profile-edit'
+            'profile-edit',
+            'ai-playground-send'
         ]);
 
         // 4. Buat User Default

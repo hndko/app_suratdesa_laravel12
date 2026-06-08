@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
 use App\Jobs\SendWhatsAppMessage;
+use App\Services\PengaduanAiService;
 use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
@@ -24,9 +25,20 @@ class PengaduanController extends Controller
     {
         $data = [
             'title' => 'Tanggapi Pengaduan',
-            'pengaduan' => $pengaduan,
+            'pengaduan' => $pengaduan->load('latestAiSuggestion'),
         ];
         return view('backend.pengaduan.edit', $data);
+    }
+
+    public function analyze(Pengaduan $pengaduan, PengaduanAiService $service)
+    {
+        try {
+            $service->analyze($pengaduan);
+
+            return redirect()->route('pengaduan.edit', $pengaduan)->with('success', 'Analisis AI pengaduan berhasil dibuat.');
+        } catch (\Throwable $e) {
+            return redirect()->route('pengaduan.edit', $pengaduan)->with('error', 'Analisis AI gagal: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, Pengaduan $pengaduan)

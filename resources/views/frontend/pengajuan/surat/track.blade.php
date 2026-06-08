@@ -53,6 +53,12 @@
                   <span class="badge bg-warning rounded-pill">Menunggu</span>
                   @elseif($surat->status == 'process')
                   <span class="badge bg-info rounded-pill">Sedang Diproses</span>
+                  @elseif($surat->status == 'verified')
+                  <span class="badge bg-info rounded-pill">Diverifikasi</span>
+                  @elseif($surat->status == 'approved')
+                  <span class="badge bg-primary rounded-pill">Disetujui</span>
+                  @elseif($surat->status == 'rejected')
+                  <span class="badge bg-danger rounded-pill">Ditolak</span>
                   @else
                   <span class="badge bg-success rounded-pill">Selesai</span>
                   @endif

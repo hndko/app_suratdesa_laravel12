@@ -55,6 +55,14 @@
         </div>
 
         @include('backend.surat.parts.tanda_tangan')
+
+        @if(!empty($verification))
+        <div style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 9pt;">
+            <strong>Verifikasi Surat:</strong> {{ $verification->verification_code }}<br>
+            <span>{{ route('public.surat.verify') }}</span><br>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data={{ urlencode(route('public.surat.verify') . '?code=' . $verification->verification_code) }}" alt="QR Verifikasi" style="margin-top: 6px;">
+        </div>
+        @endif
     </div>
 </body>
 </html>

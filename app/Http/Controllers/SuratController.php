@@ -7,6 +7,8 @@ use App\Models\Penduduk;
 use App\Models\Surat;
 use App\Services\SuratNumberService;
 use App\Jobs\SendWhatsAppMessage;
+use App\Models\SuratApproval;
+use App\Services\SuratVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF; // Assuming we use dompdf or similar later, but for now just view
@@ -18,7 +20,7 @@ class SuratController extends Controller
     {
         $data = [
             'title' => 'Arsip Surat',
-            'surats' => Surat::with(['penduduk', 'jenisSurat'])->latest()->paginate(25),
+            'surats' => Surat::with(['penduduk', 'jenisSurat', 'verification'])->latest()->paginate(25),
         ];
 
         return view('backend.surat.index', $data);
@@ -98,7 +100,7 @@ class SuratController extends Controller
     // NOTE: Detail / Cetak Surat
     public function show(string $id)
     {
-        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
+        $surat = Surat::with(['penduduk', 'jenisSurat', 'verification'])->findOrFail($id);
         $penduduk = $surat->penduduk;
 
         // Inject Keperluan & Keterangan from Saved Surat
@@ -236,7 +238,7 @@ class SuratController extends Controller
 
     public function edit(string $id)
     {
-        $surat = Surat::with(['penduduk', 'jenisSurat'])->findOrFail($id);
+        $surat = Surat::with(['penduduk', 'jenisSurat', 'approvals.user'])->findOrFail($id);
         $data = [
             'title' => 'Update Status Surat',
             'surat' => $surat,
@@ -249,16 +251,75 @@ class SuratController extends Controller
     {
         $surat = Surat::findOrFail($id);
         $request->validate([
-            'status' => 'required|in:pending,process,done',
+            'status' => 'required|in:pending,process,verified,approved,done,rejected',
+            'note' => 'nullable|string|max:1000',
         ]);
 
-        $oldStatus = $surat->status;
-        $surat->update(['status' => $request->status]);
+        $requiredPermission = match ($request->status) {
+            'verified' => 'surat-verify',
+            'approved' => 'surat-approve',
+            'rejected' => 'surat-reject',
+            default => 'surat-update-status',
+        };
 
-        // WhatsApp Notification when status becomes 'done'
-        if ($request->status === 'done' && $oldStatus !== 'done') {
+        if (!$request->user()->can($requiredPermission)) {
+            return redirect()->route('surat.edit', $surat->id)->with('error', 'Anda tidak memiliki permission untuk aksi status ini.');
+        }
+
+        $oldStatus = $surat->status;
+        $allowedTransitions = [
+            'pending' => ['pending', 'process', 'verified', 'rejected'],
+            'process' => ['process', 'verified', 'rejected'],
+            'verified' => ['verified', 'approved', 'rejected'],
+            'approved' => ['approved', 'done', 'rejected'],
+            'done' => ['done'],
+            'rejected' => ['rejected'],
+        ];
+
+        if (!in_array($request->status, $allowedTransitions[$oldStatus] ?? [$oldStatus], true)) {
+            return redirect()->route('surat.edit', $surat->id)->with('error', 'Transisi status surat tidak valid untuk alur approval.');
+        }
+
+        $update = ['status' => $request->status, 'approval_note' => $request->note];
+
+        if ($request->status === 'verified') {
+            $update['verified_at'] = now();
+        }
+
+        if ($request->status === 'approved') {
+            $update['approved_at'] = now();
+        }
+
+        if ($request->status === 'rejected') {
+            $update['rejected_at'] = now();
+        }
+
+        $surat->update($update);
+
+        SuratApproval::create([
+            'surat_id' => $surat->id,
+            'user_id' => Auth::id(),
+            'action' => $request->status,
+            'from_status' => $oldStatus,
+            'to_status' => $request->status,
+            'note' => $request->note,
+        ]);
+
+        if (in_array($request->status, ['approved', 'done'], true)) {
+            app(SuratVerificationService::class)->ensureVerification($surat->fresh('verification'));
+        }
+
+        if ($request->status !== $oldStatus) {
             $penduduk = $surat->penduduk;
-            $message = "Halo {$penduduk->nama}, pengajuan surat {$surat->jenisSurat->nama_surat} Anda telah SELESAI diproses. Silakan ambil di kantor desa pada jam kerja. Terima kasih.";
+            $statusText = match ($request->status) {
+                'process' => 'DIPROSES',
+                'verified' => 'DIVERIFIKASI',
+                'approved' => 'DISETUJUI',
+                'done' => 'SELESAI',
+                'rejected' => 'DITOLAK',
+                default => 'MENUNGGU',
+            };
+            $message = "Halo {$penduduk->nama}, pengajuan surat {$surat->jenisSurat->nama_surat} Anda berstatus: {$statusText}. Kode Tracking: {$surat->tracking_code}.";
 
             if ($penduduk->phone) {
                 SendWhatsAppMessage::dispatch($penduduk->phone, $message);

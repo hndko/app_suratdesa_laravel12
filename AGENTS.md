@@ -6,9 +6,9 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 
 - Nama aplikasi: SIMADES, Sistem Informasi Manajemen Desa.
 - Stack utama: PHP 8.2+, Laravel 12, Blade, AdminLTE 3/Bootstrap 4 untuk backend, Sandbox Bootstrap 5 untuk frontend publik.
-- Package utama: Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, Laravel queue, Fonnte WhatsApp API.
+- Package utama: Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, Laravel queue, Fonnte WhatsApp API, Laravel HTTP Client untuk AI Gateway.
 - Role utama: `super-admin`, `kades`, `operator`, dan warga publik tanpa login.
-- Modul utama: dashboard, kartu keluarga, penduduk, jenis surat, surat, pengaduan, post/pengumuman, setting, report/export, activity log, user, role, profile, WhatsApp test.
+- Modul utama: dashboard, kartu keluarga, penduduk, import penduduk, jenis surat, surat, verifikasi surat, pengaduan, AI Gateway, AI Assistant, post/pengumuman, setting, report/export, activity log, user, role, profile, WhatsApp test.
 
 ## 2. Prinsip Umum
 
@@ -31,6 +31,7 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 - Controller aplikasi saat ini berada di `app/Http/Controllers/` tanpa subfolder `Backend` atau `Auth`. Jangan memindahkan controller ke subfolder baru kecuali ada refactor terencana yang menyeluruh.
 - Model berada di `app/Models/`.
 - Service berada di `app/Services/`.
+- Adapter AI berada di `app/Services/AI/Adapters/`.
 - Queue job berada di `app/Jobs/`.
 - Export Excel berada di `app/Exports/`.
 - View backend berada di `resources/views/backend/[module]/`.
@@ -187,6 +188,8 @@ resources/views/
 ## 11. External Service dan Queue
 
 - Integrasi Fonnte/WhatsApp harus punya timeout, retry, error logging, dan fallback.
+- Integrasi AI harus melalui `AiGatewayService`, adapter provider, timeout, retry, fallback, error logging, dan tidak mengirim data sensitif yang tidak diperlukan.
+- API key AI wajib disimpan terenkripsi, tidak boleh tampil ulang di view, log, atau response.
 - Notifikasi otomatis yang bukan aksi test langsung harus dikirim lewat queue job.
 - Halaman WhatsApp test boleh kirim sinkron agar user melihat hasil langsung.
 - Jika queue dipakai, dokumentasikan kebutuhan menjalankan `php artisan queue:work`.

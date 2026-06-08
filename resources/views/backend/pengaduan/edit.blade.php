@@ -22,6 +22,14 @@
         <div class="card card-outline card-info">
             <div class="card-header">
                 <h3 class="card-title">Detail Pengaduan</h3>
+                <div class="card-tools">
+                    @can('pengaduan-ai-analyze')
+                    <form action="{{ route('pengaduan.ai-analyze', $pengaduan) }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-robot mr-1"></i> Analisis AI</button>
+                    </form>
+                    @endcan
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-sm border-0">
@@ -45,6 +53,19 @@
                 @endif
             </div>
         </div>
+
+        @if($pengaduan->latestAiSuggestion)
+        <div class="card card-outline card-info">
+            <div class="card-header"><h3 class="card-title">Saran AI Terbaru</h3></div>
+            <div class="card-body">
+                <p><strong>Ringkasan:</strong><br>{{ $pengaduan->latestAiSuggestion->summary }}</p>
+                <p><strong>Kategori:</strong> {{ $pengaduan->latestAiSuggestion->recommended_category ?? '-' }}</p>
+                <p><strong>Prioritas:</strong> {{ $pengaduan->latestAiSuggestion->priority ?? '-' }}</p>
+                <p><strong>Draft Balasan:</strong></p>
+                <div class="bg-light border rounded p-2">{{ $pengaduan->latestAiSuggestion->draft_reply ?? '-' }}</div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <div class="col-md-7">
@@ -67,7 +88,7 @@
 
                     <div class="form-group">
                         <label>Tanggapan / Jawaban</label>
-                        <textarea name="reply" class="form-control" rows="8" placeholder="Tulis tanggapan untuk warga..." required>{{ old('reply', $pengaduan->reply) }}</textarea>
+                        <textarea name="reply" class="form-control" rows="8" placeholder="Tulis tanggapan untuk warga..." required>{{ old('reply', $pengaduan->reply ?: optional($pengaduan->latestAiSuggestion)->draft_reply) }}</textarea>
                     </div>
 
                     @if($pengaduan->replied_by)

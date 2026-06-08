@@ -24,6 +24,11 @@ class JenisSurat extends Model
         return $this->hasMany(Surat::class);
     }
 
+    public function aiSuggestions()
+    {
+        return $this->hasMany(SuratAiSuggestion::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

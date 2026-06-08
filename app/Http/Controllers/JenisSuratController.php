@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JenisSurat;
+use App\Services\SuratAiService;
 use Illuminate\Http\Request;
 
 class JenisSuratController extends Controller
@@ -77,9 +78,63 @@ class JenisSuratController extends Controller
         $data = [
             'title' => 'Atur Template: ' . $jenis_surat->nama_surat,
             'jenis_surat' => $jenis_surat,
+            'latestSuggestion' => $jenis_surat->aiSuggestions()->where('suggestion_type', 'template')->latest()->first(),
         ];
 
         return view('backend.jenis_surat.template', $data);
+    }
+
+    public function suggestTemplate(string $id, SuratAiService $service)
+    {
+        $jenis_surat = JenisSurat::findOrFail($id);
+
+        try {
+            $service->suggestTemplate($jenis_surat);
+
+            return redirect()->route('jenis-surat.template', $jenis_surat->id)->with('success', 'Saran AI template berhasil dibuat.');
+        } catch (\Throwable $e) {
+            return redirect()->route('jenis-surat.template', $jenis_surat->id)->with('error', 'Saran AI gagal: ' . $e->getMessage());
+        }
+    }
+
+    public function applyTemplateSuggestion(Request $request, string $id)
+    {
+        $request->validate([
+            'suggested_text' => 'required|string',
+        ]);
+
+        $jenis_surat = JenisSurat::findOrFail($id);
+        $jenis_surat->update(['template_isi' => $request->suggested_text]);
+
+        return redirect()->route('jenis-surat.template', $jenis_surat->id)->with('success', 'Saran AI berhasil diterapkan ke template.');
+    }
+
+    public function exportTemplate(string $id)
+    {
+        $jenis_surat = JenisSurat::findOrFail($id);
+        $fileName = str($jenis_surat->kode_surat . '-' . $jenis_surat->nama_surat)->slug()->toString() . '.txt';
+
+        return response($jenis_surat->template_isi)
+            ->header('Content-Type', 'text/plain')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+    }
+
+    public function importTemplate(Request $request, string $id)
+    {
+        $request->validate([
+            'template_file' => 'required|file|mimes:txt,html|max:512',
+        ]);
+
+        $content = file_get_contents($request->file('template_file')->getRealPath());
+
+        if (trim((string) $content) === '') {
+            return redirect()->route('jenis-surat.template', $id)->with('error', 'File template kosong.');
+        }
+
+        $jenis_surat = JenisSurat::findOrFail($id);
+        $jenis_surat->update(['template_isi' => $content]);
+
+        return redirect()->route('jenis-surat.template', $jenis_surat->id)->with('success', 'Template berhasil diimport.');
     }
 
     public function updateTemplate(Request $request, string $id)

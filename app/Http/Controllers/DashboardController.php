@@ -7,6 +7,8 @@ use App\Models\KartuKeluarga;
 use App\Models\Pengaduan;
 use App\Models\Post;
 use App\Models\Surat;
+use App\Services\AI\AiGatewayService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Carbon\Carbon;
 
@@ -20,6 +22,14 @@ class DashboardController extends Controller
         $totalSurat = Surat::count();
         $totalPengaduan = Pengaduan::count();
         $totalPost = Post::count();
+        $suratSelesai = Surat::where('status', 'done')->count();
+        $suratMenungguApproval = Surat::whereIn('status', ['pending', 'process', 'verified'])->count();
+        $pengaduanSelesai = Pengaduan::where('status', 'resolved')->count();
+        $pengaduanPerKategori = Pengaduan::selectRaw('category, COUNT(*) as total')
+            ->groupBy('category')
+            ->orderByDesc('total')
+            ->pluck('total', 'category')
+            ->toArray();
 
         $genderStats = Penduduk::selectRaw('jenis_kelamin, COUNT(*) as total')
             ->groupBy('jenis_kelamin')
@@ -82,6 +92,10 @@ class DashboardController extends Controller
             'totalSurat' => $totalSurat,
             'totalPengaduan' => $totalPengaduan,
             'totalPost' => $totalPost,
+            'suratSelesai' => $suratSelesai,
+            'suratMenungguApproval' => $suratMenungguApproval,
+            'pengaduanSelesai' => $pengaduanSelesai,
+            'pengaduanPerKategori' => $pengaduanPerKategori,
             'chartSuratBulanLbl' => $chartSuratBulanLbl,
             'chartSuratBulanVal' => $chartSuratBulanVal,
             'chartJenisLbl' => $chartJenisLbl,
@@ -90,5 +104,30 @@ class DashboardController extends Controller
             'chartPengaduanVal' => $chartPengaduanVal,
         ];
         return view('backend.dashboard', $data);
+    }
+
+    public function aiSummary(AiGatewayService $aiGateway): RedirectResponse
+    {
+        $context = [
+            'total_penduduk' => Penduduk::count(),
+            'total_kk' => KartuKeluarga::count(),
+            'surat_total' => Surat::count(),
+            'surat_pending' => Surat::whereIn('status', ['pending', 'process', 'verified'])->count(),
+            'surat_selesai' => Surat::where('status', 'done')->count(),
+            'pengaduan_total' => Pengaduan::count(),
+            'pengaduan_pending' => Pengaduan::where('status', 'pending')->count(),
+            'pengaduan_selesai' => Pengaduan::where('status', 'resolved')->count(),
+        ];
+
+        try {
+            $result = $aiGateway->chat([
+                ['role' => 'system', 'content' => 'Anda adalah analis dashboard desa. Buat ringkasan singkat dan rekomendasi tindak lanjut dalam bahasa Indonesia.'],
+                ['role' => 'user', 'content' => 'Data dashboard SIMADES: ' . json_encode($context)],
+            ], 'dashboard-ai-summary');
+
+            return redirect()->route('dashboard')->with('success', 'Ringkasan AI dashboard berhasil dibuat.')->with('dashboard_ai_summary', $result['content']);
+        } catch (\Throwable $e) {
+            return redirect()->route('dashboard')->with('error', 'Ringkasan AI gagal: ' . $e->getMessage());
+        }
     }
 }

@@ -37,4 +37,14 @@ class Pengaduan extends Model
     {
         return $this->belongsTo(User::class, 'replied_by');
     }
+
+    public function aiSuggestions()
+    {
+        return $this->hasMany(PengaduanAiSuggestion::class);
+    }
+
+    public function latestAiSuggestion()
+    {
+        return $this->hasOne(PengaduanAiSuggestion::class)->latestOfMany();
+    }
 }

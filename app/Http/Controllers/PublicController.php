@@ -175,6 +175,52 @@ class PublicController extends Controller
         return view('frontend.pengajuan.pengaduan.track', $data);
     }
 
+    public function verifikasiSurat(Request $request)
+    {
+        $verification = null;
+
+        if ($request->filled('code')) {
+            $verification = \App\Models\SuratVerification::with(['surat.penduduk', 'surat.jenisSurat'])
+                ->where('verification_code', strtoupper($request->code))
+                ->where('is_active', true)
+                ->first();
+
+            if ($verification) {
+                $verification->update(['verified_at' => now()]);
+            }
+        }
+
+        $data = [
+            'title' => 'Verifikasi Keaslian Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'verification' => $verification,
+        ];
+
+        return view('frontend.verifikasi.surat', $data);
+    }
+
+    public function verifikasiSuratStatus(Request $request)
+    {
+        $request->validate([
+            'verification_code' => 'required|string|max:32',
+        ]);
+
+        $verification = \App\Models\SuratVerification::with(['surat.penduduk', 'surat.jenisSurat'])
+            ->where('verification_code', strtoupper($request->verification_code))
+            ->where('is_active', true)
+            ->first();
+
+        if ($verification) {
+            $verification->update(['verified_at' => now()]);
+        }
+
+        $data = [
+            'title' => 'Verifikasi Keaslian Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'verification' => $verification,
+        ];
+
+        return view('frontend.verifikasi.surat', $data);
+    }
+
     private function generateTicketCode(): string
     {
         do {

@@ -44,6 +44,7 @@
                   <ul class="dropdown-menu">
                     <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.create') }}">Pengajuan Surat</a></li>
                     <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.track') }}">Lacak Surat</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.verify') }}">Verifikasi Surat</a></li>
                     <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.create') }}">Kirim Pengaduan</a></li>
                     <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.track') }}">Lacak Aduan</a></li>
                   </ul>
@@ -115,6 +116,7 @@
               <li><a href="{{ url('/') }}">Beranda</a></li>
               <li><a href="{{ route('public.surat.create') }}">Pengajuan Surat</a></li>
               <li><a href="{{ route('public.surat.track') }}">Lacak Surat</a></li>
+              <li><a href="{{ route('public.surat.verify') }}">Verifikasi Surat</a></li>
               <li><a href="{{ route('public.pengaduan.create') }}">Layanan Pengaduan</a></li>
             </ul>
           </div>

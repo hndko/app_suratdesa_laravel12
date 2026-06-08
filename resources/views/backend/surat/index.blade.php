@@ -64,12 +64,25 @@
                             </td>
                              <td>{{ $item->tanggal_surat->format('d/m/Y') }}</td>
                              <td>
-                                 @if($item->status == 'pending')
-                                 <span class="badge badge-danger">Pending</span>
-                                 @elseif($item->status == 'process')
-                                 <span class="badge badge-warning">Proses</span>
-                                 @else
-                                 <span class="badge badge-success">Selesai</span>
+                                 <span class="badge badge-{{ match($item->status) {
+                                    'pending' => 'danger',
+                                    'process' => 'warning',
+                                    'verified' => 'info',
+                                    'approved' => 'primary',
+                                    'done' => 'success',
+                                    'rejected' => 'dark',
+                                    default => 'secondary',
+                                 } }}">{{ match($item->status) {
+                                    'pending' => 'Menunggu',
+                                    'process' => 'Proses',
+                                    'verified' => 'Diverifikasi',
+                                    'approved' => 'Disetujui',
+                                    'done' => 'Selesai',
+                                    'rejected' => 'Ditolak',
+                                    default => $item->status,
+                                 } }}</span>
+                                 @if($item->verification)
+                                 <span class="badge badge-info">QR</span>
                                  @endif
                              </td>
                              <td>{{ $item->keperluan }}</td>
