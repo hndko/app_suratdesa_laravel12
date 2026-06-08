@@ -29,7 +29,7 @@ class PublicController extends Controller
             'jenisSurats' => $jenisSurats,
         ];
 
-        return view('frontend.surat_create', $data);
+        return view('frontend.pengajuan.surat.create', $data);
     }
 
     public function suratStore(Request $request)
@@ -71,7 +71,7 @@ class PublicController extends Controller
 
     public function pengaduanCreate()
     {
-        return view('frontend.pengaduan_create');
+        return view('frontend.pengajuan.pengaduan.create');
     }
 
     public function pengaduanStore(Request $request)
@@ -108,7 +108,7 @@ class PublicController extends Controller
 
     public function pengaduanTrack()
     {
-        return view('frontend.pengaduan_track');
+        return view('frontend.pengajuan.pengaduan.track');
     }
 
     public function pengaduanStatus(Request $request)
@@ -126,7 +126,7 @@ class PublicController extends Controller
             'pengaduan' => $pengaduan,
         ];
 
-        return view('frontend.pengaduan_track', $data);
+        return view('frontend.pengajuan.pengaduan.track', $data);
     }
 
     private function generateTicketCode(): string

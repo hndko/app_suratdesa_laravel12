@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\PendudukController::class)->prefix('penduduk')->name('penduduk.')->middleware('permission:penduduk-index')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create')->middleware('permission:penduduk-create');
-        Route::post('/', 'store')->name('store')->middleware('permission:penduduk-create');
+        Route::post('/', 'store')->name('store')->middleware('permission:penduduk-store');
         Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:penduduk-edit');
-        Route::put('/{id}', 'update')->name('update')->middleware('permission:penduduk-edit');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:penduduk-update');
         Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:penduduk-destroy');
     });
 
@@ -59,11 +59,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\JenisSuratController::class)->prefix('jenis-surat')->name('jenis-surat.')->middleware('permission:jenis-surat-index')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create')->middleware('permission:jenis-surat-create');
-        Route::post('/', 'store')->name('store')->middleware('permission:jenis-surat-create');
+        Route::post('/', 'store')->name('store')->middleware('permission:jenis-surat-store');
         Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:jenis-surat-edit');
         Route::get('/{id}/template', 'template')->name('template')->middleware('permission:jenis-surat-template');
-        Route::put('/{id}/template', 'updateTemplate')->name('template.update')->middleware('permission:jenis-surat-template');
-        Route::put('/{id}', 'update')->name('update')->middleware('permission:jenis-surat-edit');
+        Route::put('/{id}/template', 'updateTemplate')->name('template.update')->middleware('permission:jenis-surat-template-update');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:jenis-surat-update');
         Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:jenis-surat-destroy');
     });
 
@@ -71,11 +71,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\SuratController::class)->prefix('surat')->name('surat.')->middleware('permission:surat-index')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create')->middleware('permission:surat-create');
-        Route::post('/preview', 'preview')->name('preview')->middleware('permission:surat-create');
-        Route::post('/', 'store')->name('store')->middleware('permission:surat-create');
+        Route::post('/preview', 'preview')->name('preview')->middleware('permission:surat-preview');
+        Route::post('/', 'store')->name('store')->middleware('permission:surat-store');
         Route::get('/{id}', 'show')->name('show')->middleware('permission:surat-show');
         Route::get('/{id}/edit', 'edit')->name('edit')->middleware('permission:surat-edit');
-        Route::put('/{id}', 'update')->name('update')->middleware('permission:surat-edit');
+        Route::put('/{id}', 'update')->name('update')->middleware('permission:surat-update-status');
         Route::delete('/{id}', 'destroy')->name('destroy')->middleware('permission:surat-destroy');
     });
 
@@ -83,50 +83,55 @@ Route::middleware('auth')->group(function () {
     Route::resource('post', App\Http\Controllers\PostController::class)
         ->except(['show'])
         ->middlewareFor('index', 'permission:post-index')
-        ->middlewareFor(['create', 'store'], 'permission:post-create')
-        ->middlewareFor(['edit', 'update'], 'permission:post-edit')
+        ->middlewareFor('create', 'permission:post-create')
+        ->middlewareFor('store', 'permission:post-store')
+        ->middlewareFor('edit', 'permission:post-edit')
+        ->middlewareFor('update', 'permission:post-update')
         ->middlewareFor('destroy', 'permission:post-destroy');
 
     // NOTE: Pengaduan Warga Group
     Route::resource('pengaduan', App\Http\Controllers\PengaduanController::class)
         ->only(['index', 'edit', 'update', 'destroy'])
         ->middlewareFor('index', 'permission:pengaduan-index')
-        ->middlewareFor(['edit', 'update'], 'permission:pengaduan-edit')
+        ->middlewareFor('edit', 'permission:pengaduan-edit')
+        ->middlewareFor('update', 'permission:pengaduan-update')
         ->middlewareFor('destroy', 'permission:pengaduan-destroy');
 
     // NOTE: Edit Profile
-    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
-    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile')->middleware('permission:profile-index');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update')->middleware('permission:profile-update');
 
     // NOTE: User & Role Management
     Route::resource('user', App\Http\Controllers\UserController::class)->except(['show'])
         ->middlewareFor('index', 'permission:user-index')
-        ->middlewareFor(['create', 'store'], 'permission:user-create')
-        ->middlewareFor(['edit', 'update'], 'permission:user-edit')
+        ->middlewareFor('create', 'permission:user-create')
+        ->middlewareFor('store', 'permission:user-store')
+        ->middlewareFor('edit', 'permission:user-edit')
+        ->middlewareFor('update', 'permission:user-update')
         ->middlewareFor('destroy', 'permission:user-destroy');
 
     Route::resource('role', App\Http\Controllers\RoleController::class)
         ->middlewareFor('index', 'permission:role-index')
         ->middlewareFor('show', 'permission:role-show')
-        ->middlewareFor(['create', 'store'], 'permission:role-create')
-        ->middlewareFor(['edit', 'update'], 'permission:role-edit')
+        ->middlewareFor('create', 'permission:role-create')
+        ->middlewareFor('store', 'permission:role-store')
+        ->middlewareFor('edit', 'permission:role-edit')
+        ->middlewareFor('update', 'permission:role-update')
         ->middlewareFor('destroy', 'permission:role-destroy');
 
     Route::get('/setting', [App\Http\Controllers\SettingController::class, 'index'])->name('setting.index')->middleware('permission:setting-index');
-    Route::put('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update')->middleware('permission:setting-index');
+    Route::put('/setting', [App\Http\Controllers\SettingController::class, 'update'])->name('setting.update')->middleware('permission:setting-update');
 
     // Report Management
     Route::prefix('report')->name('report.')->middleware('permission:report-index')->group(function () {
         Route::get('/', [App\Http\Controllers\ReportController::class, 'index'])->name('index');
-        Route::get('/penduduk/excel', [App\Http\Controllers\ReportController::class, 'pendudukExcel'])->name('penduduk.excel')->middleware('permission:report-export');
-        Route::get('/surat/excel', [App\Http\Controllers\ReportController::class, 'suratExcel'])->name('surat.excel')->middleware('permission:report-export');
-        Route::get('/surat/pdf', [App\Http\Controllers\ReportController::class, 'suratPdf'])->name('surat.pdf')->middleware('permission:report-export');
-        Route::get('/pengaduan/excel', [App\Http\Controllers\ReportController::class, 'pengaduanExcel'])->name('pengaduan.excel')->middleware('permission:report-export');
+        Route::get('/penduduk/excel', [App\Http\Controllers\ReportController::class, 'pendudukExcel'])->name('penduduk.excel')->middleware('permission:report-penduduk-excel');
+        Route::get('/surat/excel', [App\Http\Controllers\ReportController::class, 'suratExcel'])->name('surat.excel')->middleware('permission:report-surat-excel');
+        Route::get('/surat/pdf', [App\Http\Controllers\ReportController::class, 'suratPdf'])->name('surat.pdf')->middleware('permission:report-surat-pdf');
+        Route::get('/pengaduan/excel', [App\Http\Controllers\ReportController::class, 'pengaduanExcel'])->name('pengaduan.excel')->middleware('permission:report-pengaduan-excel');
     });
 
     // WhatsApp Test
-    Route::middleware('permission:whatsapp-test')->group(function () {
-        Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index');
-        Route::post('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'send'])->name('whatsapp.test.send');
-    });
+    Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index')->middleware('permission:whatsapp-test-index');
+    Route::post('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'send'])->name('whatsapp.test.send')->middleware('permission:whatsapp-test-send');
 });

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', \App\Facades\Setting::get('site_name', config('app.name', 'Surat Desa')))</title>
+    <title>@yield('title', \App\Facades\Setting::get('site_name', config('app.name', 'SIMADES')))</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -32,31 +32,6 @@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-                </li>
-            </ul>
-
-            <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
-                <!-- User Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-user"></i>
-                        {{ Auth::user()->name ?? 'User' }}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-header">Menu Pengguna</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="{{ route('profile') }}" class="dropdown-item">
-                            <i class="fas fa-user-edit mr-2"></i> Edit Profil
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                            </button>
-                        </form>
-                    </div>
                 </li>
             </ul>
         </nav>
@@ -169,7 +144,7 @@
                         @endcan
                         @endcanany
 
-                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test'])
+                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index'])
                         <li class="nav-header">PENGATURAN</li>
 
                         @can('user-index')
@@ -208,7 +183,7 @@
                         </li>
                         @endcan
 
-                        @can('whatsapp-test')
+                        @can('whatsapp-test-index')
                         <li class="nav-item">
                             <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.*') ? 'active' : '' }}">
                                 <i class="nav-icon fab fa-whatsapp"></i>
@@ -217,6 +192,27 @@
                         </li>
                         @endcan
                         @endcanany
+
+                        <li class="nav-header">AKUN</li>
+
+                        @can('profile-index')
+                        <li class="nav-item">
+                            <a href="{{ route('profile') }}" class="nav-link {{ request()->routeIs('profile') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-edit"></i>
+                                <p>Edit Profil</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="nav-link border-0 bg-transparent text-left w-100">
+                                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                                    <p>Logout</p>
+                                </button>
+                            </form>
+                        </li>
 
                     </ul>
                 </nav>
@@ -240,7 +236,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                v1.0.0
+                {{ config('app.version', 'v1.0.7') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.

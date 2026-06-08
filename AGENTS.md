@@ -34,6 +34,7 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 - Export Excel berada di `app/Exports/`.
 - View backend berada di `resources/views/backend/[module]/`.
 - View frontend publik berada di `resources/views/frontend/`.
+- View pengajuan publik wajib dikelompokkan di `resources/views/frontend/pengajuan/[module]/`, contoh `pengajuan/surat/create.blade.php` dan `pengajuan/pengaduan/create.blade.php`.
 - Layout berada di `resources/views/layouts/`.
 - Partial reusable lintas layout boleh dibuat di `resources/views/partials/`.
 - Asset statis berada di `public/assets/`.
@@ -65,6 +66,7 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 - Route publik tetap tanpa login, tetapi form publik wajib memakai CSRF, validation, dan rate limit bila berisiko spam.
 - Route backend wajib berada di middleware `auth`.
 - Setiap modul backend harus memakai middleware permission Spatie yang sesuai, bukan hanya menyembunyikan menu.
+- Setiap fitur, aksi tombol, request form, validasi, upload, preview, export, test integrasi, dan perubahan status wajib punya permission granular di `database/seeders/RolePermissionSeeder.php` bila dapat dijalankan dari backend.
 - Super admin mendapat bypass melalui `Gate::before`, tetapi permission tetap perlu didefinisikan di seeder.
 - Logout wajib `POST`.
 - Login wajib dilindungi throttle/rate limit.
@@ -73,13 +75,20 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 
 - Gunakan permission granular, contoh:
   - `dashboard-index`
-  - `penduduk-index/create/edit/destroy`
-  - `jenis-surat-index/create/edit/destroy/template`
-  - `surat-index/create/edit/destroy/show/print`
-  - `post-index/create/edit/destroy`
-  - `pengaduan-index/edit/destroy`
-  - `user-*`, `role-*`, `setting-index`, `report-index`, `report-export`, `whatsapp-test`
+  - `penduduk-index/create/store/edit/update/destroy`
+  - `jenis-surat-index/create/store/edit/update/destroy/template/template-update`
+  - `surat-index/create/preview/store/edit/update-status/destroy/show/print`
+  - `post-index/create/store/edit/update/destroy`
+  - `pengaduan-index/edit/update/destroy`
+  - `user-index/create/store/edit/update/destroy`
+  - `role-index/show/create/store/edit/update/destroy`
+  - `setting-index/update`
+  - `report-index/penduduk-excel/surat-excel/surat-pdf/pengaduan-excel`
+  - `whatsapp-test-index/send`
+  - `profile-index/update`
 - Menu sidebar boleh memakai `@can`/`@canany`, tetapi route tetap wajib punya middleware permission.
+- Saat menambah role baru, jangan hanya memasukkan nama modul. Sync juga permission aksi yang dibutuhkan agar tombol, form submit, request update, export, dan test integrasi tetap berfungsi sesuai role.
+- Permission lama yang masih dipakai sebagai kompatibilitas boleh dipertahankan sementara, tetapi route baru harus memakai permission aksi yang paling spesifik.
 
 ## 8. Database dan Transaksi
 
@@ -142,7 +151,25 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
   - Arahan uji manual
   - Risiko/catatan bila ada
 
-## 15. Governance
+## 15. Versioning
+
+- Project memakai format versi SemVer: `vMAJOR.MINOR.PATCH`.
+- Versi aplikasi disimpan melalui `APP_VERSION` di `.env`/`.env.example` dan dibaca dari `config('app.version')`.
+- Setiap perubahan signifikan wajib menaikkan versi:
+  - Patch, contoh `v1.0.0` ke `v1.0.1`: bugfix kecil, copy/UI minor, validasi kecil, perubahan non-breaking.
+  - Minor, contoh `v1.0.0` ke `v1.1.0`: fitur baru, perubahan UI cukup terasa, flow baru, peningkatan modul yang tidak breaking.
+  - Major, contoh `v1.0.0` ke `v2.0.0`: perubahan besar, perubahan struktur/flow utama, perubahan database/permission luas, atau perubahan yang berpotensi breaking.
+- Saat menaikkan versi, update minimal `.env.example` dan tempat tampilan versi aplikasi. Jika `.env` lokal ada dan relevan untuk pekerjaan manual, beri arahan agar user menyesuaikan `APP_VERSION`.
+- Catat versi lama dan versi baru di laporan akhir pengerjaan.
+
+## 16. Git Workflow
+
+- Setelah perubahan project selesai dan pemeriksaan ringan yang relevan sudah dilakukan, agent wajib membuat commit dan push otomatis ke remote aktif.
+- Commit hanya boleh memasukkan file yang terkait dengan pekerjaan saat itu. Jangan staging perubahan user yang tidak terkait, terutama penghapusan massal atau file generated yang belum diminta.
+- Jika push gagal karena remote, koneksi, kredensial, atau konflik branch, laporkan penyebabnya dan perubahan yang sudah/ belum masuk remote.
+- Pesan commit harus singkat, jelas, dan menjelaskan inti perubahan.
+
+## 17. Governance
 
 - `AGENTS.md` wajib diperbarui saat ada standar project baru.
 - Setelah `AGENTS.md` berubah, perubahan kode berikutnya wajib mengikuti dokumen ini.

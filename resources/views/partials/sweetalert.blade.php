@@ -10,6 +10,17 @@
     }
 </style>
 
+@php
+    $flashMessages = [
+        ['icon' => 'success', 'message' => session('success')],
+        ['icon' => 'error', 'message' => session('error')],
+        ['icon' => 'warning', 'message' => session('warning')],
+        ['icon' => 'info', 'message' => session('info')],
+    ];
+
+    $validationErrors = $errors->any() ? $errors->all() : [];
+@endphp
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof Swal === 'undefined') {
@@ -51,12 +62,7 @@
             });
         };
 
-        const flashMessages = @json([
-            ['icon' => 'success', 'message' => session('success')],
-            ['icon' => 'error', 'message' => session('error')],
-            ['icon' => 'warning', 'message' => session('warning')],
-            ['icon' => 'info', 'message' => session('info')],
-        ]);
+        const flashMessages = @json($flashMessages);
 
         flashMessages.forEach(function (item) {
             if (item.message) {
@@ -64,7 +70,7 @@
             }
         });
 
-        const validationErrors = @json($errors->any() ? $errors->all() : []);
+        const validationErrors = @json($validationErrors);
         if (validationErrors.length > 0) {
             Toast.fire({
                 icon: 'error',
