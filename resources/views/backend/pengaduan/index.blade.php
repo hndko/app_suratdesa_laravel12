@@ -47,7 +47,7 @@
                     <tbody>
                         @foreach($pengaduans as $row)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $pengaduans->firstItem() + $loop->index }}</td>
                             <td><span class="badge badge-info">{{ $row->ticket_code }}</span></td>
                             <td>{{ $row->name }}<br><small class="text-muted">{{ $row->nik }}</small></td>
                             <td>{{ $row->category }}</td>
@@ -76,6 +76,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $pengaduans->links() }}
+                </div>
             </div>
         </div>
     </div>

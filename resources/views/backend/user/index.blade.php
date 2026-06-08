@@ -42,7 +42,7 @@
                     <tbody>
                         @foreach($users as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $users->firstItem() + $loop->index }}</td>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->email }}</td>
                             <td>
@@ -62,6 +62,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $users->links() }}
+                </div>
             </div>
         </div>
     </div>

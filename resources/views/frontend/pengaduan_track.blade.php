@@ -33,6 +33,12 @@
                     <label for="ticket_code">Kode Tiket (Contoh: TKT-A1B2C3D4)</label>
                   </div>
                 </div>
+                <div class="col-md-8">
+                  <div class="form-floating mb-4">
+                    <input id="nik" type="text" name="nik" class="form-control text-center fs-20 fw-bold" placeholder="NIK" required>
+                    <label for="nik">NIK Pelapor</label>
+                  </div>
+                </div>
                 
                 <div class="col-12 text-center mt-2">
                   <button type="submit" class="btn btn-primary rounded-pill btn-send mb-3">Cek Status Sekarang</button>

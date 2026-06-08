@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Jobs\SendWhatsAppMessage;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rules\Password;
@@ -13,7 +14,7 @@ class UserController extends Controller
     {
         $data = [
             'title' => 'Manajemen User',
-            'users' => User::latest()->get()
+            'users' => User::with('roles')->latest()->paginate(25)
         ];
         return view('backend.user.index', $data);
     }
@@ -49,7 +50,7 @@ class UserController extends Controller
         if ($user->phone) {
             $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
             $message = "Halo {$user->name}, akun Anda di {$siteName} telah berhasil dibuat.\n\nEmail: {$user->email}\nRole: {$request->role}\n\nSilakan login ke sistem untuk mulai bertugas. Terima kasih.";
-            \App\Services\WhatsAppService::send($user->phone, $message);
+            SendWhatsAppMessage::dispatch($user->phone, $message);
         }
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             PendudukSeeder::class,
             JenisSuratSeeder::class,
+            SettingSeeder::class,
             SuratSeeder::class,
         ]);
     }

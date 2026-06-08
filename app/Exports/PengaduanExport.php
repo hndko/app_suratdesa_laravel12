@@ -3,15 +3,15 @@
 namespace App\Exports;
 
 use App\Models\Pengaduan;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PengaduanExport implements FromCollection, WithHeadings, WithMapping
+class PengaduanExport implements FromQuery, WithHeadings, WithMapping
 {
-    public function collection()
+    public function query()
     {
-        return Pengaduan::with('repliedBy')->latest()->get();
+        return Pengaduan::query()->with('repliedBy')->latest();
     }
 
     public function headings(): array

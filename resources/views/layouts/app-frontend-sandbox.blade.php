@@ -54,7 +54,7 @@
               <div class="offcanvas-footer d-lg-none">
                 <div>
                   <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-inverse">{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a>
-                  <br /> {{ \App\Facades\Setting::get('village_phone', '-') }} <br />
+                  <br /> {{ \App\Facades\Setting::get('village_telepon', '-') }} <br />
                 </div>
               </div>
               <!-- /.offcanvas-footer -->
@@ -100,8 +100,8 @@
         <div class="col-md-4 col-lg-3">
           <div class="widget">
             <h4 class="widget-title text-white mb-3">Kontak Kami</h4>
-            <address class="pe-xl-15">{{ \App\Facades\Setting::get('village_address', 'Alamat Kantor Desa') }}</address>
-            <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-body">{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a><br /> {{ \App\Facades\Setting::get('village_phone', '-') }}
+            <address class="pe-xl-15">{{ \App\Facades\Setting::get('village_alamat', 'Alamat Kantor Desa') }}</address>
+            <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-body">{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a><br /> {{ \App\Facades\Setting::get('village_telepon', '-') }}
           </div>
           <!-- /.widget -->
         </div>

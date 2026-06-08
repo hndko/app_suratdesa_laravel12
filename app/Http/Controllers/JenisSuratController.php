@@ -34,7 +34,7 @@ class JenisSuratController extends Controller
             'template_isi' => 'nullable',
         ]);
 
-        JenisSurat::create($request->all());
+        JenisSurat::create($request->only(['kode_surat', 'nama_surat', 'kop_judul', 'template_isi']));
 
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil ditambahkan.');
     }
@@ -62,7 +62,7 @@ class JenisSuratController extends Controller
         ]);
 
         $jenis_surat = JenisSurat::findOrFail($id);
-        $jenis_surat->update($request->all());
+        $jenis_surat->update($request->only(['kode_surat', 'nama_surat', 'kop_judul']));
 
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil diperbarui.');
     }

@@ -7,7 +7,7 @@
   <div class="container pt-11 pt-md-13 pb-11 pb-md-15 text-center">
     <div class="row">
       <div class="col-lg-8 col-xl-7 col-xxl-6 mx-auto" data-cues="slideInDown" data-group="page-title">
-        <h1 class="display-1 fs-60 mb-4 px-md-15 px-lg-0">Portal Pelayanan Digital <span class="underline-3 style-3 primary">{{ \App\Facades\Setting::get('village_name', 'Desa Kami') }}</span></h1>
+        <h1 class="display-1 fs-60 mb-4 px-md-15 px-lg-0">Portal Pelayanan Digital <span class="underline-3 style-3 primary">{{ \App\Facades\Setting::get('village_nama', 'Desa Kami') }}</span></h1>
         <p class="lead fs-24 lh-sm mb-7 mx-md-13 mx-lg-10">Kami menghadirkan solusi digital untuk mempermudah administrasi dan pelayanan publik bagi seluruh warga desa secara transparan dan efisien.</p>
         <div class="d-flex justify-content-center" data-cues="slideInDown" data-delay="600">
           <span><a href="{{ route('public.surat.create') }}" class="btn btn-lg btn-primary rounded-pill mx-1">Ajukan Surat</a></span>

@@ -17,7 +17,7 @@
     <div class="header">
         <h2>PEMERINTAH KABUPATEN ...</h2>
         <h3>KECAMATAN ...</h3>
-        <h2>DESA {{ strtoupper(\App\Facades\Setting::get('village_name', '...')) }}</h2>
+        <h2>DESA {{ strtoupper(\App\Facades\Setting::get('village_nama', '...')) }}</h2>
         <hr>
         <h4>{{ strtoupper($title) }}</h4>
     </div>

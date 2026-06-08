@@ -26,6 +26,11 @@ class ReportController extends Controller
 
     public function suratExcel(Request $request)
     {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
         $startDate = $request->start_date;
         $endDate = $request->end_date;
         
@@ -39,6 +44,11 @@ class ReportController extends Controller
 
     public function suratPdf(Request $request)
     {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
         $startDate = $request->start_date;
         $endDate = $request->end_date;
 
@@ -46,7 +56,7 @@ class ReportController extends Controller
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal_surat', [$startDate, $endDate]);
         }
-        $surats = $query->latest()->get();
+        $surats = $query->latest()->limit(1000)->get();
 
         $pdf = Pdf::loadView('backend.report.pdf_surat', [
             'surats' => $surats,

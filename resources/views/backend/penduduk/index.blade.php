@@ -53,7 +53,7 @@
                     <tbody>
                         @foreach($penduduks as $key => $row)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $penduduks->firstItem() + $loop->index }}</td>
                             <td>{{ $row->nik }}</td>
                             <td>{{ $row->nama }}</td>
                             <td>{{ $row->jenis_kelamin }}</td>
@@ -76,6 +76,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $penduduks->links() }}
+                </div>
             </div>
         </div>
     </div>

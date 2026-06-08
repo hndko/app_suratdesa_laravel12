@@ -168,7 +168,7 @@
                         @endcan
                         @endcanany
 
-                        @canany(['user-index', 'role-index', 'setting-index'])
+                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test'])
                         <li class="nav-header">PENGATURAN</li>
 
                         @can('user-index')
@@ -198,12 +198,14 @@
                         </li>
                         @endcan
 
+                        @can('report-index')
                         <li class="nav-item">
                             <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Laporan & Rekap</p>
                             </a>
                         </li>
+                        @endcan
 
                         @can('whatsapp-test')
                         <li class="nav-item">

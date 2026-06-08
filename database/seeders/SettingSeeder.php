@@ -11,9 +11,22 @@ class SettingSeeder extends Seeder
     {
         $villageConfig = config('village');
 
+        $keyMap = [
+            'nama_desa' => 'village_nama',
+            'kecamatan' => 'village_kecamatan',
+            'kabupaten' => 'village_kabupaten',
+            'alamat' => 'village_alamat',
+            'email' => 'village_email',
+            'website' => 'village_website',
+            'telepon' => 'village_telepon',
+            'logo' => 'village_logo',
+            'nama_kades' => 'village_nama_kades',
+            'nip_kades' => 'village_nip_kades',
+        ];
+
         foreach ($villageConfig as $key => $value) {
             Setting::updateOrCreate(
-                ['key' => 'village_' . $key],
+                ['key' => $keyMap[$key] ?? 'village_' . $key],
                 ['value' => $value, 'group' => 'village']
             );
         }

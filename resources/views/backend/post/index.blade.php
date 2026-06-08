@@ -51,7 +51,7 @@
                     <tbody>
                         @foreach($posts as $row)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $posts->firstItem() + $loop->index }}</td>
                             <td>
                                 @if($row->image)
                                 <img src="{{ asset('storage/'.$row->image) }}" alt="img" width="80" class="img-thumbnail">
@@ -82,6 +82,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $posts->links() }}
+                </div>
             </div>
         </div>
     </div>

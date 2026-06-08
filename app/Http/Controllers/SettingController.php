@@ -19,20 +19,35 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
-        $data = $request->except('_token', '_method', 'village_logo');
+        $validated = $request->validate([
+            'site_name' => 'nullable|string|max:100',
+            'site_description' => 'nullable|string|max:500',
+            'contact_whatsapp' => 'nullable|string|max:20',
+            'village_nama' => 'nullable|string|max:150',
+            'village_kecamatan' => 'nullable|string|max:150',
+            'village_kabupaten' => 'nullable|string|max:150',
+            'village_provinsi' => 'nullable|string|max:150',
+            'village_alamat' => 'nullable|string|max:500',
+            'village_email' => 'nullable|email|max:150',
+            'village_telepon' => 'nullable|string|max:50',
+            'village_website' => 'nullable|string|max:150',
+            'village_nama_kades' => 'nullable|string|max:150',
+            'village_nip_kades' => 'nullable|string|max:50',
+            'village_logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
 
-        foreach ($data as $key => $value) {
+        unset($validated['village_logo']);
+
+        foreach ($validated as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
         if ($request->hasFile('village_logo')) {
             $file = $request->file('village_logo');
-            $path = $file->storeAs('assets/img', 'logo_desa_dynamic.png', 'public_dir'); // custom disk for public/assets/img
-            
-            // Or just move it manually to the directory we use
-            $file->move(public_path('assets/img'), 'logo.png');
-            
-            Setting::updateOrCreate(['key' => 'village_logo'], ['value' => 'assets/img/logo.png']);
+            $filename = 'logo_desa.' . $file->extension();
+            $file->storeAs('settings', $filename, 'public');
+
+            Setting::updateOrCreate(['key' => 'village_logo'], ['value' => 'storage/settings/' . $filename]);
         }
 
         // Clear cache

@@ -62,6 +62,8 @@ class RolePermissionSeeder extends Seeder
 
             'setting-index',
             'whatsapp-test',
+            'report-index',
+            'report-export',
 
             'profile-edit'
         ];
@@ -83,6 +85,8 @@ class RolePermissionSeeder extends Seeder
             'pengaduan-index',
             'pengaduan-edit',
             'post-index',
+            'report-index',
+            'report-export',
             'profile-edit'
         ]);
 
@@ -103,27 +107,37 @@ class RolePermissionSeeder extends Seeder
             'post-edit',
             'pengaduan-index',
             'setting-index',
+            'report-index',
+            'report-export',
             'profile-edit'
         ]);
 
         // 4. Buat User Default
+        $defaultPassword = env('DEFAULT_ADMIN_PASSWORD');
+
+        if (app()->environment('production') && empty($defaultPassword)) {
+            throw new \RuntimeException('DEFAULT_ADMIN_PASSWORD wajib diisi saat seeding di production.');
+        }
+
+        $defaultPassword = $defaultPassword ?: 'password';
+
         $users = [
             [
                 'name' => 'Super Admin',
                 'email' => 'admin@example.com',
-                'password' => 'password',
+                'password' => $defaultPassword,
                 'role' => 'super-admin',
             ],
             [
                 'name' => 'Kepala Desa',
                 'email' => 'kades@example.com',
-                'password' => 'password',
+                'password' => $defaultPassword,
                 'role' => 'kades',
             ],
             [
                 'name' => 'Operator Desa',
                 'email' => 'operator@example.com',
-                'password' => 'password',
+                'password' => $defaultPassword,
                 'role' => 'operator',
             ],
         ];

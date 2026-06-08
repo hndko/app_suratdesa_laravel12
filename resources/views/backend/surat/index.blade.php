@@ -53,7 +53,7 @@
                     <tbody>
                         @foreach($surats as $key => $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $surats->firstItem() + $loop->index }}</td>
                             <td>{{ $item->no_surat }}</td>
                             <td>{{ $item->jenisSurat->nama_surat }}</td>
                             <td>
@@ -90,6 +90,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $surats->links() }}
+                </div>
             </div>
         </div>
     </div>

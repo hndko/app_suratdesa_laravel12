@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengaduan;
+use App\Jobs\SendWhatsAppMessage;
 use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
@@ -14,7 +15,7 @@ class PengaduanController extends Controller
     {
         $data = [
             'title' => 'Pengaduan Warga',
-            'pengaduans' => Pengaduan::latest()->get(),
+            'pengaduans' => Pengaduan::latest()->paginate(25),
         ];
         return view('backend.pengaduan.index', $data);
     }
@@ -55,7 +56,7 @@ class PengaduanController extends Controller
             
             $message .= "\n\nTerima kasih atas laporan Anda.";
             
-            \App\Services\WhatsAppService::send($pengaduan->phone, $message);
+            SendWhatsAppMessage::dispatch($pengaduan->phone, $message);
         }
 
         return redirect()->route('pengaduan.index')->with('success', 'Pengaduan berhasil ditanggapi.');

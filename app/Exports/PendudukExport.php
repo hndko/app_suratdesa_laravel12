@@ -3,15 +3,15 @@
 namespace App\Exports;
 
 use App\Models\Penduduk;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class PendudukExport implements FromCollection, WithHeadings, WithMapping
+class PendudukExport implements FromQuery, WithHeadings, WithMapping
 {
-    public function collection()
+    public function query()
     {
-        return Penduduk::all();
+        return Penduduk::query()->orderBy('nama');
     }
 
     public function headings(): array

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Services\SuratNumberService;
+use App\Jobs\SendWhatsAppMessage;
 
 class PublicController extends Controller
 {
@@ -23,7 +27,7 @@ class PublicController extends Controller
         $request->validate([
             'nik' => 'required|digits:16|exists:penduduks,nik',
             'jenis_surat_id' => 'required|exists:jenis_surats,id',
-            'keperluan' => 'required|string',
+            'keperluan' => 'required|string|max:2000',
         ]);
 
         $penduduk = \App\Models\Penduduk::where('nik', $request->nik)->first();
@@ -34,9 +38,8 @@ class PublicController extends Controller
         // or just store it as is for now.
         // Let's assume for now we just create the record and admin will see it in Arsip.
 
-        $jenisSurat = \App\Models\JenisSurat::find($request->jenis_surat_id);
-        $count = \App\Models\Surat::whereYear('tanggal_surat', date('Y'))->count() + 1;
-        $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $count, date('m'), date('Y'));
+        $jenisSurat = \App\Models\JenisSurat::findOrFail($request->jenis_surat_id);
+        $no_surat = SuratNumberService::generate($jenisSurat, now());
 
         \App\Models\Surat::create([
             'no_surat' => $no_surat,
@@ -50,7 +53,7 @@ class PublicController extends Controller
         // WhatsApp Notification
         if ($penduduk->phone) {
             $message = "Halo {$penduduk->nama}, pengajuan surat {$jenisSurat->nama_surat} Anda telah kami terima. Silakan pantau statusnya atau tunggu informasi selanjutnya. Terima kasih.";
-            \App\Services\WhatsAppService::send($penduduk->phone, $message);
+            SendWhatsAppMessage::dispatch($penduduk->phone, $message);
         }
 
         return redirect()->back()->with('success', 'Pengajuan surat berhasil dikirim. Silakan hubungi kantor desa untuk pengambilan.');
@@ -66,19 +69,19 @@ class PublicController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'nik' => 'required|digits:16',
-            'phone' => 'required',
-            'category' => 'required',
-            'content' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'phone' => 'required|string|max:20',
+            'category' => 'required|in:infrastruktur,keamanan,pelayanan,sosial,lainnya',
+            'content' => 'required|string|max:5000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $input = $request->all();
-        $input['ticket_code'] = 'TKT-' . strtoupper(\Illuminate\Support\Str::random(8));
+        $input = $request->only(['name', 'nik', 'phone', 'category', 'content']);
+        $input['ticket_code'] = $this->generateTicketCode();
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/pengaduan', $filename);
+            $filename = $file->hashName();
+            Storage::disk('public')->putFileAs('pengaduan', $file, $filename);
             $input['image'] = 'pengaduan/' . $filename;
         }
 
@@ -87,7 +90,7 @@ class PublicController extends Controller
         // WhatsApp Notification
         if ($request->phone) {
             $message = "Halo {$request->name}, pengaduan Anda telah kami terima dengan Kode Tiket: {$input['ticket_code']}. Gunakan kode ini untuk melacak status aduan Anda di website kami. Terima kasih.";
-            \App\Services\WhatsAppService::send($request->phone, $message);
+            SendWhatsAppMessage::dispatch($request->phone, $message);
         }
 
         return redirect()->route('public.pengaduan.track')->with('success', 'Pengaduan berhasil dikirim. Simpan Kode Tiket Anda: ' . $input['ticket_code']);
@@ -100,9 +103,24 @@ class PublicController extends Controller
 
     public function pengaduanStatus(Request $request)
     {
-        $request->validate(['ticket_code' => 'required']);
-        $pengaduan = \App\Models\Pengaduan::where('ticket_code', $request->ticket_code)->first();
+        $request->validate([
+            'ticket_code' => 'required|string|max:20',
+            'nik' => 'required|digits:16',
+        ]);
+
+        $pengaduan = \App\Models\Pengaduan::where('ticket_code', strtoupper($request->ticket_code))
+            ->where('nik', $request->nik)
+            ->first();
 
         return view('frontend.pengaduan_track', compact('pengaduan'));
+    }
+
+    private function generateTicketCode(): string
+    {
+        do {
+            $code = 'TKT-' . strtoupper(Str::random(10));
+        } while (\App\Models\Pengaduan::where('ticket_code', $code)->exists());
+
+        return $code;
     }
 }

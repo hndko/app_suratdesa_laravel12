@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penduduk;
+use App\Jobs\SendWhatsAppMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,7 @@ class PendudukController extends Controller
     {
         $data = [
             'title' => 'Data Penduduk',
-            'penduduks' => Penduduk::latest()->get(),
+            'penduduks' => Penduduk::latest()->paginate(25),
         ];
 
         return view('backend.penduduk.index', $data);
@@ -44,16 +45,29 @@ class PendudukController extends Controller
             'agama' => 'required',
             'status_perkawinan' => 'required',
             'pekerjaan' => 'required',
-            'foto_ktp' => 'nullable|image|max:2048',
+            'foto_ktp' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $input = $request->all();
+        $input = $request->only([
+            'nik',
+            'nama',
+            'phone',
+            'tempat_lahir',
+            'tgl_lahir',
+            'jenis_kelamin',
+            'alamat',
+            'rt',
+            'rw',
+            'agama',
+            'status_perkawinan',
+            'pekerjaan',
+        ]);
 
         // Upload Foto KTP
         if ($request->hasFile('foto_ktp')) {
             $file = $request->file('foto_ktp');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('public/ktp', $filename);
+            $filename = $file->hashName();
+            $path = $file->storeAs('ktp', $filename, 'public');
             $input['foto_ktp'] = 'ktp/' . $filename;
         }
 
@@ -63,7 +77,7 @@ class PendudukController extends Controller
         if ($request->phone) {
             $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
             $message = "Halo {$request->nama}, data kependudukan Anda di {$siteName} telah berhasil ditambahkan.";
-            \App\Services\WhatsAppService::send($request->phone, $message);
+            SendWhatsAppMessage::dispatch($request->phone, $message);
         }
 
         return redirect()->route('penduduk.index')->with('success', 'Data Penduduk berhasil ditambahkan.');
@@ -98,25 +112,35 @@ class PendudukController extends Controller
             'agama' => 'required',
             'status_perkawinan' => 'required',
             'pekerjaan' => 'required',
-            'foto_ktp' => 'nullable|image|max:2048',
+            'foto_ktp' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $input = $request->all();
+        $input = $request->only([
+            'nik',
+            'nama',
+            'phone',
+            'tempat_lahir',
+            'tgl_lahir',
+            'jenis_kelamin',
+            'alamat',
+            'rt',
+            'rw',
+            'agama',
+            'status_perkawinan',
+            'pekerjaan',
+        ]);
 
         // Upload Foto KTP
         if ($request->hasFile('foto_ktp')) {
             // Hapus file lama jika ada
             if ($penduduk->foto_ktp && Storage::disk('public')->exists($penduduk->foto_ktp)) {
-                Storage::start('public')->delete($penduduk->foto_ktp);
+                Storage::disk('public')->delete($penduduk->foto_ktp);
             }
 
             $file = $request->file('foto_ktp');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('public/ktp', $filename);
+            $filename = $file->hashName();
+            $path = $file->storeAs('ktp', $filename, 'public');
             $input['foto_ktp'] = 'ktp/' . $filename;
-        } else {
-            // Keep old photo
-            unset($input['foto_ktp']);
         }
 
         $penduduk->update($input);

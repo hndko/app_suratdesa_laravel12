@@ -14,7 +14,7 @@ class PostController extends Controller
     {
         $data = [
             'title' => 'Pengumuman Desa',
-            'posts' => Post::with('user')->latest()->get(),
+            'posts' => Post::with('user')->latest()->paginate(25),
         ];
         return view('backend.post.index', $data);
     }
@@ -31,19 +31,19 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'content' => 'required|string|max:10000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status' => 'required|in:published,draft',
         ]);
 
-        $input = $request->all();
+        $input = $request->only(['title', 'content', 'status']);
         $input['slug'] = \Illuminate\Support\Str::slug($request->title) . '-' . time();
         $input['user_id'] = auth()->id();
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/posts', $filename);
+            $filename = $file->hashName();
+            $file->storeAs('posts', $filename, 'public');
             $input['image'] = 'posts/' . $filename;
         }
 
@@ -65,12 +65,12 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'content' => 'required|string|max:10000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'status' => 'required|in:published,draft',
         ]);
 
-        $input = $request->all();
+        $input = $request->only(['title', 'content', 'status']);
         // Only update slug if title changed significantly or optionally keep it
         $input['slug'] = \Illuminate\Support\Str::slug($request->title) . '-' . time();
 
@@ -81,8 +81,8 @@ class PostController extends Controller
             }
 
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/posts', $filename);
+            $filename = $file->hashName();
+            $file->storeAs('posts', $filename, 'public');
             $input['image'] = 'posts/' . $filename;
         }
 

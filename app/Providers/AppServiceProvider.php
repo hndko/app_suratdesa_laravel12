@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Blade Directive: @setting('key', 'default')
         \Illuminate\Support\Facades\Blade::directive('setting', function ($expression) {
-            return "<?php echo \App\Facades\Setting::get($expression); ?>";
+            return "<?php echo e(\App\Facades\Setting::get($expression)); ?>";
         });
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\JenisSurat;
 use App\Models\Penduduk;
 use App\Models\Surat;
+use App\Services\SuratNumberService;
+use App\Jobs\SendWhatsAppMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF; // Assuming we use dompdf or similar later, but for now just view
@@ -16,7 +18,7 @@ class SuratController extends Controller
     {
         $data = [
             'title' => 'Arsip Surat',
-            'surats' => Surat::with(['penduduk', 'jenisSurat'])->latest()->get(),
+            'surats' => Surat::with(['penduduk', 'jenisSurat'])->latest()->paginate(25),
         ];
 
         return view('backend.surat.index', $data);
@@ -27,7 +29,7 @@ class SuratController extends Controller
     {
         $data = [
             'title' => 'Buat Surat Baru',
-            'penduduks' => Penduduk::latest()->get(), // Optimize with Select2 AJAX later if many records
+            'penduduks' => Penduduk::select('id', 'nik', 'nama')->latest()->limit(100)->get(),
             'jenis_surats' => JenisSurat::all(),
         ];
 
@@ -41,16 +43,12 @@ class SuratController extends Controller
             'penduduk_id' => 'required|exists:penduduks,id',
             'jenis_surat_id' => 'required|exists:jenis_surats,id',
             'tanggal_surat' => 'required|date',
-            'keperluan' => 'required|string',
+            'keperluan' => 'required|string|max:2000',
+            'keterangan' => 'nullable|string|max:2000',
         ]);
 
-        // Generate No Surat (Simple format for now: KodeSurat/NoUrut/Bulan/Tahun)
-        $jenisSurat = JenisSurat::find($request->jenis_surat_id);
-        $count = Surat::whereYear('tanggal_surat', date('Y', strtotime($request->tanggal_surat)))->count() + 1;
-        $bulan = date('m', strtotime($request->tanggal_surat)); // Romawi converter needed typically, use standard first
-        $tahun = date('Y', strtotime($request->tanggal_surat));
-
-        $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $count, $bulan, $tahun);
+        $jenisSurat = JenisSurat::findOrFail($request->jenis_surat_id);
+        $no_surat = SuratNumberService::generate($jenisSurat, $request->tanggal_surat);
 
         $surat = Surat::create([
             'no_surat' => $no_surat,
@@ -161,9 +159,9 @@ class SuratController extends Controller
                     }
 
                     $formattedLines[] = '<tr>
-                        <td style="width: 180px; vertical-align: top;">' . $label . '</td>
+                        <td style="width: 180px; vertical-align: top;">' . e($label) . '</td>
                         <td style="width: 10px; vertical-align: top;">:</td>
-                        <td style="vertical-align: top;">' . $value . '</td>
+                        <td style="vertical-align: top;">' . e($value) . '</td>
                     </tr>';
                     break;
                 }
@@ -178,7 +176,7 @@ class SuratController extends Controller
                 if (empty($trimLine)) {
                     $formattedLines[] = '<br>';
                 } else {
-                    $formattedLines[] = '<p style="margin-bottom: 5px; text-align: justify;">' . $trimLine . '</p>';
+                    $formattedLines[] = '<p style="margin-bottom: 5px; text-align: justify;">' . e($trimLine) . '</p>';
                 }
             }
         }
@@ -194,11 +192,11 @@ class SuratController extends Controller
             $content .= "<br><table style='width: 100%; border: none; font-size: 12pt;'>";
 
             if (!empty($extraData['keperluan'])) {
-                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keperluan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keperluan'] . "</td></tr>";
+                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keperluan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . e($extraData['keperluan']) . "</td></tr>";
             }
 
             if (!empty($extraData['keterangan'])) {
-                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keterangan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . $extraData['keterangan'] . "</td></tr>";
+                $content .= "<tr><td style='width: 180px; vertical-align: top;'>Keterangan</td><td style='width: 10px; vertical-align: top;'>:</td><td style='vertical-align: top; text-align: justify;'>" . e($extraData['keterangan']) . "</td></tr>";
             }
 
             $content .= "</table>";
@@ -239,7 +237,9 @@ class SuratController extends Controller
             // PRD doesn't explicitly mention phone in Penduduk, but FR-7.01 says integrate with Fonnte.
             // Let's add phone to Penduduk too? Or just log it for now.
 
-            \App\Services\WhatsAppService::send($penduduk->phone ?? '', $message);
+            if ($penduduk->phone) {
+                SendWhatsAppMessage::dispatch($penduduk->phone, $message);
+            }
         }
 
         return redirect()->route('surat.index')->with('success', 'Status surat berhasil diperbarui.');

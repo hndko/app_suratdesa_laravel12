@@ -22,9 +22,7 @@ class PendudukSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             Penduduk::create([
-                'nik' => $faker->unique()->nik(), // Or numerify('16digits') if nik() not avail in all versions, usually safe to use numerify('32##############')
-                // Faker id_ID might provide nik(), let's check or safe fallback
-                'nik' => $faker->unique()->numerify('16##############'), // changed to numerify to be safe
+                'nik' => $faker->unique()->numerify('16##############'),
                 'nama' => $faker->name,
                 'tempat_lahir' => $faker->city,
                 'tgl_lahir' => $faker->date(),
