@@ -10,7 +10,13 @@ class AuthController extends Controller
     // NOTE: Halaman Login
     public function login()
     {
-        return view('auth.login');
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+
+        $data = [
+            'title' => 'Login - ' . $siteName,
+        ];
+
+        return view('auth.login', $data);
     }
 
     // NOTE: Proses Login

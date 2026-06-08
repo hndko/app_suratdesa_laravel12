@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
 @section('content')
 <div class="d-flex align-items-center mb-3">
     <div>
@@ -171,7 +169,7 @@
     </div>
 </div>
 
-@push('js')
+@push('scripts')
 <script>
     document.getElementById('fotoKtpInput').addEventListener('change', function(event) {
         const file = event.target.files[0];

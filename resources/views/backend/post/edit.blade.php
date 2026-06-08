@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
 @section('content')
 <div class="content-header ps-0 pe-0">
     <div class="container-fluid">
@@ -76,11 +74,11 @@
 </div>
 @endsection
 
-@push('css')
+@push('styles')
 <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote-bs4.min.css') }}">
 @endpush
 
-@push('js')
+@push('scripts')
 <script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <script>
     $(function () {

@@ -1,8 +1,6 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
-@push('css')
+@push('styles')
 <link rel="stylesheet" href="{{ asset('assets/plugins/summernote/summernote-bs4.min.css') }}">
 <style>
     .placeholder-badge {
@@ -94,7 +92,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('scripts')
 <script src="{{ asset('assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <script>
     $(function () {

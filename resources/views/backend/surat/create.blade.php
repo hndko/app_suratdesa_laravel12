@@ -1,8 +1,6 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
-@push('css')
+@push('styles')
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
@@ -118,7 +116,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('scripts')
 <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 <script>
     $(document).ready(function() {

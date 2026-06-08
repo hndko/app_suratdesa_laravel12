@@ -25,9 +25,10 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
   - Timeout, retry, fallback external service
   - Error handling dan logging
 
-## 3. Struktur Folder
+## 3. Template, Layout, dan Struktur Folder
 
-- Controller aplikasi berada di `app/Http/Controllers/` tanpa subfolder `Backend` atau `Auth`, kecuali ada kebutuhan baru yang konsisten.
+- Asset statis berada di `public/assets/` untuk CSS, JS, image, library, dan font.
+- Controller aplikasi saat ini berada di `app/Http/Controllers/` tanpa subfolder `Backend` atau `Auth`. Jangan memindahkan controller ke subfolder baru kecuali ada refactor terencana yang menyeluruh.
 - Model berada di `app/Models/`.
 - Service berada di `app/Services/`.
 - Queue job berada di `app/Jobs/`.
@@ -36,30 +37,92 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 - View frontend publik berada di `resources/views/frontend/`.
 - View pengajuan publik wajib dikelompokkan di `resources/views/frontend/pengajuan/[module]/`, contoh `pengajuan/surat/create.blade.php` dan `pengajuan/pengaduan/create.blade.php`.
 - Layout berada di `resources/views/layouts/`.
-- Partial reusable lintas layout boleh dibuat di `resources/views/partials/`.
-- Asset statis berada di `public/assets/`.
+- Partial topbar, sidebar, footer, atau komponen chrome layout tidak boleh dipisah. Semua komponen utama layout wajib tetap berada dalam satu file layout.
+- Partial reusable non-layout boleh dibuat di `resources/views/partials/`, contoh partial global SweetAlert/toast.
+
+### Layout Files
+
+| Layout | File | Penggunaan |
+| --- | --- | --- |
+| Backend | `resources/views/layouts/app-backend.blade.php` | Halaman yang butuh sidebar, dashboard, CRUD, laporan, setting, profile, dan test integrasi |
+| Auth | `resources/views/layouts/app-auth.blade.php` | Halaman authentication seperti login |
+| Frontend publik | `resources/views/layouts/app-frontend-sandbox.blade.php` | Portal publik, pengajuan surat, pengaduan, dan tracking pengaduan |
+
+### Struktur View
+
+```text
+resources/views/
+├── layouts/
+│   ├── app-backend.blade.php
+│   ├── app-auth.blade.php
+│   └── app-frontend-sandbox.blade.php
+├── backend/
+│   ├── dashboard.blade.php
+│   └── [module]/
+│       ├── index.blade.php
+│       ├── create.blade.php
+│       ├── edit.blade.php
+│       └── show.blade.php
+├── auth/
+│   └── login.blade.php
+└── frontend/
+    ├── home.blade.php
+    └── pengajuan/
+        ├── surat/create.blade.php
+        └── pengaduan/
+            ├── create.blade.php
+            └── track.blade.php
+```
 
 ## 4. Layout dan Blade
 
 - Layout backend: `resources/views/layouts/app-backend.blade.php`.
 - Layout auth: `resources/views/layouts/app-auth.blade.php`.
 - Layout frontend publik: `resources/views/layouts/app-frontend-sandbox.blade.php`.
-- Halaman boleh memakai `@section('title', ...)`; layout sudah mendukung `@yield('title', ...)`.
+- Layout hanya boleh menyediakan `@yield('content')` sebagai area konten utama.
+- Title halaman diambil dari variabel `$title` yang dikirim controller via `$data`.
+- Jangan memakai `@yield('title')`, `@section('title')`, atau yield lain selain `@yield('content')`.
 - Area konten utama wajib memakai `@section('content')`.
-- CSS halaman memakai `@push('css')` dan layout memakai `@stack('css')`.
-- JS halaman memakai `@push('js')` dan layout memakai `@stack('js')`.
+- CSS tambahan per halaman memakai `@push('styles')` dan layout memakai `@stack('styles')`.
+- JS tambahan per halaman memakai `@push('scripts')` dan layout memakai `@stack('scripts')`.
 - Gunakan helper `asset()` untuk asset publik.
-- Hindari query model langsung di Blade. Data utama harus dikirim dari controller/service/view composer.
+- Jangan memanggil/query model langsung di Blade, terutama melalui `@php` atau `\App\Models\...::get()`. Semua data view wajib dikirim dari controller/service atau `View::composer()` pada service provider.
 - Jangan gunakan `{!! !!}` untuk data user kecuali sudah disanitasi/di-escape secara sengaja.
 
 ## 5. Controller
 
-- Return view diutamakan memakai array `$data`, terutama backend.
-- `compact()` tidak dipakai untuk controller baru. Jika menyentuh method lama yang memakai `compact()`, ubah ke `$data` bila scope kecil.
+- Return view selalu memakai array `$data`.
+- `$data` minimal berisi `title` untuk halaman yang memakai layout.
+- Jangan memakai `compact()` di controller.
 - Validasi request wajib eksplisit.
 - Hindari `$request->all()` untuk create/update. Gunakan `$request->only([...])` atau data hasil `$request->validate()`.
 - Operasi yang berpotensi gagal karena external service tidak boleh membuat alur utama menjadi 500 tanpa fallback.
 - Untuk daftar data besar, gunakan `paginate()`, query terbatas, filter, atau endpoint server-side.
+
+## 5a. Model Convention
+
+- Semua model Eloquent wajib memakai `use HasFactory`.
+- Trait lain seperti `LogsActivity`, `HasRoles`, atau `Notifiable` tetap boleh dipakai sesuai kebutuhan model.
+
+## 5b. Penamaan
+
+| Item | Konvensi | Contoh |
+| --- | --- | --- |
+| View file | `snake_case.blade.php` atau nama resource standar Laravel | `jenis_surat/index.blade.php`, `forgot-password.blade.php` |
+| View folder | lowercase sesuai modul existing | `backend/penduduk`, `backend/jenis_surat`, `frontend/pengajuan` |
+| Controller | `PascalCase + Controller` | `DashboardController.php`, `JenisSuratController.php` |
+| Route name | dot notation | `dashboard`, `public.surat.create`, `jenis-surat.index` |
+| Layout file | `app-[nama].blade.php` | `app-backend.blade.php` |
+
+## 5c. Cara Menambah Halaman Backend
+
+1. Buat view di `resources/views/backend/[module]/nama.blade.php`.
+2. Extend `layouts.app-backend`.
+3. Jangan menulis `@section('title')`; kirim title dari controller.
+4. Gunakan `@push('styles')` bila butuh CSS tambahan.
+5. Gunakan `@push('scripts')` bila butuh JS tambahan.
+6. Controller mengirim `$data` minimal berisi `title`.
+7. Tambahkan route di `routes/web.php` dengan middleware auth dan permission sesuai modul.
 
 ## 6. Route, Auth, dan Permission
 

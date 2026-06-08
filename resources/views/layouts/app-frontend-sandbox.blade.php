@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Sistem Informasi Desa Terintegrasi - {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}">
   <meta name="author" content="SIMADES">
-  <title>@yield('title', \App\Facades\Setting::get('site_name', 'SIMADES'))</title>
+  <title>{{ $title ?? \App\Facades\Setting::get('site_name', 'SIMADES') }}</title>
   
   <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/plugins.css') }}">
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
   <link rel="preload" href="{{ asset('assets/sandbox/css/fonts/thicccboi.css') }}" as="style" onload="this.rel='stylesheet'">
 
-  @stack('css')
+  @stack('styles')
 </head>
 
 <body>
@@ -144,7 +144,7 @@
   <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
   <script src="{{ asset('assets/sandbox/js/theme.js') }}"></script>
   @include('partials.sweetalert')
-  @stack('js')
+  @stack('scripts')
 </body>
 
 </html>

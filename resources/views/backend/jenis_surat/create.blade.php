@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
 @section('content')
 <div class="d-flex align-items-center mb-3">
     <div>

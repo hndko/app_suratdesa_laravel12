@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', 'Dashboard')
-
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header ps-0 pe-0">
@@ -122,7 +120,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('scripts')
 <script src="{{ asset('assets/plugins/chart.js/Chart.min.js') }}"></script>
 <script>
     // Manual Color Palette (Vibrant)

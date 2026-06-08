@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4 no-print bg-light p-3 rounded border">
     <div>
@@ -31,7 +29,7 @@
     </div>
 </div>
 
-@push('css')
+@push('styles')
 <style>
     @media print {
         body * {

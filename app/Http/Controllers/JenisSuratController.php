@@ -21,7 +21,11 @@ class JenisSuratController extends Controller
     // NOTE: Form tambah jenis surat
     public function create()
     {
-        return view('backend.jenis_surat.create', ['title' => 'Tambah Jenis Surat']);
+        $data = [
+            'title' => 'Tambah Jenis Surat',
+        ];
+
+        return view('backend.jenis_surat.create', $data);
     }
 
     // NOTE: Proses simpan jenis surat

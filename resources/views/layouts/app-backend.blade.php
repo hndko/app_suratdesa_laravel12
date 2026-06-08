@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', \App\Facades\Setting::get('site_name', config('app.name', 'SIMADES')))</title>
+    <title>{{ $title ?? \App\Facades\Setting::get('site_name', config('app.name', 'SIMADES')) }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
-    @stack('css')
+    @stack('styles')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -236,7 +236,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v1.1.1') }}
+                {{ config('app.version', 'v1.2.0') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.
@@ -256,7 +256,7 @@
 
     @include('partials.sweetalert')
 
-    @stack('js')
+    @stack('scripts')
 </body>
 
 </html>

@@ -1,7 +1,5 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
 @section('content')
 <div class="content-header ps-0 pe-0">
     <div class="container-fluid">
@@ -129,7 +127,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('scripts')
 <script>
     $(document).ready(function () {
         bsCustomFileInput.init();

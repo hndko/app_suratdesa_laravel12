@@ -13,8 +13,10 @@ class PublicController extends Controller
     public function home()
     {
         $posts = \App\Models\Post::where('status', 'published')->latest()->take(6)->get();
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
 
         $data = [
+            'title' => 'Selamat Datang di Portal Resmi ' . $siteName,
             'posts' => $posts,
         ];
 
@@ -24,8 +26,10 @@ class PublicController extends Controller
     public function suratCreate()
     {
         $jenisSurats = \App\Models\JenisSurat::all();
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
 
         $data = [
+            'title' => 'Pengajuan Surat Online - ' . $siteName,
             'jenisSurats' => $jenisSurats,
         ];
 
@@ -71,7 +75,13 @@ class PublicController extends Controller
 
     public function pengaduanCreate()
     {
-        return view('frontend.pengajuan.pengaduan.create');
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+
+        $data = [
+            'title' => 'Kirim Pengaduan Warga - ' . $siteName,
+        ];
+
+        return view('frontend.pengajuan.pengaduan.create', $data);
     }
 
     public function pengaduanStore(Request $request)
@@ -108,7 +118,13 @@ class PublicController extends Controller
 
     public function pengaduanTrack()
     {
-        return view('frontend.pengajuan.pengaduan.track');
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+
+        $data = [
+            'title' => 'Lacak Status Pengaduan - ' . $siteName,
+        ];
+
+        return view('frontend.pengajuan.pengaduan.track', $data);
     }
 
     public function pengaduanStatus(Request $request)
@@ -123,6 +139,7 @@ class PublicController extends Controller
             ->first();
 
         $data = [
+            'title' => 'Lacak Status Pengaduan - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
             'pengaduan' => $pengaduan,
         ];
 

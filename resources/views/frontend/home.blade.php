@@ -1,7 +1,5 @@
 @extends('layouts.app-frontend-sandbox')
 
-@section('title', 'Selamat Datang di Portal Resmi ' . \App\Facades\Setting::get('site_name', 'SIMADES'))
-
 @section('content')
 <section class="wrapper bg-light">
   <div class="container pt-11 pt-md-13 pb-11 pb-md-15 text-center">

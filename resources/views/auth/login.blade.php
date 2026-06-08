@@ -1,8 +1,6 @@
 @extends('layouts.app-auth')
 
-@section('title', 'Login - ' . \App\Facades\Setting::get('site_name', 'SIMADES'))
-
-@push('css')
+@push('styles')
 <style>
     .login-wrapper {
         min-height: 100vh;

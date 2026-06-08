@@ -1,8 +1,6 @@
 @extends('layouts.app-backend')
 
-@section('title', $title)
-
-@push('css')
+@push('styles')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
@@ -99,7 +97,7 @@
 </div>
 @endsection
 
-@push('js')
+@push('scripts')
 <!-- DataTables  & Plugins -->
 <script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

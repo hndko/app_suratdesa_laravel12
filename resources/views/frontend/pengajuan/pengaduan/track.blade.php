@@ -1,7 +1,5 @@
 @extends('layouts.app-frontend-sandbox')
 
-@section('title', 'Lacak Status Pengaduan - ' . \App\Facades\Setting::get('site_name', 'SIMADES'))
-
 @section('content')
 <section class="wrapper bg-soft-primary">
   <div class="container pt-10 pb-12 pt-md-14 pb-md-16 text-center">
@@ -86,7 +84,7 @@
                 </div>
             </div>
             @elseif(request()->isMethod('POST'))
-            @push('js')
+            @push('scripts')
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     if (window.showToast) {
