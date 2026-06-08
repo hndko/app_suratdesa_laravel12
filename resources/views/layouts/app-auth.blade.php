@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{{ $title ?? 'Login - SIMADES' }}</title>
+	<title>{{ $title ?? 'Login Staff - SIMADES' }}</title>
 
 	<!-- Google Font: Inter -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
