@@ -46,7 +46,7 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 | --- | --- | --- |
 | Backend | `resources/views/layouts/app-backend.blade.php` | Halaman yang butuh sidebar, dashboard, CRUD, laporan, setting, profile, dan test integrasi |
 | Auth | `resources/views/layouts/app-auth.blade.php` | Halaman authentication seperti login |
-| Frontend publik | `resources/views/layouts/app-frontend-sandbox.blade.php` | Portal publik, pengajuan surat, pengaduan, dan tracking pengaduan |
+| Frontend publik | `resources/views/layouts/app-frontend.blade.php` | Portal publik, pengajuan surat, pengaduan, dan tracking pengaduan |
 
 ### Struktur View
 
@@ -55,7 +55,7 @@ resources/views/
 ├── layouts/
 │   ├── app-backend.blade.php
 │   ├── app-auth.blade.php
-│   └── app-frontend-sandbox.blade.php
+│   └── app-frontend.blade.php
 ├── backend/
 │   ├── dashboard.blade.php
 │   └── [module]/
@@ -80,7 +80,7 @@ resources/views/
 
 - Layout backend: `resources/views/layouts/app-backend.blade.php`.
 - Layout auth: `resources/views/layouts/app-auth.blade.php`.
-- Layout frontend publik: `resources/views/layouts/app-frontend-sandbox.blade.php`.
+- Layout frontend publik: `resources/views/layouts/app-frontend.blade.php`.
 - Layout hanya boleh menyediakan `@yield('content')` sebagai area konten utama.
 - Title halaman diambil dari variabel `$title` yang dikirim controller via `$data`.
 - Jangan memakai `@yield('title')`, `@section('title')`, atau yield lain selain `@yield('content')`.

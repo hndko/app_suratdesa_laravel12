@@ -1,4 +1,4 @@
-@extends('layouts.app-frontend-sandbox')
+@extends('layouts.app-frontend')
 
 @section('content')
 <section class="wrapper bg-soft-primary">
