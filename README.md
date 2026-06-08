@@ -1,90 +1,115 @@
-# SIMADES - Sistem Informasi Manajemen Desa Modern
+# SIMADES - Sistem Informasi Manajemen Desa
 
-[![Laravel Version](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
-[![PHP Version](https://img.shields.io/badge/PHP-8.2%2B-blue.svg)](https://php.net)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+SIMADES adalah aplikasi manajemen administrasi desa berbasis web untuk membantu pelayanan surat, data penduduk, pengaduan warga, publikasi informasi desa, laporan, dan pengaturan role/permission.
 
-**SIMADES** (Sistem Informasi Desa) adalah platform manajemen administrasi desa berbasis web yang dirancang untuk mendigitalisasi layanan publik, mempermudah birokrasi, dan meningkatkan transparansi antara pemerintah desa dan warga. Dibangun dengan standar industri menggunakan **Laravel 12**, platform ini menawarkan pengalaman pengguna yang modern, cepat, dan handal.
+Aplikasi ini dibangun dengan Laravel 12, Blade, AdminLTE 3, Bootstrap, Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, queue Laravel, dan integrasi WhatsApp Fonnte.
 
----
+## Fitur Utama
 
-## 🌟 Fitur Utama
+- Dashboard administrasi desa.
+- Manajemen penduduk.
+- Manajemen jenis surat dan template surat.
+- Pengajuan surat online dari warga.
+- Arsip dan status surat.
+- Pengaduan warga dengan tracking kode tiket.
+- Informasi dan pengumuman desa.
+- Setting identitas aplikasi/desa.
+- Export laporan Excel/PDF.
+- RBAC berbasis role dan permission granular.
+- Notifikasi WhatsApp melalui queue.
 
-### 🏢 Panel Administrasi (Backend)
-- **Manajemen Kependudukan**: Kelola data warga dengan fitur ekspor Excel untuk pelaporan cepat.
-- **Arsip & Pembuatan Surat**: Automasi pembuatan berbagai jenis surat desa (SKU, SKTM, dll) dengan template yang dapat disesuaikan.
-- **Sistem Pengaduan Warga**: Dashboard khusus untuk memproses laporan warga secara efisien.
-- **Audit Logs & Keamanan**: Pencatatan setiap aktivitas data (Activity Log) dan kontrol akses berbasis peran (RBAC) menggunakan Spatie.
-- **Laporan & Rekapitulasi**: Penarikan laporan berkala dalam format Excel dan PDF yang siap cetak.
+## Role Default
 
-### 🌐 Portal Layanan Publik (Frontend)
-- **Desain Premium**: Menggunakan template Sandbox v3.4.1 yang responsif dan estetik.
-- **Pengajuan Surat Mandiri**: Warga dapat mengajukan surat secara online tanpa harus datang ke kantor desa.
-- **Tracking Pengaduan**: Pantau status laporan secara real-time hanya dengan kode tiket.
-- **Branding Dinamis**: Logo dan identitas desa dapat diubah langsung melalui panel pengaturan.
+- `super-admin`
+- `kades`
+- `operator`
+- Warga publik tanpa login untuk layanan pengajuan dan pengaduan.
 
-### 📲 Integrasi & Notifikasi
-- **WhatsApp Gateway (Fonnte)**: Notifikasi otomatis ke warga saat surat selesai diproses atau pengaduan ditanggapi.
-- **Clean Code Architecture**: Menggunakan Service-Pattern & Facades untuk pemeliharaan jangka panjang yang mudah.
+## Kebutuhan
 
----
+- PHP 8.2+
+- Composer 2
+- Node.js LTS dan npm
+- MySQL/MariaDB
+- Web server Apache/Nginx untuk hosting
 
-## 🛠️ Teknologi yang Digunakan
+## Instalasi Lokal Singkat
 
-| Komponen | Teknologi |
-| --- | --- |
-| **Framework** | Laravel 12 (Modern PHP) |
-| **Database** | MySQL / SQLite |
-| **UI/UX (Backend)** | AdminLTE 3 & Bootstrap 4 |
-| **UI/UX (Frontend)** | Sandbox v3.4.1 (Modern Bootstrap 5) |
-| **Integrasi** | Fonnte WhatsApp API |
-| **Packages** | Spatie (Permission & ActivityLog), Maatwebsite Excel, DomPDF |
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan simades:sync-permissions
+php artisan storage:link
+npm run build
+php artisan serve
+```
 
----
+Panduan lengkap: [docs/development.md](docs/development.md).
 
-## 🚀 Instalasi
+## Deployment
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/username/app_suratdesa_laravel12.git
-   ```
+Panduan deployment tersedia untuk:
 
-2. **Install Dependensi**
-   ```bash
-   composer install
-   npm install && npm run build
-   ```
+- Shared hosting
+- VPS dengan Nginx/Apache, PHP-FPM, dan Supervisor
+- Update production
+- Queue worker
+- Rollback ringkas
 
-3. **Konfigurasi Environment**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+Baca: [docs/deployment.md](docs/deployment.md).
 
-4. **Setup Database**
-   Sesuaikan konfigurasi DB di `.env`, lalu jalankan migrasi & seeder:
-   ```bash
-   php artisan migrate --seed
-   ```
+## Command Penting
 
-5. **Jalankan Aplikasi**
-   ```bash
-   php artisan serve
-   ```
+Sinkronkan permission SIMADES setelah perubahan RBAC atau deployment:
 
----
+```bash
+php artisan simades:sync-permissions
+```
 
-## 📸 Showcase
+Daftar command operasional: [docs/commands.md](docs/commands.md).
 
-> [!TIP]
-> Desain frontend menggunakan konsep modern 2-column layout pada halaman autentikasi dan desain landing page yang premium untuk meningkatkan kepercayaan warga terhadap layanan digital desa.
+## Dokumentasi Project
 
----
+- [AGENTS.md](AGENTS.md): aturan kerja, coding standard, RBAC, versioning, dan git workflow.
+- [docs/development.md](docs/development.md): setup development lokal.
+- [docs/deployment.md](docs/deployment.md): deployment shared hosting dan VPS.
+- [docs/commands.md](docs/commands.md): daftar command maintenance.
+- [docs/prd.md](docs/prd.md): dokumen kebutuhan produk.
 
-## 📄 Lisensi
+## Versioning
 
-Proyek ini merupakan perangkat lunak sumber terbuka yang dilisensikan di bawah [MIT license](https://opensource.org/licenses/MIT).
+Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
----
+```env
+APP_VERSION=v1.1.0
+```
 
-**Dikembangkan dengan ❤️ untuk kemajuan digitalisasi desa di Indonesia.**
+Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
+
+```bash
+php artisan config:clear
+```
+
+## Maintenance Production
+
+Urutan umum setelah pull update:
+
+```bash
+git pull origin main
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan migrate --force
+php artisan simades:sync-permissions
+php artisan optimize
+php artisan queue:restart
+```
+
+Backup database sebelum migration atau perubahan RBAC besar.
+
+## Lisensi
+
+Project ini mengikuti lisensi yang tercantum di repository.

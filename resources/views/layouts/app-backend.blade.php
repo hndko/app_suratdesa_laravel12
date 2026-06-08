@@ -236,7 +236,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v1.0.7') }}
+                {{ config('app.version', 'v1.1.0') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.

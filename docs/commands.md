@@ -1,0 +1,115 @@
+# Daftar Command SIMADES
+
+Dokumen ini mencatat command yang sering dipakai saat development, deployment, dan maintenance.
+
+## Command SIMADES
+
+### `php artisan simades:sync-permissions`
+
+Sinkronkan role dan permission default SIMADES dari `database/seeders/RolePermissionSeeder.php`, lalu reset cache permission Spatie.
+
+```bash
+php artisan simades:sync-permissions
+```
+
+Gunakan setelah:
+
+- Menambah permission baru.
+- Mengubah middleware permission route.
+- Menambah tombol aksi backend yang butuh permission.
+- Menambah export, upload, preview, test integrasi, atau perubahan status.
+- Deploy ke production setelah pull update.
+
+Opsi:
+
+```bash
+php artisan simades:sync-permissions --no-cache-reset
+```
+
+Opsi ini dipakai hanya jika cache permission akan direset oleh proses lain.
+
+Catatan production:
+
+- Command ini menjalankan `RolePermissionSeeder` dengan mode `--force`.
+- Permission baru dibuat jika belum ada.
+- Role default yang hilang dapat dibuat ulang oleh seeder.
+- Role custom client tidak seharusnya dihapus manual.
+- Backup database sebelum perubahan RBAC besar.
+
+## Command Laravel Harian
+
+### Install dan setup
+
+```bash
+composer install
+npm install
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+```
+
+### Asset
+
+```bash
+npm run dev
+npm run build
+```
+
+### Cache
+
+```bash
+php artisan optimize
+php artisan optimize:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+php artisan permission:cache-reset
+```
+
+### Database
+
+```bash
+php artisan migrate
+php artisan migrate --force
+php artisan db:seed
+php artisan db:seed --class=RolePermissionSeeder
+```
+
+Hindari di production kecuali benar-benar paham dampaknya:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Queue
+
+```bash
+php artisan queue:work --tries=3 --timeout=60
+php artisan queue:restart
+php artisan queue:failed
+php artisan queue:retry all
+php artisan queue:flush
+```
+
+### Troubleshooting
+
+```bash
+php artisan about
+php artisan route:list
+php artisan config:show app
+php artisan tinker
+```
+
+## Urutan Command Deployment Ringkas
+
+```bash
+git pull origin main
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan migrate --force
+php artisan simades:sync-permissions
+php artisan optimize
+php artisan queue:restart
+```
