@@ -52,7 +52,7 @@
                             </td>
                             <td>
                                 <a href="{{ route('user.edit', $item->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                                <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus user ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" {{ $item->id === auth()->id() ? 'disabled' : '' }}><i class="fas fa-trash"></i></button>

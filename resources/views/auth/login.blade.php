@@ -117,11 +117,6 @@
         box-shadow: 0 6px 12px rgba(49, 130, 206, 0.2);
     }
 
-    .alert {
-        border-radius: 8px;
-        border: none;
-    }
-
     @media (max-width: 992px) {
         .login-side-visual {
             display: none;
@@ -165,22 +160,6 @@
                 <h3>Login ke Dashboard</h3>
                 <p>Silakan masukkan kredensial Anda untuk melanjutkan ke area administratif.</p>
             </div>
-
-            @if(session('error'))
-            <div class="alert alert-danger mb-4">
-                <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
-            </div>
-            @endif
-
-            @if($errors->any())
-            <div class="alert alert-danger mb-4">
-                <ul class="mb-0 pl-3">
-                    @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
 
             <form action="{{ route('login.post') }}" method="post">
                 @csrf

@@ -86,9 +86,15 @@
                 </div>
             </div>
             @elseif(request()->isMethod('POST'))
-            <div class="alert alert-danger alert-icon mt-8" role="alert">
-                <i class="uil uil-times-circle"></i> Maaf, Kode Tiket tidak ditemukan atau salah. Silakan periksa kembali.
-            </div>
+            @push('js')
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (window.showToast) {
+                        window.showToast('error', 'Maaf, Kode Tiket atau NIK tidak ditemukan. Silakan periksa kembali.');
+                    }
+                });
+            </script>
+            @endpush
             @endif
 
           </div>

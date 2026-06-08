@@ -15,6 +15,7 @@
     <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
     @stack('css')
 </head>
@@ -236,37 +237,6 @@
         </div>
         <!-- /.content-wrapper -->
 
-        <!-- Toasts Container (Fixed Top Right) -->
-        <div style="position: fixed; top: 1rem; right: 1rem; z-index: 9999;">
-            @if(session('success'))
-            <div class="toast bg-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
-                <div class="toast-header">
-                    <strong class="mr-auto">Sukses</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body text-white">
-                    {{ session('success') }}
-                </div>
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
-                <div class="toast-header">
-                    <strong class="mr-auto">Error</strong>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body text-white">
-                    {{ session('error') }}
-                </div>
-            </div>
-            @endif
-        </div>
-
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
@@ -284,15 +254,11 @@
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-      // Auto show toasts
-      $('.toast').toast('show');
-  });
-    </script>
+    @include('partials.sweetalert')
 
     @stack('js')
 </body>

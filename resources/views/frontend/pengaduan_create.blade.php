@@ -28,12 +28,6 @@
                 <a href="{{ route('public.pengaduan.track') }}" class="btn btn-sm btn-soft-primary rounded-pill">Lacak Status Aduan Sebelumnya</a>
             </div>
 
-            @if(session('success'))
-            <div class="alert alert-success alert-icon" role="alert">
-              <i class="uil uil-check-circle"></i> {{ session('success') }}
-            </div>
-            @endif
-
             <form action="{{ route('public.pengaduan.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div class="row gx-4">

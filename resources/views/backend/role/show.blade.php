@@ -27,7 +27,7 @@
             </div>
             <div class="card-body">
                 @if($role->name === 'super-admin')
-                <div class="alert alert-info">
+                <div class="bg-info text-white rounded p-3 mb-3">
                     <i class="fas fa-info-circle mr-1"></i> Role ini memiliki akses ke <strong>seluruh fitur</strong> sistem secara otomatis (Bypass Permission).
                 </div>
                 @endif

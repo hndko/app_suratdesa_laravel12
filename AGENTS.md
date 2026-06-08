@@ -1,0 +1,149 @@
+# AGENTS - Aturan Kerja dan Penulisan Project SIMADES
+
+Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah source code SIMADES. Jika ada konflik antara kebiasaan umum dan dokumen ini, ikuti `AGENTS.md`.
+
+## 1. Konteks Project
+
+- Nama aplikasi: SIMADES, Sistem Informasi Manajemen Desa.
+- Stack utama: PHP 8.2+, Laravel 12, Blade, AdminLTE 3/Bootstrap 4 untuk backend, Sandbox Bootstrap 5 untuk frontend publik.
+- Package utama: Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, Laravel queue, Fonnte WhatsApp API.
+- Role utama: `super-admin`, `kades`, `operator`, dan warga publik tanpa login.
+- Modul utama: dashboard, penduduk, jenis surat, surat, pengaduan, post/pengumuman, setting, report/export, user, role, profile, WhatsApp test.
+
+## 2. Prinsip Umum
+
+- Ikuti pola yang sudah ada di project. Jangan memindahkan struktur besar tanpa kebutuhan jelas.
+- Jaga perubahan tetap terarah sesuai permintaan.
+- Jangan menghapus perubahan user atau file lain yang tidak terkait.
+- Untuk fitur baru, bugfix besar, PDF/export, upload file, scheduler, queue, transaksi data, atau integrasi eksternal, wajib cek:
+  - Race condition dan concurrency
+  - Performa dan UX bottleneck
+  - Security: auth, permission, validation, upload, secret exposure, XSS, SQL injection, CSRF
+  - Skalabilitas data
+  - Optimasi database: N+1, indexing, query efficiency
+  - Memory management
+  - Timeout, retry, fallback external service
+  - Error handling dan logging
+
+## 3. Struktur Folder
+
+- Controller aplikasi berada di `app/Http/Controllers/` tanpa subfolder `Backend` atau `Auth`, kecuali ada kebutuhan baru yang konsisten.
+- Model berada di `app/Models/`.
+- Service berada di `app/Services/`.
+- Queue job berada di `app/Jobs/`.
+- Export Excel berada di `app/Exports/`.
+- View backend berada di `resources/views/backend/[module]/`.
+- View frontend publik berada di `resources/views/frontend/`.
+- Layout berada di `resources/views/layouts/`.
+- Partial reusable lintas layout boleh dibuat di `resources/views/partials/`.
+- Asset statis berada di `public/assets/`.
+
+## 4. Layout dan Blade
+
+- Layout backend: `resources/views/layouts/app-backend.blade.php`.
+- Layout auth: `resources/views/layouts/app-auth.blade.php`.
+- Layout frontend publik: `resources/views/layouts/app-frontend-sandbox.blade.php`.
+- Halaman boleh memakai `@section('title', ...)`; layout sudah mendukung `@yield('title', ...)`.
+- Area konten utama wajib memakai `@section('content')`.
+- CSS halaman memakai `@push('css')` dan layout memakai `@stack('css')`.
+- JS halaman memakai `@push('js')` dan layout memakai `@stack('js')`.
+- Gunakan helper `asset()` untuk asset publik.
+- Hindari query model langsung di Blade. Data utama harus dikirim dari controller/service/view composer.
+- Jangan gunakan `{!! !!}` untuk data user kecuali sudah disanitasi/di-escape secara sengaja.
+
+## 5. Controller
+
+- Return view diutamakan memakai array `$data`, terutama backend.
+- `compact()` tidak dipakai untuk controller baru. Jika menyentuh method lama yang memakai `compact()`, ubah ke `$data` bila scope kecil.
+- Validasi request wajib eksplisit.
+- Hindari `$request->all()` untuk create/update. Gunakan `$request->only([...])` atau data hasil `$request->validate()`.
+- Operasi yang berpotensi gagal karena external service tidak boleh membuat alur utama menjadi 500 tanpa fallback.
+- Untuk daftar data besar, gunakan `paginate()`, query terbatas, filter, atau endpoint server-side.
+
+## 6. Route, Auth, dan Permission
+
+- Route publik tetap tanpa login, tetapi form publik wajib memakai CSRF, validation, dan rate limit bila berisiko spam.
+- Route backend wajib berada di middleware `auth`.
+- Setiap modul backend harus memakai middleware permission Spatie yang sesuai, bukan hanya menyembunyikan menu.
+- Super admin mendapat bypass melalui `Gate::before`, tetapi permission tetap perlu didefinisikan di seeder.
+- Logout wajib `POST`.
+- Login wajib dilindungi throttle/rate limit.
+
+## 7. RBAC
+
+- Gunakan permission granular, contoh:
+  - `dashboard-index`
+  - `penduduk-index/create/edit/destroy`
+  - `jenis-surat-index/create/edit/destroy/template`
+  - `surat-index/create/edit/destroy/show/print`
+  - `post-index/create/edit/destroy`
+  - `pengaduan-index/edit/destroy`
+  - `user-*`, `role-*`, `setting-index`, `report-index`, `report-export`, `whatsapp-test`
+- Menu sidebar boleh memakai `@can`/`@canany`, tetapi route tetap wajib punya middleware permission.
+
+## 8. Database dan Transaksi
+
+- Jangan membuat nomor dokumen dengan `count()+1`.
+- Nomor surat harus memakai mekanisme counter/sequence atomik dan transaksi.
+- Tambahkan index untuk kolom yang sering dipakai filter/sort/join.
+- Migration `down()` harus bersih untuk perubahan baru.
+- Foreign key penting harus jelas perilaku delete/update-nya.
+- Data publik yang masuk tetapi belum diproses admin boleh memiliki `user_id` nullable bila proses bisnis membutuhkannya.
+
+## 9. Upload File
+
+- Gunakan `Storage::disk('public')`.
+- Simpan file upload di `storage/app/public/...`, lalu akses melalui `storage/...` setelah `php artisan storage:link`.
+- Jangan memakai nama file asli sebagai nama penyimpanan. Gunakan `hashName()`, UUID, atau nama aman lain.
+- Validasi file minimal: `image`, `mimes:jpg,jpeg,png,webp`, dan `max:2048` untuk gambar umum.
+- Hapus file lama saat diganti bila memang tidak dipakai lagi.
+- Jangan memakai disk yang tidak ada di `config/filesystems.php`.
+
+## 10. Notifikasi, Toast, dan Konfirmasi
+
+- Semua flash message dan validation error harus tampil melalui SweetAlert2 toast global.
+- Gunakan partial `resources/views/partials/sweetalert.blade.php`.
+- Jangan membuat `<div class="alert ...">` untuk flash message.
+- Jangan memakai `alert()` atau `confirm()` bawaan browser.
+- Konfirmasi delete/aksi berbahaya gunakan form class `js-confirm-submit` dengan `data-confirm-text`.
+- SweetAlert2 sudah tersedia di `public/assets/plugins/sweetalert2`.
+
+## 11. External Service dan Queue
+
+- Integrasi Fonnte/WhatsApp harus punya timeout, retry, error logging, dan fallback.
+- Notifikasi otomatis yang bukan aksi test langsung harus dikirim lewat queue job.
+- Halaman WhatsApp test boleh kirim sinkron agar user melihat hasil langsung.
+- Jika queue dipakai, dokumentasikan kebutuhan menjalankan `php artisan queue:work`.
+
+## 12. Export PDF/Excel
+
+- Export data besar gunakan query/chunk/limit, bukan mengambil semua data ke memory tanpa batas.
+- PDF report wajib punya filter dan/atau limit.
+- Hindari N+1 dengan `with()` untuk relasi yang dibutuhkan.
+- Format tanggal di export/user-facing memakai format Indonesia bila relevan.
+
+## 13. UI/UX Backend dan Frontend
+
+- Backend mengikuti AdminLTE 3 dan Bootstrap 4.
+- Frontend publik mengikuti Sandbox Bootstrap 5.
+- Tombol aksi tabel sebaiknya icon-only dengan `title`.
+- Tombol utama di form sebaiknya memakai icon.
+- Form penting sebaiknya memakai input group/icon jika sudah menjadi pola modul tersebut.
+- Jangan membuat alert inline manual; gunakan toast SweetAlert.
+- Jaga tampilan tetap responsif dan tidak memuat data besar sekaligus.
+
+## 14. Testing dan Verifikasi
+
+- Agent boleh melakukan pemeriksaan ringan seperti `php -l` untuk file yang diubah.
+- Jika user meminta uji manual dilakukan oleh user, jangan menjalankan test suite/browser/migration tanpa diminta.
+- Setiap selesai pengerjaan, laporkan:
+  - Sudah dikerjakan
+  - Belum dikerjakan/perlu tindak lanjut
+  - Arahan uji manual
+  - Risiko/catatan bila ada
+
+## 15. Governance
+
+- `AGENTS.md` wajib diperbarui saat ada standar project baru.
+- Setelah `AGENTS.md` berubah, perubahan kode berikutnya wajib mengikuti dokumen ini.
+- `docs/RULES.md` tidak dipakai lagi; dokumen patokan adalah `AGENTS.md` di root project.

@@ -53,7 +53,7 @@
                                 @endif
                                 
                                 @if(!in_array($item->name, ['super-admin', 'kades', 'operator']))
-                                <form action="{{ route('role.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus role ini?')">
+                                <form action="{{ route('role.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus role ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>

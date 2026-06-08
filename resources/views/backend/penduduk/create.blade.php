@@ -21,16 +21,6 @@
         <form action="{{ route('penduduk.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            @if($errors->any())
-            <div class="alert alert-danger mb-3">
-                <ul class="mb-0 ps-3">
-                    @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label">NIK <span class="text-danger">*</span></label>

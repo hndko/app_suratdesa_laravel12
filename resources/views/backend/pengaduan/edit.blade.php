@@ -73,7 +73,7 @@
                     </div>
 
                     @if($pengaduan->replied_by)
-                    <div class="alert alert-light border">
+                    <div class="bg-light border rounded p-3">
                         <small>Terakhir ditanggapi oleh <strong>{{ $pengaduan->repliedBy->name }}</strong> pada {{ \Carbon\Carbon::parse($pengaduan->replied_at)->format('d/m/Y H:i') }}</small>
                     </div>
                     @endif

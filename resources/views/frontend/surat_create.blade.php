@@ -24,23 +24,6 @@
         <div class="card shadow-lg">
           <div class="card-body p-11">
             
-            @if(session('success'))
-            <div class="alert alert-success alert-icon" role="alert">
-              <i class="uil uil-check-circle"></i> {{ session('success') }}
-            </div>
-            @endif
-
-            @if($errors->any())
-            <div class="alert alert-danger alert-icon" role="alert">
-              <i class="uil uil-times-circle"></i>
-              <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-            @endif
-
             <form action="{{ route('public.surat.store') }}" method="POST">
               @csrf
               <div class="row gx-4">

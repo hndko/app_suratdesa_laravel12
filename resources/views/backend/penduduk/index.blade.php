@@ -64,8 +64,8 @@
                             <td>
                                 <a href="{{ route('penduduk.edit', $row->id) }}" class="btn btn-sm btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i></a>
-                                <form action="{{ route('penduduk.destroy', $row->id) }}" method="POST" class="d-inline"
-                                    onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                <form action="{{ route('penduduk.destroy', $row->id) }}" method="POST" class="d-inline js-confirm-submit"
+                                    data-confirm-text="Yakin ingin menghapus data penduduk ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i

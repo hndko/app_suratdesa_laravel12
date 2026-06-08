@@ -85,7 +85,7 @@
                     <span class="badge badge-success placeholder-badge" data-code="[tanggal_surat]">Tanggal Surat</span>
                 </div>
                 <hr>
-                <div class="alert alert-light border small">
+                <div class="bg-light border rounded p-3 small">
                     <i class="fas fa-lightbulb text-warning mr-1"></i> <strong>Tips:</strong> Gunakan tabel di editor untuk merapikan bagian identitas (Nama: [nama], dsb).
                 </div>
             </div>
@@ -115,7 +115,6 @@
 
         $('.placeholder-badge').on('click', function() {
             var code = $(this).data('code');
-            // Copy to clipboard or just alert for now, but better to insert into summernote
             $('#summernote').summernote('editor.insertText', code);
         });
     });

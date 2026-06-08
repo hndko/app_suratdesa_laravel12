@@ -133,7 +133,9 @@
 
             // Basic validation check
             if(!$('select[name="jenis_surat_id"]').val() || !$('select[name="penduduk_id"]').val()) {
-                alert('Mohon pilih Jenis Surat dan Penduduk terlebih dahulu.');
+                if (window.showToast) {
+                    window.showToast('warning', 'Mohon pilih Jenis Surat dan Penduduk terlebih dahulu.');
+                }
                 return;
             }
 
@@ -149,7 +151,10 @@
                     $('#previewContent').html(response.html);
                 },
                 error: function(xhr) {
-                    $('#previewContent').html('<div class="alert alert-danger">Gagal memuat preview. Pastikan semua data wajib diisi.</div>');
+                    $('#previewContent').html('<div class="bg-light border border-danger rounded p-4 text-danger">Gagal memuat preview. Pastikan semua data wajib diisi.</div>');
+                    if (window.showToast) {
+                        window.showToast('error', 'Gagal memuat preview. Pastikan semua data wajib diisi.');
+                    }
                 }
             });
         });

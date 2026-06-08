@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/plugins.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/colors/sky.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
   <link rel="preload" href="{{ asset('assets/sandbox/css/fonts/thicccboi.css') }}" as="style" onload="this.rel='stylesheet'">
 
   @stack('css')
@@ -140,7 +141,9 @@
   </div>
   
   <script src="{{ asset('assets/sandbox/js/plugins.js') }}"></script>
+  <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
   <script src="{{ asset('assets/sandbox/js/theme.js') }}"></script>
+  @include('partials.sweetalert')
   @stack('js')
 </body>
 

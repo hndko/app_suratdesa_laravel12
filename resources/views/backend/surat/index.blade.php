@@ -78,8 +78,8 @@
                                 <a href="{{ route('surat.edit', $item->id) }}"
                                     class="btn btn-sm btn-warning text-white mr-1" title="Update Status"><i
                                         class="fas fa-edit"></i></a>
-                                <form action="{{ route('surat.destroy', $item->id) }}" method="POST" class="d-inline"
-                                    onsubmit="return confirm('Yakin ingin menghapus arsip ini?')">
+                                <form action="{{ route('surat.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit"
+                                    data-confirm-text="Yakin ingin menghapus arsip surat ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i
