@@ -44,7 +44,7 @@ php artisan storage:link
 php artisan serve
 ```
 
-Panduan lengkap: [docs/development.md](docs/development.md).
+Panduan lengkap: [docs/02. development.md](docs/02.%20development.md).
 
 ## Deployment
 
@@ -56,7 +56,7 @@ Panduan deployment tersedia untuk:
 - Queue worker
 - Rollback ringkas
 
-Baca: [docs/deployment.md](docs/deployment.md).
+Baca: [docs/03. deployment.md](docs/03.%20deployment.md).
 
 ## Command Penting
 
@@ -66,15 +66,15 @@ Sinkronkan permission SIMADES setelah perubahan RBAC atau deployment:
 php artisan simades:sync-permissions
 ```
 
-Daftar command operasional: [docs/commands.md](docs/commands.md).
+Daftar command operasional: [docs/04. commands.md](docs/04.%20commands.md).
 
 ## Dokumentasi Project
 
 - [AGENTS.md](AGENTS.md): aturan kerja, coding standard, RBAC, versioning, dan git workflow.
-- [docs/development.md](docs/development.md): setup development lokal.
-- [docs/deployment.md](docs/deployment.md): deployment shared hosting dan VPS.
-- [docs/commands.md](docs/commands.md): daftar command maintenance.
-- [docs/prd.md](docs/prd.md): dokumen kebutuhan produk.
+- [docs/01. prd.md](docs/01.%20prd.md): dokumen kebutuhan produk.
+- [docs/02. development.md](docs/02.%20development.md): setup development lokal.
+- [docs/03. deployment.md](docs/03.%20deployment.md): deployment shared hosting dan VPS.
+- [docs/04. commands.md](docs/04.%20commands.md): daftar command maintenance.
 
 ## Versioning
 
