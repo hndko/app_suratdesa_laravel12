@@ -13,13 +13,23 @@ class PublicController extends Controller
     public function home()
     {
         $posts = \App\Models\Post::where('status', 'published')->latest()->take(6)->get();
-        return view('frontend.home', compact('posts'));
+
+        $data = [
+            'posts' => $posts,
+        ];
+
+        return view('frontend.home', $data);
     }
 
     public function suratCreate()
     {
         $jenisSurats = \App\Models\JenisSurat::all();
-        return view('frontend.surat_create', compact('jenisSurats'));
+
+        $data = [
+            'jenisSurats' => $jenisSurats,
+        ];
+
+        return view('frontend.surat_create', $data);
     }
 
     public function suratStore(Request $request)
@@ -112,7 +122,11 @@ class PublicController extends Controller
             ->where('nik', $request->nik)
             ->first();
 
-        return view('frontend.pengaduan_track', compact('pengaduan'));
+        $data = [
+            'pengaduan' => $pengaduan,
+        ];
+
+        return view('frontend.pengaduan_track', $data);
     }
 
     private function generateTicketCode(): string
