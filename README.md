@@ -29,7 +29,6 @@ Aplikasi ini dibangun dengan Laravel 12, Blade, AdminLTE 3, Bootstrap, Spatie Pe
 
 - PHP 8.2+
 - Composer 2
-- Node.js LTS dan npm
 - MySQL/MariaDB
 - Web server Apache/Nginx untuk hosting
 
@@ -37,13 +36,11 @@ Aplikasi ini dibangun dengan Laravel 12, Blade, AdminLTE 3, Bootstrap, Spatie Pe
 
 ```bash
 composer install
-npm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate --seed
 php artisan simades:sync-permissions
 php artisan storage:link
-npm run build
 php artisan serve
 ```
 
@@ -84,7 +81,7 @@ Daftar command operasional: [docs/commands.md](docs/commands.md).
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v1.1.0
+APP_VERSION=v1.1.1
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
@@ -100,8 +97,6 @@ Urutan umum setelah pull update:
 ```bash
 git pull origin main
 composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
 php artisan migrate --force
 php artisan simades:sync-permissions
 php artisan optimize

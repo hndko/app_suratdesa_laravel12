@@ -74,8 +74,6 @@ VPS memberi kontrol penuh. Gunakan Nginx/Apache, PHP-FPM, MySQL/MariaDB, dan Sup
 git clone https://github.com/hndko/app_suratdesa_laravel12.git /var/www/simades
 cd /var/www/simades
 composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
 cp .env.example .env
 php artisan key:generate --force
 php artisan migrate --force
@@ -146,8 +144,6 @@ sudo supervisorctl restart simades-queue:*
 ```bash
 git pull origin main
 composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
 php artisan migrate --force
 php artisan simades:sync-permissions
 php artisan optimize

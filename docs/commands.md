@@ -42,18 +42,12 @@ Catatan production:
 
 ```bash
 composer install
-npm install
 php artisan key:generate
 php artisan migrate --seed
 php artisan storage:link
 ```
 
-### Asset
-
-```bash
-npm run dev
-npm run build
-```
+Asset UI SIMADES saat ini memakai file statis di `public/assets`, sehingga setup normal tidak membutuhkan command npm/Vite.
 
 ### Cache
 
@@ -106,8 +100,6 @@ php artisan tinker
 ```bash
 git pull origin main
 composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
 php artisan migrate --force
 php artisan simades:sync-permissions
 php artisan optimize

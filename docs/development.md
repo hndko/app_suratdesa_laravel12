@@ -6,7 +6,6 @@ Dokumen ini berisi langkah kerja lokal untuk menjalankan SIMADES di Laragon, XAM
 
 - PHP 8.2 atau lebih baru.
 - Composer 2.
-- Node.js LTS dan npm.
 - MySQL/MariaDB.
 - Extension PHP umum Laravel: `bcmath`, `ctype`, `curl`, `dom`, `fileinfo`, `json`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, `xml`, `zip`.
 
@@ -14,7 +13,6 @@ Dokumen ini berisi langkah kerja lokal untuk menjalankan SIMADES di Laragon, XAM
 
 ```bash
 composer install
-npm install
 cp .env.example .env
 php artisan key:generate
 ```
@@ -26,7 +24,7 @@ APP_NAME="SIMADES"
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://127.0.0.1:8000
-APP_VERSION=v1.1.0
+APP_VERSION=v1.1.1
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -60,24 +58,11 @@ Upload publik disimpan melalui disk `public`, sehingga symbolic link wajib terse
 
 ## Menjalankan Aplikasi
 
-Mode sederhana:
-
 ```bash
 php artisan serve
-npm run dev
 ```
 
-Mode lengkap untuk queue dan log:
-
-```bash
-composer run dev
-```
-
-Jika tidak ingin memakai Vite dev server, build asset:
-
-```bash
-npm run build
-```
+Asset UI SIMADES saat ini memakai Bootstrap/AdminLTE/Sandbox statis dari `public/assets`, sehingga tidak perlu menjalankan command npm/Vite untuk setup normal.
 
 ## Queue Lokal
 
