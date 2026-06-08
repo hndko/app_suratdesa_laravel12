@@ -30,17 +30,32 @@
             <div class="card-header">
                 <h3 class="card-title">List Data Penduduk</h3>
                 <div class="card-tools">
+                    @can('penduduk-create')
                     <a href="{{ route('penduduk.create') }}" class="btn btn-primary btn-sm"><i
                             class="fas fa-plus mr-1"></i> Tambah Penduduk</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
+                <form action="{{ route('penduduk.index') }}" method="GET" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" value="{{ $q ?? '' }}"
+                            placeholder="Cari NIK atau nama penduduk...">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                            @if(!empty($q))
+                            <a href="{{ route('penduduk.index') }}" class="btn btn-default"><i class="fas fa-times"></i></a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
                 <table id="datatableDefault" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th width="1%">No</th>
                             <th>NIK</th>
                             <th>Nama</th>
+                            <th>No. KK</th>
                             <th>L/P</th>
                             <th>TTL</th>
                             <th>Alamat</th>
@@ -54,14 +69,18 @@
                             <td>{{ $penduduks->firstItem() + $loop->index }}</td>
                             <td>{{ $row->nik }}</td>
                             <td>{{ $row->nama }}</td>
+                            <td>{{ $row->kartuKeluarga->no_kk ?? '-' }}</td>
                             <td>{{ $row->jenis_kelamin }}</td>
                             <td>{{ $row->tempat_lahir }}, {{ \Carbon\Carbon::parse($row->tgl_lahir)->format('d-m-Y') }}
                             </td>
                             <td>{{ $row->alamat }} RT {{ $row->rt }} / RW {{ $row->rw }}</td>
                             <td>{{ $row->pekerjaan }}</td>
                             <td>
+                                @can('penduduk-edit')
                                 <a href="{{ route('penduduk.edit', $row->id) }}" class="btn btn-sm btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('penduduk-destroy')
                                 <form action="{{ route('penduduk.destroy', $row->id) }}" method="POST" class="d-inline js-confirm-submit"
                                     data-confirm-text="Yakin ingin menghapus data penduduk ini?">
                                     @csrf
@@ -69,6 +88,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach
@@ -94,6 +114,7 @@
       $("#datatableDefault").DataTable({
         "responsive": true,
         "lengthChange": true,
+        "searching": false,
         "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       }).buttons().container().appendTo('#datatableDefault_wrapper .col-md-6:eq(0)');

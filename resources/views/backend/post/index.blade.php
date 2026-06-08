@@ -29,8 +29,10 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Pengumuman</h3>
                 <div class="card-tools">
+                    @can('post-create')
                     <a href="{{ route('post.create') }}" class="btn btn-primary btn-sm"><i
                             class="fas fa-plus mr-1"></i> Buat Pengumuman</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -66,8 +68,11 @@
                             </td>
                             <td>{{ $row->created_at->format('d/m/Y H:i') }}</td>
                             <td>
+                                @can('post-edit')
                                 <a href="{{ route('post.edit', $row->id) }}" class="btn btn-sm btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('post-destroy')
                                 <form action="{{ route('post.destroy', $row->id) }}" method="POST" class="d-inline js-confirm-submit"
                                     data-confirm-text="Yakin ingin menghapus pengumuman ini?">
                                     @csrf
@@ -75,6 +80,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

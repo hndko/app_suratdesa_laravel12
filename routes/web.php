@@ -20,6 +20,8 @@ Route::get('/', [App\Http\Controllers\PublicController::class, 'home'])->name('p
 Route::name('public.')->group(function () {
     Route::get('/layanan-surat', [App\Http\Controllers\PublicController::class, 'suratCreate'])->name('surat.create');
     Route::post('/layanan-surat', [App\Http\Controllers\PublicController::class, 'suratStore'])->name('surat.store')->middleware('throttle:10,1');
+    Route::get('/lacak-surat', [App\Http\Controllers\PublicController::class, 'suratTrack'])->name('surat.track');
+    Route::post('/lacak-surat', [App\Http\Controllers\PublicController::class, 'suratStatus'])->name('surat.status')->middleware('throttle:20,1');
 
     Route::get('/kirim-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanCreate'])->name('pengaduan.create');
     Route::post('/kirim-pengaduan', [App\Http\Controllers\PublicController::class, 'pengaduanStore'])->name('pengaduan.store')->middleware('throttle:10,1');
@@ -46,6 +48,15 @@ Route::middleware('auth')->group(function () {
         ->middleware('permission:dashboard-index');
 
     // NOTE: Master Data Penduduk Group
+    Route::resource('kartu-keluarga', App\Http\Controllers\KartuKeluargaController::class)
+        ->middlewareFor('index', 'permission:kartu-keluarga-index')
+        ->middlewareFor('show', 'permission:kartu-keluarga-show')
+        ->middlewareFor('create', 'permission:kartu-keluarga-create')
+        ->middlewareFor('store', 'permission:kartu-keluarga-store')
+        ->middlewareFor('edit', 'permission:kartu-keluarga-edit')
+        ->middlewareFor('update', 'permission:kartu-keluarga-update')
+        ->middlewareFor('destroy', 'permission:kartu-keluarga-destroy');
+
     Route::controller(App\Http\Controllers\PendudukController::class)->prefix('penduduk')->name('penduduk.')->middleware('permission:penduduk-index')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create')->middleware('permission:penduduk-create');
@@ -134,4 +145,6 @@ Route::middleware('auth')->group(function () {
     // WhatsApp Test
     Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index')->middleware('permission:whatsapp-test-index');
     Route::post('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'send'])->name('whatsapp.test.send')->middleware('permission:whatsapp-test-send');
+
+    Route::get('/activity-log', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-log.index')->middleware('permission:activity-log-index');
 });

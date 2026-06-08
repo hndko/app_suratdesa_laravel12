@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penduduk;
+use App\Models\KartuKeluarga;
 use App\Models\Pengaduan;
 use App\Models\Post;
 use App\Models\Surat;
@@ -15,9 +16,20 @@ class DashboardController extends Controller
     {
         // Statistik Card
         $totalPenduduk = Penduduk::count();
+        $totalKartuKeluarga = KartuKeluarga::count();
         $totalSurat = Surat::count();
         $totalPengaduan = Pengaduan::count();
         $totalPost = Post::count();
+
+        $genderStats = Penduduk::selectRaw('jenis_kelamin, COUNT(*) as total')
+            ->groupBy('jenis_kelamin')
+            ->pluck('total', 'jenis_kelamin')
+            ->toArray();
+        $totalLakiLaki = $genderStats['L'] ?? 0;
+        $totalPerempuan = $genderStats['P'] ?? 0;
+        $rasioJenisKelamin = $totalPerempuan > 0
+            ? round($totalLakiLaki / $totalPerempuan, 2) . ' : 1'
+            : ($totalLakiLaki > 0 ? $totalLakiLaki . ' : 0' : '0 : 0');
 
         // Pengaduan Status Stats
         $pengaduanStats = Pengaduan::selectRaw('status, COUNT(*) as total')
@@ -63,6 +75,10 @@ class DashboardController extends Controller
             'title' => 'Dashboard',
             'year' => $year,
             'totalPenduduk' => $totalPenduduk,
+            'totalKartuKeluarga' => $totalKartuKeluarga,
+            'totalLakiLaki' => $totalLakiLaki,
+            'totalPerempuan' => $totalPerempuan,
+            'rasioJenisKelamin' => $rasioJenisKelamin,
             'totalSurat' => $totalSurat,
             'totalPengaduan' => $totalPengaduan,
             'totalPost' => $totalPost,

@@ -21,6 +21,7 @@ class Penduduk extends Model
     }
 
     protected $fillable = [
+        'kartu_keluarga_id',
         'nik',
         'nama',
         'phone',
@@ -31,6 +32,9 @@ class Penduduk extends Model
         'rt',
         'rw',
         'agama',
+        'pendidikan',
+        'golongan_darah',
+        'shdk',
         'status_perkawinan',
         'pekerjaan',
         'foto_ktp',
@@ -39,5 +43,10 @@ class Penduduk extends Model
     public function surats()
     {
         return $this->hasMany(Surat::class);
+    }
+
+    public function kartuKeluarga()
+    {
+        return $this->belongsTo(KartuKeluarga::class);
     }
 }

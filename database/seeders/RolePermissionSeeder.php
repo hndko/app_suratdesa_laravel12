@@ -23,6 +23,14 @@ class RolePermissionSeeder extends Seeder
         $permissions = [
             'dashboard-index',
 
+            'kartu-keluarga-index',
+            'kartu-keluarga-show',
+            'kartu-keluarga-create',
+            'kartu-keluarga-store',
+            'kartu-keluarga-edit',
+            'kartu-keluarga-update',
+            'kartu-keluarga-destroy',
+
             'user-index',
             'user-create',
             'user-store',
@@ -92,7 +100,9 @@ class RolePermissionSeeder extends Seeder
 
             'profile-index',
             'profile-update',
-            'profile-edit'
+            'profile-edit',
+
+            'activity-log-index',
         ];
 
         foreach ($permissions as $permission) {
@@ -106,6 +116,8 @@ class RolePermissionSeeder extends Seeder
         // Kades: Monitoring dan Approval
         $roleKades->syncPermissions([
             'dashboard-index',
+            'kartu-keluarga-index',
+            'kartu-keluarga-show',
             'surat-index',
             'surat-show',
             'surat-print',
@@ -121,12 +133,19 @@ class RolePermissionSeeder extends Seeder
             'report-pengaduan-excel',
             'profile-index',
             'profile-update',
-            'profile-edit'
+            'profile-edit',
+            'activity-log-index',
         ]);
 
         // Operator: Input data teknis
         $roleOperator->syncPermissions([
             'dashboard-index',
+            'kartu-keluarga-index',
+            'kartu-keluarga-show',
+            'kartu-keluarga-create',
+            'kartu-keluarga-store',
+            'kartu-keluarga-edit',
+            'kartu-keluarga-update',
             'penduduk-index',
             'penduduk-create',
             'penduduk-store',

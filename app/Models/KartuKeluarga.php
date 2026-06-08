@@ -7,22 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class JenisSurat extends Model
+class KartuKeluarga extends Model
 {
     use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'kode_surat',
-        'nama_surat',
-        'kop_judul',
-        'template_isi',
+        'no_kk',
+        'kepala_keluarga',
+        'alamat',
+        'rt',
+        'rw',
+        'desa',
+        'kecamatan',
+        'kabupaten',
+        'provinsi',
+        'kode_pos',
     ];
-
-    // NOTE: Relation to Surat
-    public function surats()
-    {
-        return $this->hasMany(Surat::class);
-    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -30,5 +30,10 @@ class JenisSurat extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
+    }
+
+    public function penduduks()
+    {
+        return $this->hasMany(Penduduk::class);
     }
 }

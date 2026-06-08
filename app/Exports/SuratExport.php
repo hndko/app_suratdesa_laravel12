@@ -36,6 +36,7 @@ class SuratExport implements FromQuery, WithHeadings, WithMapping
     {
         return [
             'No. Surat',
+            'Kode Tracking',
             'Nama Penduduk',
             'NIK',
             'Jenis Surat',
@@ -50,6 +51,7 @@ class SuratExport implements FromQuery, WithHeadings, WithMapping
     {
         return [
             $surat->no_surat,
+            $surat->tracking_code,
             $surat->penduduk->nama ?? '-',
             $surat->penduduk->nik ?? '-',
             $surat->jenisSurat->nama_surat ?? '-',

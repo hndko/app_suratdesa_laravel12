@@ -30,6 +30,20 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
+                    <label class="form-label">Kartu Keluarga</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-address-card"></i></span>
+                        <select name="kartu_keluarga_id" class="form-control">
+                            <option value="">-- Belum ditautkan --</option>
+                            @foreach($kartuKeluargas as $kk)
+                            <option value="{{ $kk->id }}" {{ old('kartu_keluarga_id', $penduduk->kartu_keluarga_id) == $kk->id ? 'selected' : '' }}>
+                                {{ $kk->no_kk }} - {{ $kk->kepala_keluarga }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
                     <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-user"></i></span>
@@ -104,7 +118,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="form-label">Status Perkawinan <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-ring"></i></span>
@@ -121,12 +135,47 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label class="form-label">Pekerjaan <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-briefcase"></i></span>
                         <input type="text" name="pekerjaan" class="form-control" placeholder="Pekerjaan"
                             value="{{ old('pekerjaan', $penduduk->pekerjaan) }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Pendidikan <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-graduation-cap"></i></span>
+                        <input type="text" name="pendidikan" class="form-control" placeholder="Pendidikan terakhir"
+                            value="{{ old('pendidikan', $penduduk->pendidikan) }}" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Golongan Darah</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-tint"></i></span>
+                        <select name="golongan_darah" class="form-control">
+                            <option value="">-- Tidak Tahu --</option>
+                            @foreach(['A','B','AB','O'] as $golongan)
+                            <option value="{{ $golongan }}" {{ old('golongan_darah', $penduduk->golongan_darah) == $golongan ? 'selected' : '' }}>{{ $golongan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Status Hubungan dalam Keluarga <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-users"></i></span>
+                        <select name="shdk" class="form-control" required>
+                            <option value="">-- Pilih --</option>
+                            @foreach(['Kepala Keluarga','Istri','Anak','Menantu','Cucu','Orang Tua','Mertua','Famili Lain','Lainnya'] as $shdk)
+                            <option value="{{ $shdk }}" {{ old('shdk', $penduduk->shdk) == $shdk ? 'selected' : '' }}>{{ $shdk }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -169,7 +218,7 @@
                     <img id="fotoKtpPreview" src="{{ Storage::url($penduduk->foto_ktp) }}" alt="Preview"
                         class="img-thumbnail" style="max-height: 200px;">
                     @else
-                    <img id="fotoKtpPreview" src="{{ asset('assets/img/user/user.jpg') }}" alt="Preview"
+                    <img id="fotoKtpPreview" src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" alt="Preview"
                         class="img-thumbnail" style="max-height: 200px;">
                     @endif
                 </div>

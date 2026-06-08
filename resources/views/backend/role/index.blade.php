@@ -23,7 +23,9 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Role Sistem</h3>
                 <div class="card-tools">
+                    @can('role-create')
                     <a href="{{ route('role.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i> Tambah Role</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -45,11 +47,16 @@
                                 <span class="badge badge-info">{{ $item->permissions_count ?? $item->permissions->count() }} Permissions</span>
                             </td>
                             <td>
+                                @can('role-show')
                                 <a href="{{ route('role.show', $item->id) }}" class="btn btn-sm btn-primary" title="Lihat Detail"><i class="fas fa-eye"></i></a>
+                                @endcan
+                                @can('role-edit')
                                 @if($item->name !== 'super-admin')
                                 <a href="{{ route('role.edit', $item->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
                                 @endif
+                                @endcan
                                 
+                                @can('role-destroy')
                                 @if(!in_array($item->name, ['super-admin', 'kades', 'operator']))
                                 <form action="{{ route('role.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus role ini?">
                                     @csrf
@@ -57,6 +64,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
                                 </form>
                                 @endif
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

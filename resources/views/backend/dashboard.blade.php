@@ -30,7 +30,23 @@
             <div class="icon">
                 <i class="fas fa-users"></i>
             </div>
+            @can('penduduk-index')
             <a href="{{ route('penduduk.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>{{ $totalKartuKeluarga }}</h3>
+                <p>Total Kartu Keluarga</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-address-card"></i>
+            </div>
+            @can('kartu-keluarga-index')
+            <a href="{{ route('kartu-keluarga.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -42,7 +58,23 @@
             <div class="icon">
                 <i class="fas fa-envelope"></i>
             </div>
+            @can('surat-index')
             <a href="{{ route('surat.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
+        </div>
+    </div>
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-secondary">
+            <div class="inner">
+                <h3>{{ $rasioJenisKelamin }}</h3>
+                <p>L/P: {{ $totalLakiLaki }} / {{ $totalPerempuan }}</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-venus-mars"></i>
+            </div>
+            @can('penduduk-index')
+            <a href="{{ route('penduduk.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -54,7 +86,9 @@
             <div class="icon">
                 <i class="fas fa-comments"></i>
             </div>
+            @can('pengaduan-index')
             <a href="{{ route('pengaduan.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -66,7 +100,9 @@
             <div class="icon">
                 <i class="fas fa-newspaper"></i>
             </div>
+            @can('post-index')
             <a href="{{ route('post.index') }}" class="small-box-footer">Detail <i class="fas fa-arrow-circle-right"></i></a>
+            @endcan
         </div>
     </div>
 </div>
@@ -133,10 +169,10 @@
     var chartSurat = new Chart(ctxSurat, {
         type: 'bar',
         data: {
-            labels: {!! json_encode($chartSuratBulanLbl) !!},
+            labels: @json($chartSuratBulanLbl),
             datasets: [{
                 label: 'Jumlah Surat',
-                data: {!! json_encode($chartSuratBulanVal) !!},
+                data: @json($chartSuratBulanVal),
                 backgroundColor: 'rgba(60, 141, 188, 0.9)',
                 borderColor: 'rgba(60, 141, 188, 0.8)',
                 borderWidth: 1
@@ -160,9 +196,9 @@
     var chartJenis = new Chart(ctxJenis, {
         type: 'doughnut',
         data: {
-            labels: {!! json_encode($chartJenisLbl) !!},
+            labels: @json($chartJenisLbl),
             datasets: [{
-                data: {!! json_encode($chartJenisVal) !!},
+                data: @json($chartJenisVal),
                 backgroundColor: colors,
             }]
         },
@@ -179,9 +215,9 @@
     var chartPengaduan = new Chart(ctxPengaduan, {
         type: 'pie',
         data: {
-            labels: {!! json_encode($chartPengaduanLbl) !!},
+            labels: @json($chartPengaduanLbl),
             datasets: [{
-                data: {!! json_encode($chartPengaduanVal) !!},
+                data: @json($chartPengaduanVal),
                 backgroundColor: ['#dc3545', '#ffc107', '#198754'],
             }]
         },

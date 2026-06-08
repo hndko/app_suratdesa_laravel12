@@ -40,15 +40,18 @@ class SuratSeeder extends Seeder
             $tahun = $tanggal->format('Y');
             $no_surat = sprintf("%s/%03d/%s/%s", $jenisSurat->kode_surat, $i + 1, $bulan, $tahun);
 
-            Surat::create([
-                'no_surat' => $no_surat,
-                'penduduk_id' => $pendudukId,
-                'jenis_surat_id' => $jenisSurat->id,
-                'user_id' => $userId,
-                'tanggal_surat' => $tanggal,
-                'keperluan' => $faker->sentence(6),
-                'keterangan' => $faker->optional()->sentence,
-            ]);
+            Surat::updateOrCreate(
+                ['no_surat' => $no_surat],
+                [
+                    'tracking_code' => 'SRT-SEED-' . str_pad((string) ($i + 1), 4, '0', STR_PAD_LEFT),
+                    'penduduk_id' => $pendudukId,
+                    'jenis_surat_id' => $jenisSurat->id,
+                    'user_id' => $userId,
+                    'tanggal_surat' => $tanggal,
+                    'keperluan' => $faker->sentence(6),
+                    'keterangan' => $faker->optional()->sentence,
+                ]
+            );
         }
     }
 }

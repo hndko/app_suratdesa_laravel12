@@ -22,9 +22,11 @@
                     </div>
                     <div class="card-body">
                         <p class="text-muted">Unduh seluruh data kependudukan desa dalam format Excel.</p>
+                        @can('report-penduduk-excel')
                         <a href="{{ route('report.penduduk.excel') }}" class="btn btn-info btn-block">
                             <i class="fas fa-file-excel mr-2"></i> Export Excel
                         </a>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -37,9 +39,11 @@
                     </div>
                     <div class="card-body">
                         <p class="text-muted">Unduh riwayat pengaduan warga beserta status tindak lanjutnya.</p>
+                        @can('report-pengaduan-excel')
                         <a href="{{ route('report.pengaduan.excel') }}" class="btn btn-success btn-block">
                             <i class="fas fa-file-excel mr-2"></i> Export Excel
                         </a>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -61,16 +65,20 @@
                                 <input type="date" name="end_date" class="form-control" required>
                             </div>
                             <div class="row">
+                                @can('report-surat-excel')
                                 <div class="col-6">
                                     <button type="submit" class="btn btn-primary btn-block">
                                         <i class="fas fa-file-excel mr-1"></i> Excel
                                     </button>
                                 </div>
+                                @endcan
+                                @can('report-surat-pdf')
                                 <div class="col-6">
                                     <button type="submit" formaction="{{ route('report.surat.pdf') }}" formtarget="_blank" class="btn btn-danger btn-block">
                                         <i class="fas fa-file-pdf mr-1"></i> PDF
                                     </button>
                                 </div>
+                                @endcan
                             </div>
                         </form>
                     </div>

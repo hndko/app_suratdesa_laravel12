@@ -99,7 +99,7 @@ Modul Integrasi Notifikasi (Opsional)
 - **Bahasa Pemrograman:** PHP 8.2+
 - **Framework Backend:** Laravel 12 (Core, Routing, Eloquent ORM)
 - **Framework Frontend:** Blade Templating, Manual Layouting (tanpa Breeze/Jetstream starter kit)
-- **Template Admin:** UBold Template (Integrasi Manual)
+- **Template Admin:** AdminLTE 3/Bootstrap 4 (Integrasi Manual)
 - **Database:** MySQL
 - **Package Utama:** \* `spatie/laravel-permission` (RBAC)
 - `spatie/laravel-activitylog` (Audit)

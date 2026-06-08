@@ -30,8 +30,10 @@
             <div class="card-header">
                 <h3 class="card-title">List Arsip Surat</h3>
                 <div class="card-tools">
+                    @can('surat-create')
                     <a href="{{ route('surat.create') }}" class="btn btn-primary btn-sm"><i
                             class="fas fa-plus mr-1"></i> Buat Surat Baru</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -40,6 +42,7 @@
                         <tr>
                             <th width="1%">No</th>
                             <th>No Surat</th>
+                            <th>Tracking</th>
                             <th>Jenis Surat</th>
                             <th>Penduduk</th>
                             <th>Tanggal</th>
@@ -53,6 +56,7 @@
                         <tr>
                             <td>{{ $surats->firstItem() + $loop->index }}</td>
                             <td>{{ $item->no_surat }}</td>
+                            <td><span class="badge badge-info">{{ $item->tracking_code ?? '-' }}</span></td>
                             <td>{{ $item->jenisSurat->nama_surat }}</td>
                             <td>
                                 <div>{{ $item->penduduk->nama }}</div>
@@ -70,12 +74,17 @@
                              </td>
                              <td>{{ $item->keperluan }}</td>
                             <td>
+                                @can('surat-show')
                                 <a href="{{ route('surat.show', $item->id) }}"
                                     class="btn btn-sm btn-info text-white mr-1" title="Lihat/Cetak"><i
                                         class="fas fa-print"></i></a>
+                                @endcan
+                                @can('surat-edit')
                                 <a href="{{ route('surat.edit', $item->id) }}"
                                     class="btn btn-sm btn-warning text-white mr-1" title="Update Status"><i
                                         class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('surat-destroy')
                                 <form action="{{ route('surat.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit"
                                     data-confirm-text="Yakin ingin menghapus arsip surat ini?">
                                     @csrf
@@ -83,6 +92,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

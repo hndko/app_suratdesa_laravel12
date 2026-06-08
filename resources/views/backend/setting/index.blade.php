@@ -119,7 +119,9 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
+                    @can('setting-update')
                     <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save mr-1"></i> Simpan Pengaturan</button>
+                    @endcan
                 </div>
             </div>
         </form>

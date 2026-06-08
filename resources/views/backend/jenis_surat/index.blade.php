@@ -30,8 +30,10 @@
             <div class="card-header">
                 <h3 class="card-title">List Jenis Surat</h3>
                 <div class="card-tools">
+                    @can('jenis-surat-create')
                     <a href="{{ route('jenis-surat.create') }}" class="btn btn-primary btn-sm"><i
                             class="fas fa-plus mr-1"></i> Tambah Jenis Surat</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -53,10 +55,15 @@
                             <td>{{ $item->nama_surat }}</td>
                             <td>{{ $item->kop_judul }}</td>
                             <td>
+                                @can('jenis-surat-template')
                                 <a href="{{ route('jenis-surat.template', $item->id) }}" class="btn btn-sm btn-info" title="Atur Template"><i
                                         class="fas fa-file-code"></i></a>
+                                @endcan
+                                @can('jenis-surat-edit')
                                 <a href="{{ route('jenis-surat.edit', $item->id) }}" class="btn btn-sm btn-warning"><i
                                         class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('jenis-surat-destroy')
                                 <form action="{{ route('jenis-surat.destroy', $item->id) }}" method="POST"
                                     class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus jenis surat ini?">
                                     @csrf
@@ -64,6 +71,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

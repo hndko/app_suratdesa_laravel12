@@ -13,7 +13,9 @@
     <div class="d-flex gap-2">
         <a href="{{ route('surat.index') }}" class="btn btn-secondary mr-2"><i class="fa fa-arrow-left me-1"></i>
             Kembali</a>
-        <button onclick="window.print()" class="btn btn-primary"><i class="fa fa-print me-1"></i> Cetak</button>
+        @can('surat-print')
+        <button type="button" class="btn btn-primary" id="printSuratButton"><i class="fa fa-print me-1"></i> Cetak</button>
+        @endcan
     </div>
 </div>
 
@@ -65,5 +67,12 @@
         }
     }
 </style>
+@endpush
+@push('scripts')
+<script>
+    document.getElementById('printSuratButton')?.addEventListener('click', function () {
+        window.print();
+    });
+</script>
 @endpush
 @endsection

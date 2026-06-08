@@ -52,6 +52,7 @@ class SuratController extends Controller
 
         $surat = Surat::create([
             'no_surat' => $no_surat,
+            'tracking_code' => $this->generateTrackingCode(),
             'penduduk_id' => $request->penduduk_id,
             'jenis_surat_id' => $request->jenis_surat_id,
             'user_id' => Auth::id(),
@@ -120,7 +121,19 @@ class SuratController extends Controller
         // Force Indonesian Locale for Date Formatting
         \Carbon\Carbon::setLocale('id');
 
-        $search = ['[nama]', '[nik]', '[tempat_lahir]', '[tgl_lahir]', '[alamat]', '[agama]', '[pekerjaan]'];
+        $search = [
+            '[nama]',
+            '[nik]',
+            '[tempat_lahir]',
+            '[tgl_lahir]',
+            '[alamat]',
+            '[agama]',
+            '[pendidikan]',
+            '[golongan_darah]',
+            '[shdk]',
+            '[status_perkawinan]',
+            '[pekerjaan]',
+        ];
         $replace = [
             $penduduk->nama,
             $penduduk->nik,
@@ -128,6 +141,10 @@ class SuratController extends Controller
             \Carbon\Carbon::parse($penduduk->tgl_lahir)->isoFormat('D MMMM Y'),
             $penduduk->alamat,
             $penduduk->agama,
+            $penduduk->pendidikan ?? '-',
+            $penduduk->golongan_darah ?? '-',
+            $penduduk->shdk ?? '-',
+            $penduduk->status_perkawinan,
             $penduduk->pekerjaan
         ];
 
@@ -140,7 +157,19 @@ class SuratController extends Controller
         $formattedLines = [];
         $inTable = false;
 
-        $identityLabels = ['Nama', 'NIK', 'Tempat/Tgl Lahir', 'TTL', 'Alamat', 'Agama', 'Pekerjaan', 'Status Perkawinan'];
+        $identityLabels = [
+            'Nama',
+            'NIK',
+            'Tempat/Tgl Lahir',
+            'TTL',
+            'Alamat',
+            'Agama',
+            'Pendidikan',
+            'Golongan Darah',
+            'SHDK',
+            'Pekerjaan',
+            'Status Perkawinan',
+        ];
 
         foreach ($lines as $line) {
             $trimLine = trim($line);
@@ -231,12 +260,6 @@ class SuratController extends Controller
             $penduduk = $surat->penduduk;
             $message = "Halo {$penduduk->nama}, pengajuan surat {$surat->jenisSurat->nama_surat} Anda telah SELESAI diproses. Silakan ambil di kantor desa pada jam kerja. Terima kasih.";
 
-            // Assuming we have a phone field in penduduk, if not we skip or use a default
-            // Let's check Penduduk model fields.
-            // In PendudukController store, there is no phone field.
-            // PRD doesn't explicitly mention phone in Penduduk, but FR-7.01 says integrate with Fonnte.
-            // Let's add phone to Penduduk too? Or just log it for now.
-
             if ($penduduk->phone) {
                 SendWhatsAppMessage::dispatch($penduduk->phone, $message);
             }
@@ -249,5 +272,14 @@ class SuratController extends Controller
     {
         Surat::findOrFail($id)->delete();
         return redirect()->route('surat.index')->with('success', 'Surat berhasil dihapus.');
+    }
+
+    private function generateTrackingCode(): string
+    {
+        do {
+            $code = 'SRT-' . strtoupper(\Illuminate\Support\Str::random(10));
+        } while (Surat::where('tracking_code', $code)->exists());
+
+        return $code;
     }
 }

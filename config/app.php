@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'SIMADES'),
 
-    'version' => env('APP_VERSION', 'v1.2.1'),
+    'version' => env('APP_VERSION', 'v2.0.0'),
 
     /*
     |--------------------------------------------------------------------------

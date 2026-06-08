@@ -60,8 +60,11 @@
                             </td>
                             <td>{{ $row->created_at->format('d/m/Y H:i') }}</td>
                             <td>
+                                @can('pengaduan-edit')
                                 <a href="{{ route('pengaduan.edit', $row->id) }}" class="btn btn-sm btn-info"
                                     title="Tanggapi"><i class="fas fa-reply"></i></a>
+                                @endcan
+                                @can('pengaduan-destroy')
                                 <form action="{{ route('pengaduan.destroy', $row->id) }}" method="POST" class="d-inline js-confirm-submit"
                                     data-confirm-text="Yakin ingin menghapus pengaduan ini?">
                                     @csrf
@@ -69,6 +72,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i
                                             class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

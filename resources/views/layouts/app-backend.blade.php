@@ -72,8 +72,18 @@
                             </a>
                         </li>
 
-                        @canany(['penduduk-index', 'jenis-surat-index'])
+                        @canany(['kartu-keluarga-index', 'penduduk-index', 'jenis-surat-index'])
                         <li class="nav-header">MASTER DATA</li>
+
+                        @can('kartu-keluarga-index')
+                        <li class="nav-item">
+                            <a href="{{ route('kartu-keluarga.index') }}"
+                                class="nav-link {{ request()->is('kartu-keluarga*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-address-card"></i>
+                                <p>Kartu Keluarga</p>
+                            </a>
+                        </li>
+                        @endcan
 
                         @can('penduduk-index')
                         <li class="nav-item">
@@ -144,7 +154,7 @@
                         @endcan
                         @endcanany
 
-                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index'])
+                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index', 'activity-log-index'])
                         <li class="nav-header">PENGATURAN</li>
 
                         @can('user-index')
@@ -188,6 +198,15 @@
                             <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.*') ? 'active' : '' }}">
                                 <i class="nav-icon fab fa-whatsapp"></i>
                                 <p>Test WA Gateway</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('activity-log-index')
+                        <li class="nav-item">
+                            <a href="{{ route('activity-log.index') }}" class="nav-link {{ request()->routeIs('activity-log.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-history"></i>
+                                <p>Activity Log</p>
                             </a>
                         </li>
                         @endcan
@@ -236,7 +255,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v1.2.1') }}
+                {{ config('app.version', 'v2.0.0') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.

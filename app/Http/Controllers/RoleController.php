@@ -38,6 +38,13 @@ class RoleController extends Controller
             $role->syncPermissions($request->permissions);
         }
 
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($role)
+            ->event('created')
+            ->withProperties(['permissions' => $request->permissions ?? []])
+            ->log('role created');
+
         return redirect()->route('role.index')->with('success', 'Role berhasil ditambahkan.');
     }
 
@@ -88,6 +95,13 @@ class RoleController extends Controller
             $role->syncPermissions([]);
         }
 
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($role)
+            ->event('updated')
+            ->withProperties(['permissions' => $request->permissions ?? []])
+            ->log('role updated');
+
         return redirect()->route('role.index')->with('success', 'Role berhasil diperbarui.');
     }
 
@@ -101,6 +115,13 @@ class RoleController extends Controller
         }
 
         $role->delete();
+
+        activity()
+            ->causedBy(auth()->user())
+            ->event('deleted')
+            ->withProperties(['role' => $role->name])
+            ->log('role deleted');
+
         return redirect()->route('role.index')->with('success', 'Role berhasil dihapus.');
     }
 }

@@ -11,13 +11,14 @@ class PendudukExport implements FromQuery, WithHeadings, WithMapping
 {
     public function query()
     {
-        return Penduduk::query()->orderBy('nama');
+        return Penduduk::query()->with('kartuKeluarga')->orderBy('nama');
     }
 
     public function headings(): array
     {
         return [
             'NIK',
+            'No. KK',
             'Nama Lengkap',
             'No. Telepon',
             'Tempat Lahir',
@@ -27,6 +28,9 @@ class PendudukExport implements FromQuery, WithHeadings, WithMapping
             'RT',
             'RW',
             'Agama',
+            'Pendidikan',
+            'Golongan Darah',
+            'SHDK',
             'Status Perkawinan',
             'Pekerjaan',
         ];
@@ -36,6 +40,7 @@ class PendudukExport implements FromQuery, WithHeadings, WithMapping
     {
         return [
             $penduduk->nik,
+            $penduduk->kartuKeluarga->no_kk ?? '-',
             $penduduk->nama,
             $penduduk->phone,
             $penduduk->tempat_lahir,
@@ -45,6 +50,9 @@ class PendudukExport implements FromQuery, WithHeadings, WithMapping
             $penduduk->rt,
             $penduduk->rw,
             $penduduk->agama,
+            $penduduk->pendidikan,
+            $penduduk->golongan_darah,
+            $penduduk->shdk,
             $penduduk->status_perkawinan,
             $penduduk->pekerjaan,
         ];

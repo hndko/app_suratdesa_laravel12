@@ -22,6 +22,7 @@ class Surat extends Model
 
     protected $fillable = [
         'no_surat',
+        'tracking_code',
         'penduduk_id',
         'jenis_surat_id',
         'user_id',

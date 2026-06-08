@@ -8,7 +8,7 @@ Dokumen ini adalah patokan wajib untuk semua agent/developer saat mengubah sourc
 - Stack utama: PHP 8.2+, Laravel 12, Blade, AdminLTE 3/Bootstrap 4 untuk backend, Sandbox Bootstrap 5 untuk frontend publik.
 - Package utama: Spatie Permission, Spatie Activitylog, Maatwebsite Excel, DomPDF, Laravel queue, Fonnte WhatsApp API.
 - Role utama: `super-admin`, `kades`, `operator`, dan warga publik tanpa login.
-- Modul utama: dashboard, penduduk, jenis surat, surat, pengaduan, post/pengumuman, setting, report/export, user, role, profile, WhatsApp test.
+- Modul utama: dashboard, kartu keluarga, penduduk, jenis surat, surat, pengaduan, post/pengumuman, setting, report/export, activity log, user, role, profile, WhatsApp test.
 
 ## 2. Prinsip Umum
 
@@ -68,7 +68,9 @@ resources/views/
 └── frontend/
     ├── home.blade.php
     └── pengajuan/
-        ├── surat/create.blade.php
+        ├── surat/
+        │   ├── create.blade.php
+        │   └── track.blade.php
         └── pengaduan/
             ├── create.blade.php
             └── track.blade.php
@@ -138,6 +140,7 @@ resources/views/
 
 - Gunakan permission granular, contoh:
   - `dashboard-index`
+  - `kartu-keluarga-index/show/create/store/edit/update/destroy`
   - `penduduk-index/create/store/edit/update/destroy`
   - `jenis-surat-index/create/store/edit/update/destroy/template/template-update`
   - `surat-index/create/preview/store/edit/update-status/destroy/show/print`
@@ -148,6 +151,7 @@ resources/views/
   - `setting-index/update`
   - `report-index/penduduk-excel/surat-excel/surat-pdf/pengaduan-excel`
   - `whatsapp-test-index/send`
+  - `activity-log-index`
   - `profile-index/update`
 - Menu sidebar boleh memakai `@can`/`@canany`, tetapi route tetap wajib punya middleware permission.
 - Saat menambah role baru, jangan hanya memasukkan nama modul. Sync juga permission aksi yang dibutuhkan agar tombol, form submit, request update, export, dan test integrasi tetap berfungsi sesuai role.

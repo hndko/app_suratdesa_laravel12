@@ -23,7 +23,9 @@
             <div class="card-header">
                 <h3 class="card-title">Daftar Pengguna Sistem</h3>
                 <div class="card-tools">
+                    @can('user-create')
                     <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i> Tambah User</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -49,12 +51,16 @@
                                 @endforeach
                             </td>
                             <td>
+                                @can('user-edit')
                                 <a href="{{ route('user.edit', $item->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                @endcan
+                                @can('user-destroy')
                                 <form action="{{ route('user.destroy', $item->id) }}" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus user ini?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" {{ $item->id === auth()->id() ? 'disabled' : '' }}><i class="fas fa-trash"></i></button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

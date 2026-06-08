@@ -46,17 +46,13 @@ class PublicController extends Controller
 
         $penduduk = \App\Models\Penduduk::where('nik', $request->nik)->first();
 
-        // In public submission, status is usually 'pending' or similar if implemented.
-        // Based on PRD FR-4.05: Admin can change status.
-        // But our Surat model doesn't have status yet. Let's add it via migration if needed,
-        // or just store it as is for now.
-        // Let's assume for now we just create the record and admin will see it in Arsip.
-
         $jenisSurat = \App\Models\JenisSurat::findOrFail($request->jenis_surat_id);
         $no_surat = SuratNumberService::generate($jenisSurat, now());
+        $trackingCode = $this->generateSuratTrackingCode();
 
         \App\Models\Surat::create([
             'no_surat' => $no_surat,
+            'tracking_code' => $trackingCode,
             'penduduk_id' => $penduduk->id,
             'jenis_surat_id' => $request->jenis_surat_id,
             'tanggal_surat' => now(),
@@ -66,11 +62,44 @@ class PublicController extends Controller
 
         // WhatsApp Notification
         if ($penduduk->phone) {
-            $message = "Halo {$penduduk->nama}, pengajuan surat {$jenisSurat->nama_surat} Anda telah kami terima. Silakan pantau statusnya atau tunggu informasi selanjutnya. Terima kasih.";
+            $message = "Halo {$penduduk->nama}, pengajuan surat {$jenisSurat->nama_surat} Anda telah kami terima. Kode Tracking: {$trackingCode}. Gunakan kode ini untuk memantau status pengajuan. Terima kasih.";
             SendWhatsAppMessage::dispatch($penduduk->phone, $message);
         }
 
-        return redirect()->back()->with('success', 'Pengajuan surat berhasil dikirim. Silakan hubungi kantor desa untuk pengambilan.');
+        return redirect()->route('public.surat.track')->with('success', 'Pengajuan surat berhasil dikirim. Simpan Kode Tracking Anda: ' . $trackingCode);
+    }
+
+    public function suratTrack()
+    {
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+
+        $data = [
+            'title' => 'Lacak Pengajuan Surat - ' . $siteName,
+        ];
+
+        return view('frontend.pengajuan.surat.track', $data);
+    }
+
+    public function suratStatus(Request $request)
+    {
+        $request->validate([
+            'tracking_code' => 'required|string|max:24',
+            'nik' => 'required|digits:16',
+        ]);
+
+        $surat = \App\Models\Surat::with(['penduduk', 'jenisSurat'])
+            ->where('tracking_code', strtoupper($request->tracking_code))
+            ->whereHas('penduduk', function ($query) use ($request) {
+                $query->where('nik', $request->nik);
+            })
+            ->first();
+
+        $data = [
+            'title' => 'Lacak Pengajuan Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'surat' => $surat,
+        ];
+
+        return view('frontend.pengajuan.surat.track', $data);
     }
 
     public function pengaduanCreate()
@@ -151,6 +180,15 @@ class PublicController extends Controller
         do {
             $code = 'TKT-' . strtoupper(Str::random(10));
         } while (\App\Models\Pengaduan::where('ticket_code', $code)->exists());
+
+        return $code;
+    }
+
+    private function generateSuratTrackingCode(): string
+    {
+        do {
+            $code = 'SRT-' . strtoupper(Str::random(10));
+        } while (\App\Models\Surat::where('tracking_code', $code)->exists());
 
         return $code;
     }
