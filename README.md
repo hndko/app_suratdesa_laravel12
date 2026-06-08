@@ -81,7 +81,7 @@ Daftar command operasional: [docs/commands.md](docs/commands.md).
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v1.2.0
+APP_VERSION=v1.2.1
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
