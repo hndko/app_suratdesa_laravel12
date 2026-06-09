@@ -245,7 +245,7 @@
                 <li class="nav-item d-flex align-items-center">
                     <span class="navbar-version-badge" title="Versi Aplikasi">
                         <i class="fas fa-code-branch"></i>
-                        {{ config('app.version', 'v3.0.35') }}
+                        {{ config('app.version', 'v3.0.36') }}
                     </span>
                 </li>
             </ul>
@@ -266,8 +266,8 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                            alt="User Image">
+                        <img src="{{ Auth::user()?->avatar ? asset('storage/' . Auth::user()->avatar) : asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                            alt="Avatar {{ Auth::user()->name ?? 'Administrator' }}">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">{{ Auth::user()->name ?? 'Administrator' }}</a>
