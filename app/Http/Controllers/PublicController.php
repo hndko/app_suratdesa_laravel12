@@ -127,6 +127,8 @@ class PublicController extends Controller
 
         $data = [
             'title' => 'Kirim Pengaduan Warga - ' . $siteName,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
         ];
 
         return view('frontend.pengajuan.pengaduan.create', $data);
