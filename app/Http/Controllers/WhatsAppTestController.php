@@ -24,16 +24,25 @@ class WhatsAppTestController extends Controller
     {
         $request->validate([
             'phone' => 'required|string|max:20',
-            'message' => 'required|string|max:1000'
+            'message' => 'required|string|max:1000',
         ]);
 
-        $result = WhatsAppService::send($request->phone, $request->message);
+        $result = WhatsAppService::send($request->phone, $request->message, [
+            'countryCode' => '62',
+            'typing' => true,
+            'preview' => false,
+        ]);
 
-        if ($result && isset($result['status']) && $result['status'] == true) {
-            return back()->with('success', 'Pesan WhatsApp berhasil dikirim!');
+        $isSuccess = $result && (bool) ($result['status'] ?? $result['Status'] ?? false);
+
+        if ($isSuccess) {
+            $detail = $result['detail'] ?? 'Pesan WhatsApp berhasil dikirim!';
+
+            return back()->with('success', $detail);
         }
 
-        $error = isset($result['reason']) ? $result['reason'] : 'Terjadi kesalahan saat mengirim pesan. Pastikan token Fonnte sudah benar.';
+        $error = $result['reason'] ?? $result['detail'] ?? 'Terjadi kesalahan saat mengirim pesan. Pastikan token Fonnte sudah benar.';
+
         return back()->with('error', 'Gagal mengirim pesan: ' . $error);
     }
 }

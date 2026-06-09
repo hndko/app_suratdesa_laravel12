@@ -12,16 +12,17 @@ class SendWhatsAppMessage implements ShouldQueue
 
     public int $tries = 3;
 
-    public int $timeout = 10;
+    public int $timeout = 30;
 
     public function __construct(
         public string $target,
         public string $message,
+        public array $options = [],
     ) {
     }
 
     public function handle(): void
     {
-        WhatsAppService::send($this->target, $this->message);
+        WhatsAppService::send($this->target, $this->message, $this->options);
     }
 }

@@ -35,7 +35,7 @@
             <div class="metric-icon"><i class="fas fa-clock"></i></div>
             <div>
                 <span>Timeout</span>
-                <strong>5 detik</strong>
+                <strong>10 detik</strong>
                 <small>Retry 2x</small>
             </div>
         </div>
@@ -119,7 +119,7 @@
                 <div>
                     <i class="fas fa-redo"></i>
                     <span>Reliability</span>
-                    <strong>Timeout 5 detik, retry 2x</strong>
+                    <strong>Timeout 10 detik, retry 2x</strong>
                 </div>
             </div>
 
