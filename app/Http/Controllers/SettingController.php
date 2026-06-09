@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class SettingController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $settings = Setting::all()->pluck('value', 'key');
-        return view('backend.setting.index', [
+
+        $data = [
             'title' => 'Pengaturan Website',
-            'settings' => $settings
-        ]);
+            'settings' => $settings,
+        ];
+
+        return view('backend.setting.index', $data);
     }
 
     public function update(Request $request)
@@ -39,15 +43,25 @@ class SettingController extends Controller
         unset($validated['village_logo']);
 
         foreach ($validated as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            Setting::updateOrCreate(['key' => $key], [
+                'value' => $value,
+                'group' => str_starts_with($key, 'village_') ? 'village' : 'general',
+            ]);
         }
 
         if ($request->hasFile('village_logo')) {
-            $file = $request->file('village_logo');
-            $filename = 'logo_desa.' . $file->extension();
-            $file->storeAs('settings', $filename, 'public');
+            $oldLogo = Setting::where('key', 'village_logo')->value('value');
+            if ($oldLogo && str_starts_with($oldLogo, 'storage/settings/')) {
+                Storage::disk('public')->delete(str_replace('storage/', '', $oldLogo));
+            }
 
-            Setting::updateOrCreate(['key' => 'village_logo'], ['value' => 'storage/settings/' . $filename]);
+            $file = $request->file('village_logo');
+            $path = $file->store('settings', 'public');
+
+            Setting::updateOrCreate(['key' => 'village_logo'], [
+                'value' => 'storage/' . $path,
+                'group' => 'village',
+            ]);
         }
 
         // Clear cache
