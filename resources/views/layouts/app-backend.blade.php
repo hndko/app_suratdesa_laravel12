@@ -186,6 +186,25 @@
             width: 1% !important;
         }
 
+        .navbar-version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            min-height: 32px;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            color: #0f766e;
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            font-size: 0.82rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .navbar-version-badge i {
+            font-size: 0.78rem;
+        }
+
         html,
         body,
         .wrapper,
@@ -215,6 +234,14 @@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item d-flex align-items-center">
+                    <span class="navbar-version-badge" title="Versi Aplikasi">
+                        <i class="fas fa-code-branch"></i>
+                        {{ config('app.version', 'v3.0.13') }}
+                    </span>
                 </li>
             </ul>
         </nav>
