@@ -186,18 +186,28 @@
             width: 1% !important;
         }
 
+        html,
+        body,
+        .wrapper,
         .content-wrapper {
-            min-height: auto !important;
-            padding-bottom: 1rem;
+            background: #f4f6f9;
+        }
+
+        .content-wrapper {
+            min-height: 0 !important;
+            padding-bottom: 0.75rem;
         }
 
         .main-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 48px;
-            padding: 0.65rem 1.25rem;
+            height: 52px;
+            min-height: 52px;
+            max-height: 52px;
+            padding: 0 1.25rem;
             line-height: 1.35;
+            overflow: hidden;
         }
 
         .main-footer .footer-version {
@@ -503,7 +513,7 @@
                 reserved.
             </div>
             <div class="footer-version">
-                {{ config('app.version', 'v3.0.10') }}
+                {{ config('app.version', 'v3.0.11') }}
             </div>
         </footer>
     </div>
