@@ -1,4 +1,4 @@
-# SIMADES
+# 🏛️ SIMADES
 
 **Sistem Informasi Manajemen Desa berbasis Laravel untuk digitalisasi layanan administrasi desa.**
 
@@ -6,11 +6,11 @@ SIMADES adalah aplikasi web yang dirancang untuk membantu pemerintah desa mengel
 
 Project ini dibuat sebagai solusi administrasi desa yang praktis untuk kebutuhan operasional harian: warga dapat mengajukan layanan secara online, operator dapat memproses data dan surat, kepala desa dapat memantau laporan, dan admin dapat mengatur role serta permission secara granular.
 
-## Short Description GitHub
+## ✨ Short Description GitHub
 
 Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, pengaduan, laporan, RBAC, dan tracking layanan publik.
 
-## Tujuan Project
+## 🎯 Tujuan Project
 
 - Mendigitalisasi proses administrasi desa yang sebelumnya manual.
 - Mempermudah warga mengajukan surat dan pengaduan dari portal publik.
@@ -18,7 +18,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 - Memberi kepala desa akses monitoring terhadap surat, pengaduan, dan laporan.
 - Menjaga akses fitur menggunakan role dan permission yang terstruktur.
 
-## Fitur Utama
+## 🚀 Fitur Utama
 
 - Dashboard statistik administrasi desa.
 - Manajemen Kartu Keluarga.
@@ -38,7 +38,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 - Pengaturan identitas desa dan aplikasi.
 - Integrasi notifikasi WhatsApp melalui Fonnte dan queue Laravel.
 
-## Role Pengguna
+## 👥 Role Pengguna
 
 | Role | Fungsi |
 | --- | --- |
@@ -47,7 +47,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 | `operator` | Mengelola data teknis seperti penduduk, KK, surat, pengaduan, pengumuman, dan setting tertentu. |
 | Warga publik | Mengajukan surat, mengirim pengaduan, dan melacak status layanan tanpa login. |
 
-## Tech Stack
+## 🧰 Tech Stack
 
 | Area | Teknologi |
 | --- | --- |
@@ -61,7 +61,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 | Queue | Laravel Queue |
 | Integrasi | Fonnte WhatsApp API, AI provider gateway |
 
-## Highlight Implementasi
+## 🔎 Highlight Implementasi
 
 - Permission dibuat granular sampai level aksi seperti `create`, `store`, `edit`, `update`, `destroy`, `preview`, `export`, dan `send`.
 - Nomor surat menggunakan service counter agar lebih aman dari duplikasi dibanding pola `count()+1`.
@@ -73,7 +73,7 @@ Sistem Informasi Manajemen Desa berbasis Laravel untuk layanan surat, penduduk, 
 - QR verifikasi surat publik membatasi data yang tampil agar tidak membuka NIK/alamat lengkap.
 - Dokumentasi development, deployment, command, dan PRD tersedia di folder `docs/`.
 
-## Instalasi Lokal Singkat
+## ⚙️ Instalasi Lokal Singkat
 
 ```bash
 composer install
@@ -87,13 +87,13 @@ php artisan serve
 
 Panduan lengkap tersedia di [docs/02. development.md](docs/02.%20development.md).
 
-## Deployment
+## 🚢 Deployment
 
 Dokumentasi deployment mencakup shared hosting, VPS, queue worker, update production, dan rollback ringkas.
 
 Baca panduan di [docs/03. deployment.md](docs/03.%20deployment.md).
 
-## Command Penting
+## 🧭 Command Penting
 
 Sinkronkan permission setelah deployment, perubahan role, atau update fitur:
 
@@ -103,7 +103,7 @@ php artisan simades:sync-permissions
 
 Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20commands.md).
 
-## Dokumentasi
+## 📚 Dokumentasi
 
 - [AGENTS.md](AGENTS.md): aturan kerja, coding standard, RBAC, versioning, dan git workflow.
 - [docs/01. prd.md](docs/01.%20prd.md): dokumen kebutuhan produk.
@@ -111,12 +111,12 @@ Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20command
 - [docs/03. deployment.md](docs/03.%20deployment.md): deployment shared hosting dan VPS.
 - [docs/04. commands.md](docs/04.%20commands.md): daftar command maintenance.
 
-## Versioning
+## 🏷️ Versioning
 
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v3.0.13
+APP_VERSION=v3.0.14
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
@@ -125,7 +125,7 @@ Jika `.env` lokal atau production masih memakai versi lama, update manual lalu j
 php artisan config:clear
 ```
 
-## Maintenance Production
+## 🛠️ Maintenance Production
 
 Urutan umum setelah pull update:
 
@@ -140,10 +140,10 @@ php artisan queue:restart
 
 Selalu backup database sebelum menjalankan migration atau perubahan RBAC besar di production.
 
-## Status Project
+## 📌 Status Project
 
-Project berada pada versi `v3.0.13` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, sidebar backend, dashboard operasional, modul Kartu Keluarga dengan DataTables server-side, dan Select2 global untuk form select. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
+Project berada pada versi `v3.0.14` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, sidebar backend, dashboard operasional, modul Kartu Keluarga dengan DataTables server-side, dan Select2 global untuk form select. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
 
-## Lisensi
+## 📄 Lisensi
 
 Project ini mengikuti lisensi yang tercantum di repository.
