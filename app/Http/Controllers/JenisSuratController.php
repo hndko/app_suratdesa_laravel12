@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisSurat;
 use App\Services\SuratAiService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class JenisSuratController extends Controller
 {
     // NOTE: Tampilkan daftar jenis surat
-    public function index(Request $request)
+    public function index(Request $request): View|JsonResponse
     {
+        if ($request->ajax()) {
+            return $this->dataTable($request);
+        }
+
         $data = [
             'title' => 'Jenis Surat',
-            'jenis_surats' => JenisSurat::latest()->get(),
+            'totalJenisSurat' => JenisSurat::count(),
+            'totalDenganTemplate' => JenisSurat::whereNotNull('template_isi')->where('template_isi', '!=', '')->count(),
+            'totalTanpaTemplate' => JenisSurat::where(function ($query) {
+                $query->whereNull('template_isi')->orWhere('template_isi', '');
+            })->count(),
+            'totalDigunakan' => JenisSurat::has('surats')->count(),
         ];
 
         return view('backend.jenis_surat.index', $data);
@@ -39,7 +50,12 @@ class JenisSuratController extends Controller
             'template_isi' => 'nullable',
         ]);
 
-        JenisSurat::create($request->only(['kode_surat', 'nama_surat', 'kop_judul', 'template_isi']));
+        JenisSurat::create([
+            'kode_surat' => $request->kode_surat,
+            'nama_surat' => $request->nama_surat,
+            'kop_judul' => $request->kop_judul,
+            'template_isi' => $request->template_isi ?? '',
+        ]);
 
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil ditambahkan.');
     }
@@ -162,5 +178,88 @@ class JenisSuratController extends Controller
 
         $jenis_surat->delete();
         return redirect()->route('jenis-surat.index')->with('success', 'Jenis Surat berhasil dihapus.');
+    }
+
+    private function dataTable(Request $request): JsonResponse
+    {
+        $columns = [
+            0 => 'id',
+            1 => 'kode_surat',
+            2 => 'nama_surat',
+            3 => 'kop_judul',
+            4 => 'surats_count',
+            5 => 'updated_at',
+        ];
+
+        $baseQuery = JenisSurat::query()->withCount('surats');
+        $recordsTotal = (clone $baseQuery)->count();
+        $search = trim((string) $request->input('search.value'));
+
+        if ($search !== '') {
+            $baseQuery->where(function ($query) use ($search) {
+                $query->where('kode_surat', 'like', '%' . $search . '%')
+                    ->orWhere('nama_surat', 'like', '%' . $search . '%')
+                    ->orWhere('kop_judul', 'like', '%' . $search . '%');
+            });
+        }
+
+        $recordsFiltered = (clone $baseQuery)->count();
+        $orderColumnIndex = (int) $request->input('order.0.column', 5);
+        $orderColumn = $columns[$orderColumnIndex] ?? 'updated_at';
+        $orderDirection = $request->input('order.0.dir') === 'asc' ? 'asc' : 'desc';
+        $length = (int) $request->input('length', 10);
+        $start = max((int) $request->input('start', 0), 0);
+        $length = $length > 0 ? min($length, 100) : 10;
+
+        $rows = $baseQuery
+            ->orderBy($orderColumn, $orderDirection)
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        $canTemplate = $request->user()?->can('jenis-surat-template') ?? false;
+        $canEdit = $request->user()?->can('jenis-surat-edit') ?? false;
+        $canDestroy = $request->user()?->can('jenis-surat-destroy') ?? false;
+
+        $data = $rows->map(function (JenisSurat $row, int $index) use ($start, $canTemplate, $canEdit, $canDestroy) {
+            $hasTemplate = trim((string) $row->template_isi) !== '';
+            $actions = '<div class="action-group">';
+
+            if ($canTemplate) {
+                $actions .= '<a href="' . route('jenis-surat.template', $row->id) . '" class="btn btn-sm btn-info" title="Atur Template"><i class="fas fa-file-code"></i></a>';
+            }
+
+            if ($canEdit) {
+                $actions .= '<a href="' . route('jenis-surat.edit', $row->id) . '" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>';
+            }
+
+            if ($canDestroy) {
+                $actions .= '<form action="' . route('jenis-surat.destroy', $row->id) . '" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus jenis surat ' . e($row->nama_surat) . '?">'
+                    . csrf_field()
+                    . method_field('DELETE')
+                    . '<button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    . '</form>';
+            }
+
+            $actions .= '</div>';
+
+            return [
+                'no' => $start + $index + 1,
+                'kode_surat' => '<span class="code-pill"><i class="fas fa-hashtag"></i>' . e($row->kode_surat) . '</span>',
+                'nama_surat' => '<strong>' . e($row->nama_surat) . '</strong><small>' . ($hasTemplate ? 'Template tersedia' : 'Template belum diatur') . '</small>',
+                'kop_judul' => '<span>' . e($row->kop_judul) . '</span>',
+                'template' => '<span class="status-pill status-' . ($hasTemplate ? 'success' : 'warning') . '">' . ($hasTemplate ? 'Tersedia' : 'Belum ada') . '</span>',
+                'digunakan' => '<span class="usage-count">' . number_format($row->surats_count, 0, ',', '.') . '</span>',
+                'updated_at' => $row->updated_at?->format('d-m-Y H:i') ?? '-',
+                'aksi' => $actions,
+            ];
+        });
+
+        return response()->json([
+            'draw' => (int) $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
     }
 }
