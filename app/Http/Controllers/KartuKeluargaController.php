@@ -4,33 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\KartuKeluarga;
 use App\Models\Penduduk;
-use Illuminate\Http\Request;
 
 class KartuKeluargaController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $query = KartuKeluarga::withCount('penduduks')->latest();
         $totalKartuKeluarga = KartuKeluarga::count();
         $totalAnggota = Penduduk::whereNotNull('kartu_keluarga_id')->count();
         $kkKosong = KartuKeluarga::doesntHave('penduduks')->count();
 
-        if ($request->filled('q')) {
-            $keyword = $request->q;
-            $query->where(function ($builder) use ($keyword) {
-                $builder->where('no_kk', 'like', '%' . $keyword . '%')
-                    ->orWhere('kepala_keluarga', 'like', '%' . $keyword . '%');
-            });
-        }
-
         $data = [
             'title' => 'Data Kartu Keluarga',
-            'kartuKeluargas' => $query->paginate(25)->withQueryString(),
+            'kartuKeluargas' => $query->get(),
             'totalKartuKeluarga' => $totalKartuKeluarga,
             'totalAnggota' => $totalAnggota,
             'kkKosong' => $kkKosong,
             'rataRataAnggota' => $totalKartuKeluarga > 0 ? round($totalAnggota / $totalKartuKeluarga, 1) : 0,
-            'q' => $request->q,
         ];
 
         return view('backend.kartu_keluarga.index', $data);

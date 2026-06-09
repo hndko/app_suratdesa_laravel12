@@ -1,5 +1,10 @@
 @extends('layouts.app-backend')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+@endpush
+
 @section('content')
 <div class="kk-page">
     <div class="kk-hero">
@@ -59,28 +64,11 @@
                 <span>Daftar Data</span>
                 <h2>Kartu Keluarga</h2>
             </div>
-            <form action="{{ route('kartu-keluarga.index') }}" method="GET" class="kk-search">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    </div>
-                    <input type="text" name="q" class="form-control" value="{{ $q ?? '' }}" placeholder="Cari nomor KK atau kepala keluarga">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fas fa-search mr-1"></i> Cari
-                        </button>
-                        @if(!empty($q))
-                        <a href="{{ route('kartu-keluarga.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times mr-1"></i> Reset
-                        </a>
-                        @endif
-                    </div>
-                </div>
-            </form>
+            <small class="table-hint"><i class="fas fa-table mr-1"></i> Search, pagination, dan jumlah data memakai DataTables.</small>
         </div>
 
         <div class="kk-table-wrap">
-            <table class="table kk-table">
+            <table id="datatableKartuKeluarga" class="table kk-table table-hover nowrap" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -92,9 +80,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($kartuKeluargas as $row)
+                    @foreach($kartuKeluargas as $row)
                     <tr class="js-lazy-row">
-                        <td data-label="No">{{ $kartuKeluargas->firstItem() + $loop->index }}</td>
+                        <td data-label="No">{{ $loop->iteration }}</td>
                         <td data-label="Nomor KK">
                             <div class="kk-number">
                                 <i class="fas fa-id-card"></i>
@@ -137,22 +125,10 @@
                             </div>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state">
-                                <i class="fas fa-folder-open"></i>
-                                <strong>Belum ada data Kartu Keluarga.</strong>
-                                <span>Tambahkan data KK untuk mulai menghubungkan data penduduk.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
-
-        <div class="kk-pagination">{{ $kartuKeluargas->links() }}</div>
     </div>
 </div>
 @endsection
@@ -281,14 +257,9 @@
         letter-spacing: 0;
     }
 
-    .kk-search {
-        width: min(100%, 620px);
-    }
-
-    .kk-search .input-group-text,
-    .kk-search .form-control,
-    .kk-search .btn {
-        min-height: 42px;
+    .table-hint {
+        color: #64748b;
+        font-weight: 700;
     }
 
     .kk-table-wrap {
@@ -298,12 +269,12 @@
 
     .kk-table {
         margin-bottom: 0;
-        border-collapse: separate;
-        border-spacing: 0 0.55rem;
+        border-collapse: collapse;
     }
 
     .kk-table thead th {
-        border: 0;
+        border-top: 0;
+        border-bottom: 1px solid #e5e7eb;
         color: #64748b;
         font-size: 0.78rem;
         letter-spacing: 0.04em;
@@ -325,18 +296,43 @@
     .kk-table tbody td {
         vertical-align: middle;
         border-top: 1px solid #eef2f7;
-        border-bottom: 1px solid #eef2f7;
         background: #ffffff;
     }
 
-    .kk-table tbody td:first-child {
-        border-left: 1px solid #eef2f7;
-        border-radius: 12px 0 0 12px;
+    .kk-table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+    .kk-table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
+        top: 50%;
+        background-color: #0f766e;
+        border: 0;
+        box-shadow: none;
+        transform: translateY(-50%);
     }
 
-    .kk-table tbody td:last-child {
-        border-right: 1px solid #eef2f7;
-        border-radius: 0 12px 12px 0;
+    .kk-card .dataTables_wrapper .row:first-child {
+        align-items: center;
+        margin-bottom: 0.8rem;
+    }
+
+    .kk-card .dataTables_length label,
+    .kk-card .dataTables_filter label {
+        color: #475569;
+        font-weight: 700;
+    }
+
+    .kk-card .dataTables_filter input,
+    .kk-card .dataTables_length select {
+        border-radius: 8px;
+        border-color: #dbe3ef;
+    }
+
+    .kk-card .dataTables_info {
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .kk-card .pagination .page-link {
+        border-radius: 8px;
+        margin-left: 0.18rem;
     }
 
     .kk-number {
@@ -383,29 +379,6 @@
         justify-content: center;
     }
 
-    .empty-state {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 2rem 1rem;
-        color: #64748b;
-        text-align: center;
-    }
-
-    .empty-state i {
-        font-size: 2rem;
-        color: #0f766e;
-    }
-
-    .empty-state strong {
-        color: #111827;
-    }
-
-    .kk-pagination {
-        margin-top: 1rem;
-    }
-
     @media (max-width: 1199.98px) {
         .kk-metric-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -431,92 +404,60 @@
             grid-template-columns: 1fr;
         }
 
-        .kk-search .input-group {
-            display: block;
-        }
-
-        .kk-search .input-group-prepend,
-        .kk-search .input-group-append,
-        .kk-search .form-control,
-        .kk-search .btn {
-            display: flex;
-            width: 100%;
-            border-radius: 8px !important;
-            margin-bottom: 0.45rem;
-        }
-
-        .kk-table thead {
-            display: none;
-        }
-
-        .kk-table,
-        .kk-table tbody,
-        .kk-table tr,
-        .kk-table td {
-            display: block;
-            width: 100%;
-        }
-
-        .kk-table {
-            border-spacing: 0;
-        }
-
-        .kk-table tbody tr {
-            margin-bottom: 0.85rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            overflow: hidden;
-            background: #ffffff;
-        }
-
-        .kk-table tbody td {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            border: 0;
-            border-bottom: 1px solid #f1f5f9;
-            border-radius: 0 !important;
-            text-align: right !important;
-        }
-
-        .kk-table tbody td::before {
-            content: attr(data-label);
-            color: #64748b;
-            font-weight: 800;
-            text-align: left;
-        }
-
-        .kk-table tbody td:last-child {
-            border-bottom: 0;
+        .kk-card .dataTables_wrapper .row:first-child > div,
+        .kk-card .dataTables_wrapper .row:last-child > div {
+            margin-bottom: 0.6rem;
         }
     }
 </style>
 @endpush
 
 @push('scripts')
+<script src="{{ asset('assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var rows = document.querySelectorAll('.js-lazy-row');
-
-        if ('IntersectionObserver' in window) {
-            var observer = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { rootMargin: '80px 0px' });
-
-            rows.forEach(function (row) {
-                observer.observe(row);
-            });
-            return;
-        }
-
-        rows.forEach(function (row) {
-            row.classList.add('is-visible');
+    $(function () {
+        var table = $('#datatableKartuKeluarga').DataTable({
+            responsive: true,
+            lengthChange: true,
+            searching: true,
+            paging: true,
+            info: true,
+            autoWidth: false,
+            deferRender: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Semua']],
+            order: [[0, 'asc']],
+            columnDefs: [
+                { orderable: false, searchable: false, targets: 5 },
+                { responsivePriority: 1, targets: 1 },
+                { responsivePriority: 2, targets: 2 },
+                { responsivePriority: 3, targets: 5 }
+            ],
+            language: {
+                search: 'Cari:',
+                searchPlaceholder: 'Nomor KK, kepala keluarga, alamat...',
+                lengthMenu: 'Tampilkan _MENU_ data',
+                info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
+                infoEmpty: 'Belum ada data',
+                infoFiltered: '(difilter dari _MAX_ total data)',
+                zeroRecords: 'Data Kartu Keluarga tidak ditemukan',
+                emptyTable: 'Belum ada data Kartu Keluarga',
+                paginate: {
+                    first: 'Awal',
+                    last: 'Akhir',
+                    next: 'Berikutnya',
+                    previous: 'Sebelumnya'
+                }
+            },
+            drawCallback: function () {
+                $('#datatableKartuKeluarga tbody tr').addClass('is-visible');
+            }
         });
+
+        table.rows({ page: 'current' }).nodes().to$().addClass('is-visible');
     });
 </script>
 @endpush
