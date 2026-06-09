@@ -84,7 +84,7 @@
                     <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-venus-mars"></i></span>
-                        <select name="jenis_kelamin" class="form-select" required>
+                        <select name="jenis_kelamin" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="L" {{ old('jenis_kelamin')=='L' ? 'selected' : '' }}>Laki-laki</option>
                             <option value="P" {{ old('jenis_kelamin')=='P' ? 'selected' : '' }}>Perempuan</option>
@@ -95,7 +95,7 @@
                     <label class="form-label">Agama <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-pray"></i></span>
-                        <select name="agama" class="form-select" required>
+                        <select name="agama" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="Islam" {{ old('agama')=='Islam' ? 'selected' : '' }}>Islam</option>
                             <option value="Kristen" {{ old('agama')=='Kristen' ? 'selected' : '' }}>Kristen</option>
@@ -113,7 +113,7 @@
                     <label class="form-label">Status Perkawinan <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-ring"></i></span>
-                        <select name="status_perkawinan" class="form-select" required>
+                        <select name="status_perkawinan" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="Belum Kawin" {{ old('status_perkawinan')=='Belum Kawin' ? 'selected' : '' }}>
                                 Belum Kawin</option>

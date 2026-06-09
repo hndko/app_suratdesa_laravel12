@@ -51,8 +51,8 @@
                 </div>
 
                 <div class="col-md-6">
-                  <div class="form-select-wrapper mb-4">
-                    <select class="form-select @error('category') is-invalid @enderror" id="category" name="category" required>
+                  <div class="form-control-wrapper mb-4">
+                    <select class="form-control @error('category') is-invalid @enderror" id="category" name="category" required>
                       <option selected disabled value="">Kategori Aduan</option>
                       <option value="infrastruktur">Infrastruktur / Jalan</option>
                       <option value="keamanan">Keamanan / Ketertiban</option>

@@ -36,7 +36,8 @@
                         <select name="kartu_keluarga_id" class="form-control">
                             <option value="">-- Belum ditautkan --</option>
                             @foreach($kartuKeluargas as $kk)
-                            <option value="{{ $kk->id }}" {{ old('kartu_keluarga_id', $penduduk->kartu_keluarga_id) == $kk->id ? 'selected' : '' }}>
+                            <option value="{{ $kk->id }}" {{ old('kartu_keluarga_id', $penduduk->kartu_keluarga_id) ==
+                                $kk->id ? 'selected' : '' }}>
                                 {{ $kk->no_kk }} - {{ $kk->kepala_keluarga }}
                             </option>
                             @endforeach
@@ -85,7 +86,7 @@
                     <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-venus-mars"></i></span>
-                        <select name="jenis_kelamin" class="form-select" required>
+                        <select name="jenis_kelamin" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="L" {{ old('jenis_kelamin', $penduduk->jenis_kelamin) == 'L' ? 'selected' : ''
                                 }}>Laki-laki</option>
@@ -98,7 +99,7 @@
                     <label class="form-label">Agama <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-pray"></i></span>
-                        <select name="agama" class="form-select" required>
+                        <select name="agama" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="Islam" {{ old('agama', $penduduk->agama) == 'Islam' ? 'selected' : ''
                                 }}>Islam</option>
@@ -122,7 +123,7 @@
                     <label class="form-label">Status Perkawinan <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-ring"></i></span>
-                        <select name="status_perkawinan" class="form-select" required>
+                        <select name="status_perkawinan" class="form-control" required>
                             <option value="">-- Pilih --</option>
                             <option value="Belum Kawin" {{ old('status_perkawinan', $penduduk->status_perkawinan) ==
                                 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
@@ -161,7 +162,8 @@
                         <select name="golongan_darah" class="form-control">
                             <option value="">-- Tidak Tahu --</option>
                             @foreach(['A','B','AB','O'] as $golongan)
-                            <option value="{{ $golongan }}" {{ old('golongan_darah', $penduduk->golongan_darah) == $golongan ? 'selected' : '' }}>{{ $golongan }}</option>
+                            <option value="{{ $golongan }}" {{ old('golongan_darah', $penduduk->golongan_darah) ==
+                                $golongan ? 'selected' : '' }}>{{ $golongan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -172,8 +174,10 @@
                         <span class="input-group-text"><i class="fa fa-users"></i></span>
                         <select name="shdk" class="form-control" required>
                             <option value="">-- Pilih --</option>
-                            @foreach(['Kepala Keluarga','Istri','Anak','Menantu','Cucu','Orang Tua','Mertua','Famili Lain','Lainnya'] as $shdk)
-                            <option value="{{ $shdk }}" {{ old('shdk', $penduduk->shdk) == $shdk ? 'selected' : '' }}>{{ $shdk }}</option>
+                            @foreach(['Kepala Keluarga','Istri','Anak','Menantu','Cucu','Orang Tua','Mertua','Famili
+                            Lain','Lainnya'] as $shdk)
+                            <option value="{{ $shdk }}" {{ old('shdk', $penduduk->shdk) == $shdk ? 'selected' : '' }}>{{
+                                $shdk }}</option>
                             @endforeach
                         </select>
                     </div>

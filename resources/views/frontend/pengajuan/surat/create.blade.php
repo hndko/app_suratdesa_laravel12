@@ -34,8 +34,8 @@
                 </div>
                 
                 <div class="col-md-12">
-                  <div class="form-select-wrapper mb-4">
-                    <select class="form-select" id="jenis_surat_id" name="jenis_surat_id" required>
+                  <div class="form-control-wrapper mb-4">
+                    <select class="form-control" id="jenis_surat_id" name="jenis_surat_id" required>
                       <option selected disabled value="">Pilih Jenis Surat</option>
                       @foreach($jenisSurats as $js)
                         <option value="{{ $js->id }}">{{ $js->nama_surat }}</option>
