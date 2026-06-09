@@ -13,6 +13,12 @@ class AiAssistantController extends Controller
     {
         $data = [
             'title' => 'AI Assistant Internal',
+            'totalSurat' => Surat::count(),
+            'suratPending' => Surat::where('status', 'pending')->count(),
+            'suratDone' => Surat::where('status', 'done')->count(),
+            'totalPengaduan' => Pengaduan::count(),
+            'pengaduanPending' => Pengaduan::where('status', 'pending')->count(),
+            'pengaduanResolved' => Pengaduan::where('status', 'resolved')->count(),
         ];
 
         return view('backend.ai_assistant.index', $data);
