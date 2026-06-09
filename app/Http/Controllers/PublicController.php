@@ -212,6 +212,9 @@ class PublicController extends Controller
         $data = [
             'title' => 'Verifikasi Keaslian Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
             'verification' => $verification,
+            'siteName' => \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'verificationCode' => $request->filled('code') ? strtoupper($request->code) : null,
         ];
 
         return view('frontend.verifikasi.surat', $data);
@@ -235,6 +238,9 @@ class PublicController extends Controller
         $data = [
             'title' => 'Verifikasi Keaslian Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
             'verification' => $verification,
+            'siteName' => \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'verificationCode' => strtoupper($request->verification_code),
         ];
 
         return view('frontend.verifikasi.surat', $data);
