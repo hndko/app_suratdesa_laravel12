@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             JenisSuratSeeder::class,
             SettingSeeder::class,
             SuratSeeder::class,
+            PostSeeder::class,
         ]);
     }
 }
