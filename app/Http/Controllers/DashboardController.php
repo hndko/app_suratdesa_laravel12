@@ -25,10 +25,23 @@ class DashboardController extends Controller
         $suratSelesai = Surat::where('status', 'done')->count();
         $suratMenungguApproval = Surat::whereIn('status', ['pending', 'process', 'verified'])->count();
         $pengaduanSelesai = Pengaduan::where('status', 'resolved')->count();
+        $suratCompletionRate = $totalSurat > 0 ? round(($suratSelesai / $totalSurat) * 100) : 0;
+        $pengaduanCompletionRate = $totalPengaduan > 0 ? round(($pengaduanSelesai / $totalPengaduan) * 100) : 0;
+        $suratBulanIni = Surat::whereYear('tanggal_surat', now()->year)
+            ->whereMonth('tanggal_surat', now()->month)
+            ->count();
+        $pengaduanBulanIni = Pengaduan::whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
         $pengaduanPerKategori = Pengaduan::selectRaw('category, COUNT(*) as total')
             ->groupBy('category')
             ->orderByDesc('total')
+            ->limit(5)
             ->pluck('total', 'category')
+            ->toArray();
+        $suratStatusStats = Surat::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
             ->toArray();
 
         $genderStats = Penduduk::selectRaw('jenis_kelamin, COUNT(*) as total')
@@ -76,10 +89,34 @@ class DashboardController extends Controller
         $suratPerJenis = Surat::selectRaw('jenis_surat_id, COUNT(*) as total')
             ->groupBy('jenis_surat_id')
             ->with('jenisSurat')
+            ->orderByDesc('total')
+            ->limit(8)
             ->get();
 
-        $chartJenisLbl = $suratPerJenis->pluck('jenisSurat.nama_surat')->toArray();
+        $chartJenisLbl = $suratPerJenis->map(fn ($item) => $item->jenisSurat?->nama_surat ?? 'Tidak diketahui')->toArray();
         $chartJenisVal = $suratPerJenis->pluck('total')->toArray();
+
+        $latestSurats = Surat::with(['penduduk', 'jenisSurat'])
+            ->latest('created_at')
+            ->limit(5)
+            ->get();
+        $latestPengaduans = Pengaduan::latest('created_at')
+            ->limit(5)
+            ->get();
+
+        $suratStatusLabels = [
+            'pending' => 'Menunggu',
+            'process' => 'Diproses',
+            'verified' => 'Diverifikasi',
+            'approved' => 'Disetujui',
+            'done' => 'Selesai',
+            'rejected' => 'Ditolak',
+        ];
+        $pengaduanStatusLabels = [
+            'pending' => 'Menunggu',
+            'process' => 'Diproses',
+            'resolved' => 'Selesai',
+        ];
 
         $data = [
             'title' => 'Dashboard',
@@ -95,7 +132,16 @@ class DashboardController extends Controller
             'suratSelesai' => $suratSelesai,
             'suratMenungguApproval' => $suratMenungguApproval,
             'pengaduanSelesai' => $pengaduanSelesai,
+            'suratCompletionRate' => $suratCompletionRate,
+            'pengaduanCompletionRate' => $pengaduanCompletionRate,
+            'suratBulanIni' => $suratBulanIni,
+            'pengaduanBulanIni' => $pengaduanBulanIni,
             'pengaduanPerKategori' => $pengaduanPerKategori,
+            'suratStatusStats' => $suratStatusStats,
+            'suratStatusLabels' => $suratStatusLabels,
+            'pengaduanStatusLabels' => $pengaduanStatusLabels,
+            'latestSurats' => $latestSurats,
+            'latestPengaduans' => $latestPengaduans,
             'chartSuratBulanLbl' => $chartSuratBulanLbl,
             'chartSuratBulanVal' => $chartSuratBulanVal,
             'chartJenisLbl' => $chartJenisLbl,

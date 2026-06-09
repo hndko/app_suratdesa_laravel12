@@ -116,7 +116,7 @@ Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20command
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v3.0.3
+APP_VERSION=v3.0.4
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
@@ -142,7 +142,7 @@ Selalu backup database sebelum menjalankan migration atau perubahan RBAC besar d
 
 ## Status Project
 
-Project berada pada versi `v3.0.3` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, dan sidebar backend yang lebih rapi. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
+Project berada pada versi `v3.0.4` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, sidebar backend, dan dashboard operasional yang lebih rapi. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
 
 ## Lisensi
 
