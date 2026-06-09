@@ -41,6 +41,206 @@
   <link rel="preload" href="{{ asset('assets/sandbox/css/fonts/thicccboi.css') }}" as="style" onload="this.rel='stylesheet'">
 
   <style>
+    .public-navbar {
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.06);
+    }
+
+    .public-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      min-width: 0;
+      color: #111827;
+    }
+
+    .public-brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
+    }
+
+    .brand-text {
+      display: grid;
+      line-height: 1.1;
+    }
+
+    .brand-text strong {
+      color: #111827;
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-text span {
+      color: #64748b;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .public-navbar .navbar-nav .nav-link,
+    .public-navbar .dropdown-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      color: #334155;
+      font-weight: 800;
+    }
+
+    .public-navbar .navbar-nav .nav-link:hover,
+    .public-navbar .dropdown-item:hover {
+      color: #0f766e;
+    }
+
+    .public-navbar .dropdown-menu {
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+    }
+
+    .public-navbar .dropdown-item {
+      padding: 0.65rem 1rem;
+    }
+
+    .public-navbar .dropdown-item i,
+    .public-navbar .nav-link i {
+      color: #0f766e;
+      font-size: 1.05rem;
+    }
+
+    .public-nav-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      white-space: nowrap;
+    }
+
+    .public-footer {
+      position: relative;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    .public-footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(14, 116, 144, 0.18), rgba(15, 118, 110, 0.16));
+      pointer-events: none;
+    }
+
+    .public-footer .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-brand {
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 0.3rem;
+    }
+
+    .footer-brand strong,
+    .footer-brand span {
+      display: block;
+    }
+
+    .footer-brand strong {
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .footer-brand span,
+    .footer-muted {
+      color: #cbd5e1;
+      font-weight: 700;
+    }
+
+    .footer-list {
+      display: grid;
+      gap: 0.55rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .footer-contact {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .footer-list a,
+    .footer-contact a,
+    .footer-contact span {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      color: #e2e8f0;
+      font-weight: 700;
+    }
+
+    .footer-list a:hover,
+    .footer-contact a:hover {
+      color: #67e8f9;
+    }
+
+    .footer-list i,
+    .footer-contact i {
+      color: #5eead4;
+      font-size: 1.05rem;
+      margin-top: 0.08rem;
+    }
+
+    .footer-cta {
+      padding: 1rem;
+      border: 1px solid rgba(226, 232, 240, 0.14);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-cta .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+    }
+
+    @media (max-width: 991.98px) {
+      .public-brand img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .brand-text strong {
+        max-width: 170px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .public-navbar .navbar-nav .nav-link {
+        font-size: 1rem;
+      }
+    }
+
     .select2-container {
       width: 100% !important;
     }
@@ -67,13 +267,16 @@
 
 <body>
   <div class="content-wrapper">
-    <header class="wrapper bg-light">
-      <nav class="navbar navbar-expand-lg center-nav transparent navbar-light">
+    <header class="wrapper public-navbar">
+      <nav class="navbar navbar-expand-lg center-nav navbar-light">
         <div class="container flex-lg-row flex-nowrap align-items-center">
           <div class="navbar-brand w-100">
-            <a href="{{ url('/') }}">
-              <img src="{{ asset($brandLogo) }}" style="max-height: 40px;" alt="Logo {{ $siteName }}" />
-              <span class="ms-2 fw-bold text-dark fs-20">{{ $siteName }}</span>
+            <a href="{{ url('/') }}" class="public-brand">
+              <img src="{{ asset($brandLogo) }}" alt="Logo {{ $siteName }}" />
+              <span class="brand-text">
+                <strong>{{ $siteName }}</strong>
+                <span>Portal Layanan Desa</span>
+              </span>
             </a>
           </div>
           <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
@@ -84,27 +287,27 @@
             <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url('/') }}">Beranda</a>
+                  <a class="nav-link" href="{{ url('/') }}"><i class="uil uil-estate"></i> Beranda</a>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Layanan Online</a>
+                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="uil uil-apps"></i> Layanan Online</a>
                   <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.create') }}">Pengajuan Surat</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.track') }}">Lacak Surat</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.verify') }}">Verifikasi Surat</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.create') }}">Kirim Pengaduan</a></li>
-                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.track') }}">Lacak Aduan</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.create') }}"><i class="uil uil-file-plus-alt"></i> Pengajuan Surat</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.track') }}"><i class="uil uil-search-alt"></i> Lacak Surat</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.surat.verify') }}"><i class="uil uil-qrcode-scan"></i> Verifikasi Surat</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.create') }}"><i class="uil uil-comment-plus"></i> Kirim Pengaduan</a></li>
+                    <li class="nav-item"><a class="dropdown-item" href="{{ route('public.pengaduan.track') }}"><i class="uil uil-ticket"></i> Lacak Aduan</a></li>
                   </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('public.pengumuman.index') }}">Pengumuman</a>
+                    <a class="nav-link" href="{{ route('public.pengumuman.index') }}"><i class="uil uil-megaphone"></i> Pengumuman</a>
                 </li>
               </ul>
               <!-- /.navbar-nav -->
               <div class="offcanvas-footer d-lg-none">
                 <div>
-                  <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-inverse">{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a>
-                  <br /> {{ \App\Facades\Setting::get('village_telepon', '-') }} <br />
+                  <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-inverse"><i class="uil uil-envelope"></i> {{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a>
+                  <br /> <i class="uil uil-phone"></i> {{ \App\Facades\Setting::get('village_telepon', '-') }} <br />
                 </div>
               </div>
               <!-- /.offcanvas-footer -->
@@ -115,7 +318,7 @@
           <div class="navbar-other w-100 d-flex ms-auto">
             <ul class="navbar-nav flex-row align-items-center ms-auto">
               <li class="nav-item d-none d-md-block">
-                <a href="{{ route('login') }}" class="btn btn-sm btn-primary rounded-pill">Login Staff</a>
+                <a href="{{ route('public.surat.create') }}" class="btn btn-sm btn-primary rounded-pill public-nav-cta"><i class="uil uil-file-plus-alt"></i> Ajukan Surat</a>
               </li>
               <li class="nav-item d-lg-none">
                 <button class="hamburger offcanvas-nav-btn"><span></span></button>
@@ -136,52 +339,64 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <footer class="bg-dark text-inverse">
+  <footer class="public-footer text-inverse">
     <div class="container py-13 py-md-15">
       <div class="row gy-6 gy-lg-0">
-        <div class="col-md-4 col-lg-3">
+        <div class="col-md-6 col-lg-3">
           <div class="widget">
-            <img class="mb-4" src="{{ asset($brandLogo) }}" style="max-height: 50px;" alt="Logo {{ $siteName }}" />
-            <p class="mb-4">© {{ date('Y') }} {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}. <br class="d-none d-lg-block" />All rights reserved.</p>
+            <div class="footer-brand">
+              <img src="{{ asset($brandLogo) }}" alt="Logo {{ $siteName }}" loading="lazy" />
+              <div>
+                <strong>{{ $siteName }}</strong>
+                <span>{{ \App\Facades\Setting::get('village_nama', 'Desa Kami') }}</span>
+              </div>
+            </div>
+            <p class="footer-muted mb-0">Portal layanan mandiri untuk surat, pengaduan, verifikasi dokumen, dan informasi publik desa.</p>
           </div>
           <!-- /.widget -->
         </div>
         <!-- /column -->
-        <div class="col-md-4 col-lg-3">
+        <div class="col-md-6 col-lg-3">
           <div class="widget">
             <h4 class="widget-title text-white mb-3">Kontak Kami</h4>
-            <address class="pe-xl-15">{{ \App\Facades\Setting::get('village_alamat', 'Alamat Kantor Desa') }}</address>
-            <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}" class="link-body">{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a><br /> {{ \App\Facades\Setting::get('village_telepon', '-') }}
+            <div class="footer-contact">
+              <span><i class="uil uil-map-marker"></i> {{ \App\Facades\Setting::get('village_alamat', 'Alamat Kantor Desa') }}</span>
+              <a href="mailto:{{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}"><i class="uil uil-envelope"></i> {{ \App\Facades\Setting::get('village_email', 'desa@example.com') }}</a>
+              <span><i class="uil uil-phone"></i> {{ \App\Facades\Setting::get('village_telepon', '-') }}</span>
+            </div>
           </div>
           <!-- /.widget -->
         </div>
         <!-- /column -->
-        <div class="col-md-4 col-lg-3">
+        <div class="col-md-6 col-lg-3">
           <div class="widget">
             <h4 class="widget-title text-white mb-3">Tautan Cepat</h4>
-            <ul class="list-unstyled  mb-0">
-              <li><a href="{{ url('/') }}">Beranda</a></li>
-              <li><a href="{{ route('public.surat.create') }}">Pengajuan Surat</a></li>
-              <li><a href="{{ route('public.surat.track') }}">Lacak Surat</a></li>
-              <li><a href="{{ route('public.surat.verify') }}">Verifikasi Surat</a></li>
-              <li><a href="{{ route('public.pengaduan.create') }}">Layanan Pengaduan</a></li>
-              <li><a href="{{ route('public.pengumuman.index') }}">Pengumuman</a></li>
+            <ul class="footer-list">
+              <li><a href="{{ url('/') }}"><i class="uil uil-estate"></i> Beranda</a></li>
+              <li><a href="{{ route('public.surat.create') }}"><i class="uil uil-file-plus-alt"></i> Pengajuan Surat</a></li>
+              <li><a href="{{ route('public.surat.track') }}"><i class="uil uil-search-alt"></i> Lacak Surat</a></li>
+              <li><a href="{{ route('public.surat.verify') }}"><i class="uil uil-qrcode-scan"></i> Verifikasi Surat</a></li>
+              <li><a href="{{ route('public.pengaduan.create') }}"><i class="uil uil-comment-plus"></i> Layanan Pengaduan</a></li>
+              <li><a href="{{ route('public.pengumuman.index') }}"><i class="uil uil-megaphone"></i> Pengumuman</a></li>
             </ul>
           </div>
           <!-- /.widget -->
         </div>
         <!-- /column -->
-        <div class="col-md-12 col-lg-3">
-          <div class="widget">
+        <div class="col-md-6 col-lg-3">
+          <div class="widget footer-cta">
             <h4 class="widget-title text-white mb-3">Layanan Mandiri</h4>
-            <p class="mb-5">Ajukan surat menyurat desa dengan lebih mudah dan cepat melalui portal online kami.</p>
-            <a href="{{ route('public.surat.create') }}" class="btn btn-primary rounded-pill">Mulai Pengajuan</a>
+            <p class="footer-muted mb-4">Ajukan surat, cek status layanan, atau kirim pengaduan langsung dari portal publik.</p>
+            <a href="{{ route('public.surat.create') }}" class="btn btn-primary rounded-pill"><i class="uil uil-file-plus-alt"></i> Mulai Pengajuan</a>
           </div>
           <!-- /.widget -->
         </div>
         <!-- /column -->
       </div>
       <!--/.row -->
+      <div class="footer-bottom mt-8 pt-5 border-top border-secondary">
+        <p class="footer-muted mb-0">© {{ date('Y') }} {{ $siteName }}. Semua hak cipta dilindungi.</p>
+      </div>
     </div>
     <!-- /.container -->
   </footer>
