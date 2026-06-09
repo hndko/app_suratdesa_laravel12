@@ -4,11 +4,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistem Informasi Desa Terintegrasi - {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}">
-  <meta name="author" content="SIMADES">
-  <title>{{ $title ?? \App\Facades\Setting::get('site_name', 'SIMADES') }}</title>
+  @php
+    $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+    $seoTitle = \App\Facades\Setting::get('seo_title', $siteName);
+    $seoDescription = \App\Facades\Setting::get('seo_description', \App\Facades\Setting::get('site_description', 'Sistem Informasi Desa Terintegrasi - ' . $siteName));
+    $seoKeywords = \App\Facades\Setting::get('seo_keywords', 'simades, sistem informasi desa, surat desa, pelayanan desa');
+    $seoAuthor = \App\Facades\Setting::get('seo_author', $siteName);
+    $seoRobots = \App\Facades\Setting::get('seo_robots', 'index, follow');
+    $favicon = \App\Facades\Setting::get('site_favicon', 'assets/img/favicon.png');
+    $brandLogo = \App\Facades\Setting::get('site_logo', \App\Facades\Setting::get('village_logo', 'assets/img/favicon.png'));
+    $ogTitle = \App\Facades\Setting::get('seo_og_title', $seoTitle);
+    $ogDescription = \App\Facades\Setting::get('seo_og_description', $seoDescription);
+    $ogImage = \App\Facades\Setting::get('seo_og_image', $brandLogo);
+  @endphp
+  <meta name="description" content="{{ $seoDescription }}">
+  <meta name="keywords" content="{{ $seoKeywords }}">
+  <meta name="author" content="{{ $seoAuthor }}">
+  <meta name="robots" content="{{ $seoRobots }}">
+  <meta property="og:title" content="{{ $ogTitle }}">
+  <meta property="og:description" content="{{ $ogDescription }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
+  <meta property="og:image" content="{{ asset($ogImage) }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $ogTitle }}">
+  <meta name="twitter:description" content="{{ $ogDescription }}">
+  <meta name="twitter:image" content="{{ asset($ogImage) }}">
+  <title>{{ $title ?? $seoTitle }}</title>
   
-  <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
+  <link rel="shortcut icon" href="{{ asset($favicon) }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/plugins.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/colors/sky.css') }}">
@@ -48,8 +72,8 @@
         <div class="container flex-lg-row flex-nowrap align-items-center">
           <div class="navbar-brand w-100">
             <a href="{{ url('/') }}">
-              <img src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}" style="max-height: 40px;" alt="Logo" />
-              <span class="ms-2 fw-bold text-dark fs-20">{{ \App\Facades\Setting::get('site_name', 'SIMADES') }}</span>
+              <img src="{{ asset($brandLogo) }}" style="max-height: 40px;" alt="Logo {{ $siteName }}" />
+              <span class="ms-2 fw-bold text-dark fs-20">{{ $siteName }}</span>
             </a>
           </div>
           <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
@@ -117,7 +141,7 @@
       <div class="row gy-6 gy-lg-0">
         <div class="col-md-4 col-lg-3">
           <div class="widget">
-            <img class="mb-4" src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}" style="max-height: 50px;" alt="" />
+            <img class="mb-4" src="{{ asset($brandLogo) }}" style="max-height: 50px;" alt="Logo {{ $siteName }}" />
             <p class="mb-4">© {{ date('Y') }} {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}. <br class="d-none d-lg-block" />All rights reserved.</p>
           </div>
           <!-- /.widget -->

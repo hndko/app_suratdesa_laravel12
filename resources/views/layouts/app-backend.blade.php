@@ -4,7 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? \App\Facades\Setting::get('site_name', config('app.name', 'SIMADES')) }}</title>
+    @php
+        $siteName = \App\Facades\Setting::get('site_name', config('app.name', 'SIMADES'));
+        $favicon = \App\Facades\Setting::get('site_favicon', 'assets/img/favicon.png');
+        $brandLogo = \App\Facades\Setting::get('site_logo', \App\Facades\Setting::get('village_logo', 'assets/img/favicon.png'));
+    @endphp
+    <title>{{ $title ?? $siteName }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -12,7 +17,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <link rel="icon" href="{{ asset($favicon) }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
@@ -240,7 +245,7 @@
                 <li class="nav-item d-flex align-items-center">
                     <span class="navbar-version-badge" title="Versi Aplikasi">
                         <i class="fas fa-code-branch"></i>
-                        {{ config('app.version', 'v3.0.32') }}
+                        {{ config('app.version', 'v3.0.33') }}
                     </span>
                 </li>
             </ul>
@@ -251,9 +256,9 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('dashboard') }}" class="brand-link">
-                <img src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}" alt="Logo"
+                <img src="{{ asset($brandLogo) }}" alt="Logo {{ $siteName }}"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{{ \App\Facades\Setting::get('site_name', 'SIMADES') }}</span>
+                <span class="brand-text font-weight-light">{{ $siteName }}</span>
             </a>
 
             <!-- Sidebar -->

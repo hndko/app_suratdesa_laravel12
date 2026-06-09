@@ -465,7 +465,7 @@
         <aside class="login-identity">
             <div class="brand-row">
                 <div class="brand-mark">
-                    <img src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}"
+                    <img src="{{ asset(\App\Facades\Setting::get('site_logo', \App\Facades\Setting::get('village_logo', 'assets/img/favicon.png'))) }}"
                         alt="Logo {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}"
                         loading="lazy"
                         decoding="async">
@@ -509,7 +509,7 @@
         <section class="login-form-side">
             <div class="login-form-inner">
                 <div class="mobile-brand">
-                    <img src="{{ asset(\App\Facades\Setting::get('village_logo', 'assets/img/favicon.png')) }}"
+                    <img src="{{ asset(\App\Facades\Setting::get('site_logo', \App\Facades\Setting::get('village_logo', 'assets/img/favicon.png'))) }}"
                         alt="Logo {{ \App\Facades\Setting::get('site_name', 'SIMADES') }}"
                         loading="lazy"
                         decoding="async">

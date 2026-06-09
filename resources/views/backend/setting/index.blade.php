@@ -3,6 +3,9 @@
 @section('content')
 @php
     $logoPath = $settings['village_logo'] ?? 'assets/img/logo.png';
+    $siteLogoPath = $settings['site_logo'] ?? $logoPath;
+    $faviconPath = $settings['site_favicon'] ?? 'assets/img/favicon.png';
+    $ogImagePath = $settings['seo_og_image'] ?? $siteLogoPath;
 @endphp
 
 <div class="setting-page">
@@ -34,6 +37,10 @@
                 <a class="setting-tab" id="branding-tab" data-toggle="pill" href="#branding" role="tab">
                     <i class="fas fa-image"></i>
                     <span>Logo & Branding</span>
+                </a>
+                <a class="setting-tab" id="seo-tab" data-toggle="pill" href="#seo" role="tab">
+                    <i class="fas fa-chart-line"></i>
+                    <span>SEO</span>
                 </a>
             </div>
 
@@ -215,28 +222,160 @@
                             <i class="fas fa-image"></i>
                         </div>
 
-                        <div class="branding-grid">
-                            <div class="logo-preview-card">
-                                <span>Preview Logo</span>
-                                <img id="logoPreview" src="{{ asset($logoPath) }}" alt="Preview Logo Desa" loading="lazy">
+                        <div class="asset-grid">
+                            <div class="asset-card">
+                                <div class="logo-preview-card">
+                                    <span>Logo Aplikasi</span>
+                                    <img id="siteLogoPreview" src="{{ asset($siteLogoPath) }}" alt="Preview Logo Aplikasi" loading="lazy">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="site_logo">Upload Logo Aplikasi</label>
+                                    <div class="custom-file setting-file">
+                                        <input type="file" id="site_logo" name="site_logo" class="custom-file-input js-image-preview @error('site_logo') is-invalid @enderror" data-preview="#siteLogoPreview" accept="image/jpeg,image/png,image/webp">
+                                        <label class="custom-file-label" for="site_logo">Pilih logo aplikasi...</label>
+                                        @error('site_logo')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                    </div>
+                                    <small class="form-text text-muted">Dipakai di navbar, login, dan portal publik. Maksimal 2 MB.</small>
+                                </div>
                             </div>
 
-                            <div>
-                                <div class="form-group">
-                                    <label for="village_logo">Upload Logo Desa</label>
+                            <div class="asset-card">
+                                <div class="logo-preview-card">
+                                    <span>Logo Desa</span>
+                                    <img id="logoPreview" src="{{ asset($logoPath) }}" alt="Preview Logo Desa" loading="lazy">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="village_logo">Upload Logo Desa/Kop Surat</label>
                                     <div class="custom-file setting-file">
-                                        <input type="file" id="village_logo" name="village_logo" class="custom-file-input @error('village_logo') is-invalid @enderror" accept="image/jpeg,image/png,image/webp">
-                                        <label class="custom-file-label" for="village_logo">Pilih gambar logo...</label>
+                                        <input type="file" id="village_logo" name="village_logo" class="custom-file-input js-image-preview @error('village_logo') is-invalid @enderror" data-preview="#logoPreview" accept="image/jpeg,image/png,image/webp">
+                                        <label class="custom-file-label" for="village_logo">Pilih logo desa...</label>
                                         @error('village_logo')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     </div>
-                                    <small class="form-text text-muted">Format: JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB. Preview akan berubah otomatis setelah file dipilih.</small>
+                                    <small class="form-text text-muted">Dipakai di kop surat dan PDF. Maksimal 2 MB.</small>
                                 </div>
+                            </div>
 
-                                <div class="branding-note">
-                                    <i class="fas fa-info-circle"></i>
-                                    <div>
-                                        <strong>Dipakai di kop surat dan layout aplikasi</strong>
-                                        <span>Logo ini tampil pada navbar, halaman login, portal publik, dan PDF surat.</span>
+                            <div class="asset-card">
+                                <div class="logo-preview-card compact">
+                                    <span>Favicon</span>
+                                    <img id="faviconPreview" src="{{ asset($faviconPath) }}" alt="Preview Favicon" loading="lazy">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="site_favicon">Upload Favicon</label>
+                                    <div class="custom-file setting-file">
+                                        <input type="file" id="site_favicon" name="site_favicon" class="custom-file-input js-image-preview @error('site_favicon') is-invalid @enderror" data-preview="#faviconPreview" accept="image/x-icon,image/vnd.microsoft.icon,image/png,image/jpeg,image/webp">
+                                        <label class="custom-file-label" for="site_favicon">Pilih favicon...</label>
+                                        @error('site_favicon')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                    </div>
+                                    <small class="form-text text-muted">Format ICO/PNG/JPG/WEBP. Maksimal 1 MB.</small>
+                                </div>
+                            </div>
+
+                            <div class="asset-card">
+                                <div class="logo-preview-card">
+                                    <span>OG Image</span>
+                                    <img id="ogImagePreview" src="{{ asset($ogImagePath) }}" alt="Preview OG Image" loading="lazy">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="seo_og_image">Upload Gambar SEO/Social Share</label>
+                                    <div class="custom-file setting-file">
+                                        <input type="file" id="seo_og_image" name="seo_og_image" class="custom-file-input js-image-preview @error('seo_og_image') is-invalid @enderror" data-preview="#ogImagePreview" accept="image/jpeg,image/png,image/webp">
+                                        <label class="custom-file-label" for="seo_og_image">Pilih OG image...</label>
+                                        @error('seo_og_image')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                    </div>
+                                    <small class="form-text text-muted">Dipakai saat link portal dibagikan. Rekomendasi 1200x630 px.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="branding-note mt-3">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Branding dipakai lintas layout</strong>
+                                <span>Logo aplikasi, favicon, dan OG image akan dipakai oleh backend, login, portal publik, dan metadata SEO.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="seo" role="tabpanel">
+                    <div class="setting-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span>SEO</span>
+                                <h2>Metadata Portal Publik</h2>
+                            </div>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="seo_title">SEO Title</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-heading"></i></span></div>
+                                        <input type="text" id="seo_title" name="seo_title" class="form-control @error('seo_title') is-invalid @enderror" value="{{ old('seo_title', $settings['seo_title'] ?? '') }}" placeholder="Contoh: SIMADES - Portal Pelayanan Desa" maxlength="150">
+                                        @error('seo_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="seo_author">SEO Author</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-edit"></i></span></div>
+                                        <input type="text" id="seo_author" name="seo_author" class="form-control @error('seo_author') is-invalid @enderror" value="{{ old('seo_author', $settings['seo_author'] ?? '') }}" placeholder="Contoh: Pemerintah Desa SIMADES" maxlength="100">
+                                        @error('seo_author')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="seo_keywords">SEO Keywords</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-tags"></i></span></div>
+                                        <input type="text" id="seo_keywords" name="seo_keywords" class="form-control @error('seo_keywords') is-invalid @enderror" value="{{ old('seo_keywords', $settings['seo_keywords'] ?? '') }}" placeholder="Contoh: desa digital, surat desa, pengaduan warga" maxlength="300">
+                                        @error('seo_keywords')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="seo_robots">SEO Robots</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-robot"></i></span></div>
+                                        <input type="text" id="seo_robots" name="seo_robots" class="form-control @error('seo_robots') is-invalid @enderror" value="{{ old('seo_robots', $settings['seo_robots'] ?? 'index, follow') }}" placeholder="index, follow" maxlength="100">
+                                        @error('seo_robots')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="seo_description">SEO Description</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-align-left"></i></span></div>
+                                        <textarea id="seo_description" name="seo_description" class="form-control @error('seo_description') is-invalid @enderror" rows="3" placeholder="Ringkasan singkat portal publik untuk mesin pencari" maxlength="300">{{ old('seo_description', $settings['seo_description'] ?? '') }}</textarea>
+                                        @error('seo_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mb-lg-0">
+                                    <label for="seo_og_title">Open Graph Title</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-share-alt"></i></span></div>
+                                        <input type="text" id="seo_og_title" name="seo_og_title" class="form-control @error('seo_og_title') is-invalid @enderror" value="{{ old('seo_og_title', $settings['seo_og_title'] ?? '') }}" placeholder="Judul saat link dibagikan" maxlength="150">
+                                        @error('seo_og_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mb-0">
+                                    <label for="seo_og_description">Open Graph Description</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment-alt"></i></span></div>
+                                        <textarea id="seo_og_description" name="seo_og_description" class="form-control @error('seo_og_description') is-invalid @enderror" rows="2" placeholder="Deskripsi saat link dibagikan" maxlength="300">{{ old('seo_og_description', $settings['seo_og_description'] ?? '') }}</textarea>
+                                        @error('seo_og_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                             </div>
@@ -387,11 +526,25 @@
         border-radius: 8px;
     }
     .setting-panel textarea.form-control { min-height: 112px; }
-    .branding-grid {
+    .branding-grid,
+    .asset-grid {
         display: grid;
         grid-template-columns: 260px minmax(0, 1fr);
         gap: 1rem;
         align-items: start;
+    }
+    .asset-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .asset-card {
+        display: grid;
+        grid-template-columns: 180px minmax(0, 1fr);
+        gap: 1rem;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f8fafc;
     }
     .logo-preview-card {
         display: grid;
@@ -416,6 +569,13 @@
         padding: 0.75rem;
         box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
     }
+    .logo-preview-card.compact {
+        min-height: 180px;
+    }
+    .logo-preview-card.compact img {
+        max-width: 96px;
+        max-height: 96px;
+    }
     .branding-note {
         display: flex;
         align-items: flex-start;
@@ -438,11 +598,13 @@
     }
     @media (max-width: 991.98px) {
         .setting-shell,
-        .branding-grid {
+        .branding-grid,
+        .asset-grid,
+        .asset-card {
             grid-template-columns: 1fr;
         }
         .setting-tabs {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         .setting-actions { grid-column: 1; }
     }
@@ -468,28 +630,31 @@
             bsCustomFileInput.init();
         }
 
-        $('#village_logo').on('change', function () {
+        $('.js-image-preview').on('change', function () {
             var file = this.files && this.files[0] ? this.files[0] : null;
+            var $input = $(this);
+            var previewTarget = $input.data('preview');
             if (!file) {
                 return;
             }
 
-            if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
+            var allowedExtensions = /\.(ico|jpg|jpeg|png|webp)$/i;
+            if (!allowedExtensions.test(file.name)) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Format tidak didukung',
-                    text: 'Gunakan file JPG, JPEG, PNG, atau WEBP.',
+                    text: 'Gunakan file ICO, JPG, JPEG, PNG, atau WEBP sesuai kebutuhan.',
                     confirmButtonText: 'Mengerti',
                     buttonsStyling: false,
                     customClass: { confirmButton: 'btn btn-primary' }
                 });
-                $(this).val('');
+                $input.val('');
                 return;
             }
 
             var reader = new FileReader();
             reader.onload = function (event) {
-                $('#logoPreview').attr('src', event.target.result);
+                $(previewTarget).attr('src', event.target.result);
             };
             reader.readAsDataURL(file);
         });

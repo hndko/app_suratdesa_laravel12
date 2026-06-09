@@ -4,7 +4,12 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{{ $title ?? 'Login Staff - SIMADES' }}</title>
+	@php
+		$siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+		$favicon = \App\Facades\Setting::get('site_favicon', 'assets/img/favicon.png');
+	@endphp
+	<title>{{ $title ?? 'Login Staff - ' . $siteName }}</title>
+	<link rel="icon" href="{{ asset($favicon) }}">
 
 	<!-- Google Font: Inter -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
