@@ -24,6 +24,7 @@
         display: flex;
         align-items: center;
         padding: 32px 18px;
+        overflow-x: hidden;
     }
 
     .login-panel {
@@ -44,23 +45,36 @@
         position: relative;
         padding: 54px;
         background:
-            linear-gradient(135deg, rgba(10, 68, 142, 0.96), rgba(15, 118, 110, 0.9)),
-            url('{{ asset('assets/img/logo.png') }}');
-        background-repeat: no-repeat;
-        background-position: right 42px bottom 42px;
-        background-size: 180px;
+            radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.18), transparent 18rem),
+            radial-gradient(circle at 12% 88%, rgba(49, 196, 190, 0.22), transparent 15rem),
+            linear-gradient(135deg, #0b4c92 0%, #0f766e 100%);
         color: #ffffff;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 620px;
+        min-height: 600px;
+        overflow: hidden;
     }
 
     .login-identity::after {
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.16));
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.18)),
+            repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 18px);
+        pointer-events: none;
+    }
+
+    .login-identity::before {
+        content: "";
+        position: absolute;
+        right: -80px;
+        bottom: -90px;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        border: 42px solid rgba(255, 255, 255, 0.08);
         pointer-events: none;
     }
 
@@ -107,8 +121,8 @@
     }
 
     .identity-copy {
-        max-width: 560px;
-        margin: 78px 0 38px;
+        max-width: 500px;
+        margin: 58px 0 34px;
     }
 
     .identity-copy .eyebrow {
@@ -125,11 +139,12 @@
     }
 
     .identity-copy h2 {
-        font-size: 2.45rem;
-        line-height: 1.12;
+        font-size: 2.12rem;
+        line-height: 1.18;
         font-weight: 800;
         margin: 0 0 18px;
         letter-spacing: 0;
+        max-width: 12ch;
     }
 
     .identity-copy p {
@@ -370,7 +385,8 @@
         }
 
         .identity-copy h2 {
-            font-size: 2rem;
+            font-size: 1.9rem;
+            max-width: 18ch;
         }
 
         .feature-grid {
@@ -415,6 +431,29 @@
         .remember-row {
             align-items: flex-start;
             flex-direction: column;
+        }
+    }
+
+    @media (max-height: 760px) and (min-width: 992px) {
+        .login-page-shell {
+            align-items: flex-start;
+        }
+
+        .login-identity {
+            min-height: 560px;
+            padding: 42px;
+        }
+
+        .identity-copy {
+            margin: 42px 0 28px;
+        }
+
+        .identity-copy h2 {
+            font-size: 1.88rem;
+        }
+
+        .feature-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
