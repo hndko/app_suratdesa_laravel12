@@ -35,6 +35,37 @@ class PublicController extends Controller
         return view('frontend.home', $data);
     }
 
+    public function pengumumanIndex(Request $request)
+    {
+        $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
+        $search = trim((string) $request->query('q', ''));
+
+        $posts = Post::where('status', 'published')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('content', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(9)
+            ->withQueryString();
+
+        $latestPost = Post::where('status', 'published')->latest()->first();
+
+        $data = [
+            'title' => 'Pengumuman Desa - ' . $siteName,
+            'posts' => $posts,
+            'latestPost' => $latestPost,
+            'search' => $search,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'totalPengumuman' => Post::where('status', 'published')->count(),
+        ];
+
+        return view('frontend.pengumuman.index', $data);
+    }
+
     public function suratCreate()
     {
         $jenisSurats = JenisSurat::orderBy('nama_surat')->get();

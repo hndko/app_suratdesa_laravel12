@@ -141,6 +141,12 @@
         </div>
       @endforelse
     </div>
+
+    <div class="announcement-action">
+      <a href="{{ route('public.pengumuman.index') }}" class="btn btn-primary rounded-pill">
+        <i class="uil uil-megaphone"></i> Lihat Semua Pengumuman
+      </a>
+    </div>
   </div>
 </section>
 
@@ -389,6 +395,16 @@
     letter-spacing: 0;
   }
   .announcement-body p { color: #64748b; margin: 0; }
+  .announcement-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .announcement-action .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
   .empty-announcement {
     grid-column: 1 / -1;
     display: grid;

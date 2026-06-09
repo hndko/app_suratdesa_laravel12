@@ -97,7 +97,7 @@
                   </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#pengumuman">Pengumuman</a>
+                    <a class="nav-link" href="{{ route('public.pengumuman.index') }}">Pengumuman</a>
                 </li>
               </ul>
               <!-- /.navbar-nav -->
@@ -165,6 +165,7 @@
               <li><a href="{{ route('public.surat.track') }}">Lacak Surat</a></li>
               <li><a href="{{ route('public.surat.verify') }}">Verifikasi Surat</a></li>
               <li><a href="{{ route('public.pengaduan.create') }}">Layanan Pengaduan</a></li>
+              <li><a href="{{ route('public.pengumuman.index') }}">Pengumuman</a></li>
             </ul>
           </div>
           <!-- /.widget -->

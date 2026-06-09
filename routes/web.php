@@ -30,6 +30,8 @@ Route::name('public.')->group(function () {
 
     Route::get('/verifikasi-surat', [App\Http\Controllers\PublicController::class, 'verifikasiSurat'])->name('surat.verify');
     Route::post('/verifikasi-surat', [App\Http\Controllers\PublicController::class, 'verifikasiSuratStatus'])->name('surat.verify.status')->middleware('throttle:30,1');
+
+    Route::get('/pengumuman', [App\Http\Controllers\PublicController::class, 'pengumumanIndex'])->name('pengumuman.index');
 });
 
 // NOTE: Middleware Guest Group
