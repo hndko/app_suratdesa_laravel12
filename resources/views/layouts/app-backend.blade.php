@@ -17,6 +17,161 @@
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
+    <style>
+        .main-sidebar {
+            background: linear-gradient(180deg, #111827 0%, #0f2f4d 56%, #0f3f3a 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .brand-link {
+            min-height: 64px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            display: flex;
+            align-items: center;
+            padding: 0.78rem 1rem;
+        }
+
+        .brand-link .brand-image {
+            width: 38px;
+            height: 38px;
+            max-height: 38px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 11px;
+            padding: 4px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+            margin-left: 0;
+            margin-right: 0.75rem;
+        }
+
+        .brand-link .brand-text {
+            font-weight: 700 !important;
+            color: #ffffff;
+            letter-spacing: 0;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .sidebar {
+            padding: 0 0.75rem 1rem;
+        }
+
+        .user-panel {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.75rem !important;
+            margin: 0.9rem 0 1rem !important;
+            align-items: center;
+        }
+
+        .user-panel .image {
+            padding-left: 0;
+        }
+
+        .user-panel img {
+            width: 38px;
+            height: 38px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.42);
+        }
+
+        .user-panel .info {
+            padding: 0 0 0 0.7rem;
+            min-width: 0;
+        }
+
+        .user-panel .info a {
+            color: #ffffff;
+            font-weight: 700;
+            line-height: 1.1;
+            max-width: 168px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-panel .user-role {
+            display: block;
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.74rem;
+            margin-top: 4px;
+        }
+
+        .nav-sidebar {
+            padding-bottom: 0.75rem;
+        }
+
+        .nav-sidebar .nav-header {
+            color: rgba(255, 255, 255, 0.48);
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            padding: 1rem 0.75rem 0.45rem;
+            margin-top: 0.2rem;
+        }
+
+        .nav-sidebar .nav-header::after {
+            content: "";
+            display: block;
+            height: 1px;
+            margin-top: 0.42rem;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-sidebar .nav-item {
+            margin-bottom: 0.18rem;
+        }
+
+        .nav-sidebar .nav-link {
+            border-radius: 11px;
+            color: rgba(255, 255, 255, 0.78);
+            padding: 0.62rem 0.78rem;
+            min-height: 42px;
+            transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+
+        .nav-sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transform: translateX(2px);
+        }
+
+        .nav-sidebar .nav-link.active {
+            background: linear-gradient(135deg, #1d6dde, #119c8d) !important;
+            color: #ffffff !important;
+            box-shadow: 0 10px 22px rgba(13, 110, 253, 0.28);
+        }
+
+        .nav-sidebar .nav-icon {
+            width: 1.5rem;
+            margin-right: 0.48rem;
+            text-align: center;
+            color: inherit;
+        }
+
+        .nav-sidebar .nav-link p {
+            font-weight: 600;
+            font-size: 0.92rem;
+            white-space: normal;
+            line-height: 1.25;
+        }
+
+        .nav-sidebar .logout-link {
+            color: #fecaca;
+        }
+
+        .nav-sidebar .logout-link:hover {
+            background: rgba(239, 68, 68, 0.14);
+            color: #ffffff;
+        }
+
+        .sidebar-mini.sidebar-collapse .brand-link .brand-text,
+        .sidebar-mini.sidebar-collapse .user-panel .info {
+            opacity: 0;
+        }
+    </style>
+
     @stack('styles')
 </head>
 
@@ -56,6 +211,7 @@
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">{{ Auth::user()->name ?? 'Administrator' }}</a>
+                        <span class="user-role">{{ Auth::user()?->roles?->pluck('name')->first() ?? 'Staff Desa' }}</span>
                     </div>
                 </div>
 
@@ -164,8 +320,57 @@
                         @endcan
                         @endcanany
 
-                        @canany(['user-index', 'role-index', 'setting-index', 'report-index', 'whatsapp-test-index', 'activity-log-index', 'ai-setting-index', 'ai-log-index', 'ai-playground-send'])
-                        <li class="nav-header">PENGATURAN</li>
+                        @canany(['report-index', 'whatsapp-test-index', 'ai-setting-index', 'ai-log-index', 'ai-playground-send'])
+                        <li class="nav-header">LAPORAN & INTEGRASI</li>
+
+                        @can('report-index')
+                        <li class="nav-item">
+                            <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-invoice"></i>
+                                <p>Laporan & Rekap</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('ai-playground-send')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-assistant.index') }}" class="nav-link {{ request()->routeIs('ai-assistant.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-comments"></i>
+                                <p>AI Assistant</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('whatsapp-test-index')
+                        <li class="nav-item">
+                            <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.*') ? 'active' : '' }}">
+                                <i class="nav-icon fab fa-whatsapp"></i>
+                                <p>Test WA Gateway</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('ai-setting-index')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-settings.index') }}" class="nav-link {{ request()->routeIs('ai-settings.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-robot"></i>
+                                <p>AI Gateway</p>
+                            </a>
+                        </li>
+                        @endcan
+
+                        @can('ai-log-index')
+                        <li class="nav-item">
+                            <a href="{{ route('ai-logs.index') }}" class="nav-link {{ request()->routeIs('ai-logs.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-clipboard-list"></i>
+                                <p>AI Usage Log</p>
+                            </a>
+                        </li>
+                        @endcan
+                        @endcanany
+
+                        @canany(['user-index', 'role-index', 'setting-index', 'activity-log-index'])
+                        <li class="nav-header">SISTEM</li>
 
                         @can('user-index')
                         <li class="nav-item">
@@ -194,56 +399,11 @@
                         </li>
                         @endcan
 
-                        @can('report-index')
-                        <li class="nav-item">
-                            <a href="{{ route('report.index') }}" class="nav-link {{ request()->routeIs('report.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-file-invoice"></i>
-                                <p>Laporan & Rekap</p>
-                            </a>
-                        </li>
-                        @endcan
-
-                        @can('whatsapp-test-index')
-                        <li class="nav-item">
-                            <a href="{{ route('whatsapp.test.index') }}" class="nav-link {{ request()->routeIs('whatsapp.test.*') ? 'active' : '' }}">
-                                <i class="nav-icon fab fa-whatsapp"></i>
-                                <p>Test WA Gateway</p>
-                            </a>
-                        </li>
-                        @endcan
-
                         @can('activity-log-index')
                         <li class="nav-item">
                             <a href="{{ route('activity-log.index') }}" class="nav-link {{ request()->routeIs('activity-log.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-history"></i>
                                 <p>Activity Log</p>
-                            </a>
-                        </li>
-                        @endcan
-
-                        @can('ai-setting-index')
-                        <li class="nav-item">
-                            <a href="{{ route('ai-settings.index') }}" class="nav-link {{ request()->routeIs('ai-settings.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-robot"></i>
-                                <p>AI Gateway</p>
-                            </a>
-                        </li>
-                        @endcan
-
-                        @can('ai-log-index')
-                        <li class="nav-item">
-                            <a href="{{ route('ai-logs.index') }}" class="nav-link {{ request()->routeIs('ai-logs.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>AI Usage Log</p>
-                            </a>
-                        </li>
-                        @endcan
-
-                        @can('ai-playground-send')
-                        <li class="nav-item">
-                            <a href="{{ route('ai-assistant.index') }}" class="nav-link {{ request()->routeIs('ai-assistant.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-comments"></i>
-                                <p>AI Assistant</p>
                             </a>
                         </li>
                         @endcan
@@ -263,7 +423,7 @@
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="nav-link border-0 bg-transparent text-left w-100">
+                                <button type="submit" class="nav-link logout-link border-0 bg-transparent text-left w-100">
                                     <i class="nav-icon fas fa-sign-out-alt"></i>
                                     <p>Logout</p>
                                 </button>
@@ -292,7 +452,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v3.0.2') }}
+                {{ config('app.version', 'v3.0.3') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.
