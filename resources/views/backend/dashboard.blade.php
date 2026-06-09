@@ -27,7 +27,8 @@
             <div class="metric-icon"><i class="fas fa-users"></i></div>
             <span>Total Penduduk</span>
             <strong>{{ number_format($totalPenduduk, 0, ',', '.') }}</strong>
-            <p>L/P {{ number_format($totalLakiLaki, 0, ',', '.') }} / {{ number_format($totalPerempuan, 0, ',', '.') }}</p>
+            <p>L/P {{ number_format($totalLakiLaki, 0, ',', '.') }} / {{ number_format($totalPerempuan, 0, ',', '.') }}
+            </p>
             @can('penduduk-index')
             <a href="{{ route('penduduk.index') }}">Lihat data <i class="fas fa-arrow-right ml-1"></i></a>
             @endcan
@@ -66,7 +67,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-xl-8">
             <div class="dashboard-card">
                 <div class="card-heading">
@@ -111,7 +112,8 @@
                 <div class="attention-box">
                     <i class="fas fa-tasks"></i>
                     <div>
-                        <strong>{{ number_format($suratMenungguApproval, 0, ',', '.') }} surat menunggu tindak lanjut</strong>
+                        <strong>{{ number_format($suratMenungguApproval, 0, ',', '.') }} surat menunggu tindak
+                            lanjut</strong>
                         <p>Fokuskan proses verifikasi dan persetujuan agar pemohon tidak menunggu terlalu lama.</p>
                     </div>
                 </div>
@@ -136,7 +138,8 @@
         @if(session('dashboard_ai_summary'))
         <div class="ai-result">{{ session('dashboard_ai_summary') }}</div>
         @else
-        <p class="muted-text mb-0">Gunakan ringkasan AI untuk melihat insight cepat dari data surat dan pengaduan. Hasil AI hanya rekomendasi awal.</p>
+        <p class="muted-text mb-0">Gunakan ringkasan AI untuk melihat insight cepat dari data surat dan pengaduan. Hasil
+            AI hanya rekomendasi awal.</p>
         @endif
     </div>
     @endcan
@@ -224,7 +227,8 @@
                             <span>{{ $surat->penduduk?->nama ?? 'Pemohon tidak tersedia' }}</span>
                             <small>{{ $surat->created_at?->diffForHumans() }}</small>
                         </div>
-                        <span class="status-badge status-{{ $surat->status }}">{{ $suratStatusLabels[$surat->status] ?? ucfirst($surat->status) }}</span>
+                        <span class="status-badge status-{{ $surat->status }}">{{ $suratStatusLabels[$surat->status] ??
+                            ucfirst($surat->status) }}</span>
                     </div>
                     @empty
                     <div class="empty-state">
@@ -258,7 +262,8 @@
                             <span>{{ ucfirst($pengaduan->category ?: 'Tidak berkategori') }}</span>
                             <small>{{ $pengaduan->created_at?->diffForHumans() }}</small>
                         </div>
-                        <span class="status-badge status-{{ $pengaduan->status }}">{{ $pengaduanStatusLabels[$pengaduan->status] ?? ucfirst($pengaduan->status) }}</span>
+                        <span class="status-badge status-{{ $pengaduan->status }}">{{
+                            $pengaduanStatusLabels[$pengaduan->status] ?? ucfirst($pengaduan->status) }}</span>
                     </div>
                     @empty
                     <div class="empty-state">
@@ -414,10 +419,21 @@
         color: #ffffff;
     }
 
-    .metric-blue { --metric-color: #2563eb; }
-    .metric-green { --metric-color: #059669; }
-    .metric-orange { --metric-color: #ea580c; }
-    .metric-red { --metric-color: #dc2626; }
+    .metric-blue {
+        --metric-color: #2563eb;
+    }
+
+    .metric-green {
+        --metric-color: #059669;
+    }
+
+    .metric-orange {
+        --metric-color: #ea580c;
+    }
+
+    .metric-red {
+        --metric-color: #dc2626;
+    }
 
     .progress-thin {
         height: 7px;
@@ -589,13 +605,32 @@
         background: #e2e8f0;
     }
 
-    .status-pending { color: #92400e; background: #fef3c7; }
+    .status-pending {
+        color: #92400e;
+        background: #fef3c7;
+    }
+
     .status-process,
-    .status-verified { color: #075985; background: #e0f2fe; }
-    .status-approved { color: #065f46; background: #d1fae5; }
+    .status-verified {
+        color: #075985;
+        background: #e0f2fe;
+    }
+
+    .status-approved {
+        color: #065f46;
+        background: #d1fae5;
+    }
+
     .status-done,
-    .status-resolved { color: #166534; background: #dcfce7; }
-    .status-rejected { color: #991b1b; background: #fee2e2; }
+    .status-resolved {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .status-rejected {
+        color: #991b1b;
+        background: #fee2e2;
+    }
 
     .empty-state {
         display: flex;
