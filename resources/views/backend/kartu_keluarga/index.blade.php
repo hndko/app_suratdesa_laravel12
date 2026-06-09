@@ -64,7 +64,7 @@
                 <span>Daftar Data</span>
                 <h2>Kartu Keluarga</h2>
             </div>
-            <small class="table-hint"><i class="fas fa-table mr-1"></i> Search, pagination, dan jumlah data memakai DataTables.</small>
+            <small class="table-hint"><i class="fas fa-server mr-1"></i> Search, pagination, dan sorting memakai DataTables server-side.</small>
         </div>
 
         <div class="kk-table-wrap">
@@ -79,54 +79,7 @@
                         <th class="text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($kartuKeluargas as $row)
-                    <tr class="js-lazy-row">
-                        <td data-label="No">{{ $loop->iteration }}</td>
-                        <td data-label="Nomor KK">
-                            <div class="kk-number">
-                                <i class="fas fa-id-card"></i>
-                                <span>{{ $row->no_kk }}</span>
-                            </div>
-                        </td>
-                        <td data-label="Kepala Keluarga">
-                            <strong>{{ $row->kepala_keluarga }}</strong>
-                            <small>{{ $row->desa ?: 'Desa belum diisi' }}</small>
-                        </td>
-                        <td data-label="Domisili">
-                            <span>{{ $row->alamat }}</span>
-                            <small>RT {{ $row->rt }} / RW {{ $row->rw }}{{ $row->kecamatan ? ' - ' . $row->kecamatan : '' }}</small>
-                        </td>
-                        <td data-label="Anggota">
-                            <span class="member-badge">{{ number_format($row->penduduks_count, 0, ',', '.') }} orang</span>
-                        </td>
-                        <td data-label="Aksi" class="text-right">
-                            <div class="action-group">
-                                @can('kartu-keluarga-show')
-                                <a href="{{ route('kartu-keluarga.show', $row->id) }}" class="btn btn-sm btn-info" title="Detail">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                @endcan
-                                @can('kartu-keluarga-edit')
-                                <a href="{{ route('kartu-keluarga.edit', $row->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endcan
-                                @can('kartu-keluarga-destroy')
-                                <form action="{{ route('kartu-keluarga.destroy', $row->id) }}" method="POST" class="d-inline js-confirm-submit"
-                                    data-confirm-text="Yakin ingin menghapus Kartu Keluarga {{ $row->no_kk }}?">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                                @endcan
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -420,6 +373,9 @@
 <script>
     $(function () {
         var table = $('#datatableKartuKeluarga').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('kartu-keluarga.index') }}',
             responsive: true,
             lengthChange: true,
             searching: true,
@@ -428,15 +384,25 @@
             autoWidth: false,
             deferRender: true,
             pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Semua']],
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
             order: [[0, 'asc']],
+            columns: [
+                { data: 'no', name: 'id' },
+                { data: 'no_kk', name: 'no_kk' },
+                { data: 'kepala_keluarga', name: 'kepala_keluarga' },
+                { data: 'domisili', name: 'alamat' },
+                { data: 'anggota', name: 'penduduks_count' },
+                { data: 'aksi', name: 'aksi' }
+            ],
             columnDefs: [
                 { orderable: false, searchable: false, targets: 5 },
                 { responsivePriority: 1, targets: 1 },
                 { responsivePriority: 2, targets: 2 },
-                { responsivePriority: 3, targets: 5 }
+                { responsivePriority: 3, targets: 5 },
+                { className: 'text-right', targets: 5 }
             ],
             language: {
+                processing: '<i class="fas fa-spinner fa-spin mr-1"></i> Memuat data...',
                 search: 'Cari:',
                 searchPlaceholder: 'Nomor KK, kepala keluarga, alamat...',
                 lengthMenu: 'Tampilkan _MENU_ data',

@@ -206,7 +206,7 @@ resources/views/
 - Backend mengikuti AdminLTE 3 dan Bootstrap 4.
 - Frontend publik mengikuti Sandbox Bootstrap 5.
 - Tombol aksi tabel sebaiknya icon-only dengan `title`.
-- Halaman listing backend yang memakai tabel interaktif wajib memakai DataTables untuk search, pagination, page length, info, sorting, dan responsive behavior. Jangan membuat form search/pagination manual di atas tabel kecuali memang memakai server-side filtering khusus untuk data sangat besar.
+- Halaman listing backend yang memakai tabel interaktif wajib memakai DataTables server-side untuk search, pagination, page length, info, sorting, dan responsive behavior. Jangan membuat form search/pagination manual di atas tabel kecuali ada filter bisnis khusus di luar kemampuan search DataTables.
 - Tombol utama di form sebaiknya memakai icon.
 - Form penting sebaiknya memakai input group/icon jika sudah menjadi pola modul tersebut.
 - Jangan membuat alert inline manual; gunakan toast SweetAlert.
