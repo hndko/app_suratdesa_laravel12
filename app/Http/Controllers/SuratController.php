@@ -17,11 +17,18 @@ use PDF; // Assuming we use dompdf or similar later, but for now just view
 class SuratController extends Controller
 {
     // NOTE: Arsip Surat (Index)
-    public function index()
+    public function index(Request $request): \Illuminate\View\View|JsonResponse
     {
+        if ($request->ajax()) {
+            return $this->dataTable($request);
+        }
+
         $data = [
             'title' => 'Arsip Surat',
-            'surats' => Surat::with(['penduduk', 'jenisSurat', 'verification'])->latest()->paginate(25),
+            'totalSurat' => Surat::count(),
+            'totalMenunggu' => Surat::whereIn('status', ['pending', 'process'])->count(),
+            'totalDisetujui' => Surat::whereIn('status', ['verified', 'approved'])->count(),
+            'totalSelesai' => Surat::where('status', 'done')->count(),
         ];
 
         return view('backend.surat.index', $data);
@@ -378,5 +385,111 @@ class SuratController extends Controller
         } while (Surat::where('tracking_code', $code)->exists());
 
         return $code;
+    }
+
+    private function dataTable(Request $request): JsonResponse
+    {
+        $columns = [
+            0 => 'id',
+            1 => 'no_surat',
+            2 => 'tracking_code',
+            5 => 'tanggal_surat',
+            6 => 'status',
+            7 => 'keperluan',
+        ];
+
+        $baseQuery = Surat::query()->with(['penduduk', 'jenisSurat', 'verification']);
+        $recordsTotal = (clone $baseQuery)->count();
+        $search = trim((string) $request->input('search.value'));
+
+        if ($search !== '') {
+            $baseQuery->where(function ($query) use ($search) {
+                $query->where('no_surat', 'like', '%' . $search . '%')
+                    ->orWhere('tracking_code', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%')
+                    ->orWhere('keperluan', 'like', '%' . $search . '%')
+                    ->orWhereHas('penduduk', function ($pendudukQuery) use ($search) {
+                        $pendudukQuery->where('nama', 'like', '%' . $search . '%')
+                            ->orWhere('nik', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('jenisSurat', function ($jenisQuery) use ($search) {
+                        $jenisQuery->where('nama_surat', 'like', '%' . $search . '%')
+                            ->orWhere('kode_surat', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $recordsFiltered = (clone $baseQuery)->count();
+        $orderColumnIndex = (int) $request->input('order.0.column', 5);
+        $orderColumn = $columns[$orderColumnIndex] ?? 'tanggal_surat';
+        $orderDirection = $request->input('order.0.dir') === 'asc' ? 'asc' : 'desc';
+        $length = (int) $request->input('length', 10);
+        $start = max((int) $request->input('start', 0), 0);
+        $length = $length > 0 ? min($length, 100) : 10;
+
+        $rows = $baseQuery
+            ->orderBy($orderColumn, $orderDirection)
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        $canShow = $request->user()?->can('surat-show') ?? false;
+        $canEdit = $request->user()?->can('surat-edit') ?? false;
+        $canDestroy = $request->user()?->can('surat-destroy') ?? false;
+
+        $data = $rows->map(function (Surat $row, int $index) use ($start, $canShow, $canEdit, $canDestroy) {
+            $statusMeta = $this->statusMeta((string) $row->status);
+            $actions = '<div class="action-group">';
+
+            if ($canShow) {
+                $actions .= '<a href="' . route('surat.show', $row->id) . '" class="btn btn-sm btn-info" title="Lihat/Cetak"><i class="fas fa-print"></i></a>';
+            }
+
+            if ($canEdit) {
+                $actions .= '<a href="' . route('surat.edit', $row->id) . '" class="btn btn-sm btn-warning" title="Update Status"><i class="fas fa-edit"></i></a>';
+            }
+
+            if ($canDestroy) {
+                $actions .= '<form action="' . route('surat.destroy', $row->id) . '" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus arsip surat ' . e($row->no_surat) . '?">'
+                    . csrf_field()
+                    . method_field('DELETE')
+                    . '<button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    . '</form>';
+            }
+
+            $actions .= '</div>';
+
+            return [
+                'no' => $start + $index + 1,
+                'no_surat' => '<div class="letter-number"><i class="fas fa-file-signature"></i><div><strong>' . e($row->no_surat) . '</strong><small>' . e($row->jenisSurat?->kode_surat ?? '-') . '</small></div></div>',
+                'tracking' => '<span class="tracking-pill"><i class="fas fa-barcode"></i>' . e($row->tracking_code ?? '-') . '</span>',
+                'jenis_surat' => '<strong>' . e($row->jenisSurat?->nama_surat ?? '-') . '</strong><small>' . e($row->jenisSurat?->kop_judul ?? '-') . '</small>',
+                'penduduk' => '<strong>' . e($row->penduduk?->nama ?? '-') . '</strong><small>' . e($row->penduduk?->nik ?? '-') . '</small>',
+                'tanggal' => $row->tanggal_surat?->format('d-m-Y') ?? '-',
+                'status' => '<span class="status-pill status-' . $statusMeta['class'] . '">' . e($statusMeta['label']) . '</span>' . ($row->verification ? '<span class="qr-pill"><i class="fas fa-qrcode"></i> QR</span>' : ''),
+                'keperluan' => '<span class="purpose-text">' . e(str($row->keperluan)->limit(90)) . '</span>',
+                'aksi' => $actions,
+            ];
+        });
+
+        return response()->json([
+            'draw' => (int) $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
+    }
+
+    private function statusMeta(string $status): array
+    {
+        return match ($status) {
+            'pending' => ['label' => 'Menunggu', 'class' => 'danger'],
+            'process' => ['label' => 'Proses', 'class' => 'warning'],
+            'verified' => ['label' => 'Diverifikasi', 'class' => 'info'],
+            'approved' => ['label' => 'Disetujui', 'class' => 'primary'],
+            'done' => ['label' => 'Selesai', 'class' => 'success'],
+            'rejected' => ['label' => 'Ditolak', 'class' => 'dark'],
+            default => ['label' => ucfirst($status), 'class' => 'secondary'],
+        };
     }
 }
