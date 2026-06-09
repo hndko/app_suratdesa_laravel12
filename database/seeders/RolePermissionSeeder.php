@@ -73,6 +73,7 @@ class RolePermissionSeeder extends Seeder
 
             'surat-index',
             'surat-create',
+            'surat-penduduk-options',
             'surat-preview',
             'surat-store',
             'surat-edit',
@@ -189,6 +190,7 @@ class RolePermissionSeeder extends Seeder
             'import-penduduk-process',
             'surat-index',
             'surat-create',
+            'surat-penduduk-options',
             'surat-preview',
             'surat-store',
             'surat-edit',

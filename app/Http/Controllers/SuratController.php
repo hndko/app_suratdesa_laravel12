@@ -9,6 +9,7 @@ use App\Services\SuratNumberService;
 use App\Jobs\SendWhatsAppMessage;
 use App\Models\SuratApproval;
 use App\Services\SuratVerificationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF; // Assuming we use dompdf or similar later, but for now just view
@@ -29,13 +30,48 @@ class SuratController extends Controller
     // NOTE: Form Buat Surat
     public function create()
     {
+        $selectedPenduduk = old('penduduk_id')
+            ? Penduduk::select('id', 'nik', 'nama', 'phone', 'alamat')->find(old('penduduk_id'))
+            : null;
+
         $data = [
             'title' => 'Buat Surat Baru',
-            'penduduks' => Penduduk::select('id', 'nik', 'nama')->latest()->limit(100)->get(),
-            'jenis_surats' => JenisSurat::all(),
+            'selectedPenduduk' => $selectedPenduduk,
+            'jenis_surats' => JenisSurat::orderBy('nama_surat')->get(),
         ];
 
         return view('backend.surat.create', $data);
+    }
+
+    public function pendudukOptions(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->input('q'));
+
+        $penduduks = Penduduk::query()
+            ->select('id', 'nik', 'nama', 'phone', 'alamat')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($builder) use ($search) {
+                    $builder->where('nik', 'like', '%' . $search . '%')
+                        ->orWhere('nama', 'like', '%' . $search . '%')
+                        ->orWhere('phone', 'like', '%' . $search . '%')
+                        ->orWhere('alamat', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->limit(20)
+            ->get()
+            ->map(function (Penduduk $penduduk) {
+                return [
+                    'id' => $penduduk->id,
+                    'text' => $penduduk->nik . ' - ' . $penduduk->nama,
+                    'nik' => $penduduk->nik,
+                    'nama' => $penduduk->nama,
+                    'phone' => $penduduk->phone,
+                    'alamat' => $penduduk->alamat,
+                ];
+            });
+
+        return response()->json(['results' => $penduduks]);
     }
 
     // NOTE: Simpan Surat

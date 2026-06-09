@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\SuratController::class)->prefix('surat')->name('surat.')->middleware('permission:surat-index')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create')->middleware('permission:surat-create');
+        Route::get('/penduduk-options', 'pendudukOptions')->name('penduduk-options')->middleware('permission:surat-penduduk-options');
         Route::post('/preview', 'preview')->name('preview')->middleware('permission:surat-preview');
         Route::post('/', 'store')->name('store')->middleware('permission:surat-store');
         Route::get('/{id}', 'show')->name('show')->middleware('permission:surat-show');
