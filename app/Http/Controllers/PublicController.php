@@ -172,6 +172,8 @@ class PublicController extends Controller
 
         $data = [
             'title' => 'Lacak Status Pengaduan - ' . $siteName,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
         ];
 
         return view('frontend.pengajuan.pengaduan.track', $data);
@@ -191,6 +193,9 @@ class PublicController extends Controller
         $data = [
             'title' => 'Lacak Status Pengaduan - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
             'pengaduan' => $pengaduan,
+            'siteName' => \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'ticketCode' => strtoupper($request->ticket_code),
         ];
 
         return view('frontend.pengajuan.pengaduan.track', $data);
