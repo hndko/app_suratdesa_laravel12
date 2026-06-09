@@ -185,6 +185,38 @@
             flex: 1 1 auto;
             width: 1% !important;
         }
+
+        .content-wrapper {
+            min-height: auto !important;
+            padding-bottom: 1rem;
+        }
+
+        .main-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 48px;
+            padding: 0.65rem 1.25rem;
+            line-height: 1.35;
+        }
+
+        .main-footer .footer-version {
+            margin-left: 1rem;
+            color: #7c8794;
+            font-weight: 700;
+        }
+
+        @media (max-width: 575.98px) {
+            .main-footer {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .main-footer .footer-version {
+                margin-left: 0;
+            }
+        }
     </style>
 
     @stack('styles')
@@ -466,11 +498,13 @@
 
         <!-- Main Footer -->
         <footer class="main-footer">
-            <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v3.0.9') }}
+            <div>
+                <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
+                reserved.
             </div>
-            <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
-            reserved.
+            <div class="footer-version">
+                {{ config('app.version', 'v3.0.10') }}
+            </div>
         </footer>
     </div>
     <!-- ./wrapper -->
