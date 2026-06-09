@@ -28,8 +28,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-search-alt"></i> Tracking Surat {{ $villageName }}</span>
-        <h1>Lacak status pengajuan surat secara mandiri.</h1>
-        <p>Masukkan kode tracking dan NIK pemohon untuk melihat posisi pengajuan, jenis surat, nomor surat, dan catatan approval bila tersedia.</p>
+        <h1>{{ \App\Facades\Setting::get('public_surat_track_hero_title', 'Lacak status pengajuan surat secara mandiri.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_surat_track_hero_description', 'Masukkan kode tracking dan NIK pemohon untuk melihat posisi pengajuan, jenis surat, nomor surat, dan catatan approval bila tersedia.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.surat.create') }}" class="btn btn-outline-primary rounded-pill">
             <i class="uil uil-file-plus-alt"></i> Ajukan Surat Baru

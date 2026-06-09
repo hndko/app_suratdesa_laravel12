@@ -34,6 +34,10 @@
                     <i class="fas fa-landmark"></i>
                     <span>Identitas Desa</span>
                 </a>
+                <a class="setting-tab" id="public-tab" data-toggle="pill" href="#public" role="tab">
+                    <i class="fas fa-desktop"></i>
+                    <span>Portal Publik</span>
+                </a>
                 <a class="setting-tab" id="branding-tab" data-toggle="pill" href="#branding" role="tab">
                     <i class="fas fa-image"></i>
                     <span>Logo & Branding</span>
@@ -91,6 +95,134 @@
                                         @error('site_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                     <small class="form-text text-muted">Dipakai untuk metadata portal publik dan konteks branding aplikasi.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="public" role="tabpanel">
+                    <div class="setting-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span>Frontend</span>
+                                <h2>Konten Portal Publik</h2>
+                            </div>
+                            <i class="fas fa-desktop"></i>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="public_brand_tagline">Tagline Brand Navbar</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-id-badge"></i></span></div>
+                                        <input type="text" id="public_brand_tagline" name="public_brand_tagline" class="form-control @error('public_brand_tagline') is-invalid @enderror" value="{{ old('public_brand_tagline', $settings['public_brand_tagline'] ?? '') }}" placeholder="Contoh: Portal Layanan Desa" maxlength="100">
+                                        @error('public_brand_tagline')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="public_footer_cta_title">Judul CTA Footer</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-bullhorn"></i></span></div>
+                                        <input type="text" id="public_footer_cta_title" name="public_footer_cta_title" class="form-control @error('public_footer_cta_title') is-invalid @enderror" value="{{ old('public_footer_cta_title', $settings['public_footer_cta_title'] ?? '') }}" placeholder="Contoh: Layanan Mandiri" maxlength="100">
+                                        @error('public_footer_cta_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="public_footer_description">Deskripsi Footer</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-align-left"></i></span></div>
+                                        <textarea id="public_footer_description" name="public_footer_description" class="form-control @error('public_footer_description') is-invalid @enderror" rows="3" placeholder="Deskripsi singkat portal publik yang tampil di footer" maxlength="500">{{ old('public_footer_description', $settings['public_footer_description'] ?? '') }}</textarea>
+                                        @error('public_footer_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label for="public_footer_cta_text">Deskripsi CTA Footer</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment-alt"></i></span></div>
+                                        <textarea id="public_footer_cta_text" name="public_footer_cta_text" class="form-control @error('public_footer_cta_text') is-invalid @enderror" rows="2" placeholder="Kalimat ajakan layanan mandiri di footer" maxlength="300">{{ old('public_footer_cta_text', $settings['public_footer_cta_text'] ?? '') }}</textarea>
+                                        @error('public_footer_cta_text')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="public_footer_cta_button">Label Tombol CTA Footer</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-mouse-pointer"></i></span></div>
+                                        <input type="text" id="public_footer_cta_button" name="public_footer_cta_button" class="form-control @error('public_footer_cta_button') is-invalid @enderror" value="{{ old('public_footer_cta_button', $settings['public_footer_cta_button'] ?? '') }}" placeholder="Contoh: Mulai Pengajuan" maxlength="80">
+                                        @error('public_footer_cta_button')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="public-copy-grid">
+                            @php
+                                $publicPages = [
+                                    ['prefix' => 'public_home_hero', 'icon' => 'fas fa-home', 'title' => 'Beranda', 'titlePlaceholder' => 'Pelayanan desa digital yang mudah dipantau dari rumah.', 'descriptionPlaceholder' => 'Ajukan surat, kirim pengaduan, lacak proses layanan, dan cek keaslian dokumen melalui satu portal publik.'],
+                                    ['prefix' => 'public_surat_create_hero', 'icon' => 'fas fa-file-signature', 'title' => 'Pengajuan Surat', 'titlePlaceholder' => 'Ajukan surat desa tanpa antre berulang.', 'descriptionPlaceholder' => 'Isi NIK, pilih jenis surat, tulis keperluan, lalu simpan kode tracking.'],
+                                    ['prefix' => 'public_surat_track_hero', 'icon' => 'fas fa-search', 'title' => 'Lacak Surat', 'titlePlaceholder' => 'Lacak status pengajuan surat secara mandiri.', 'descriptionPlaceholder' => 'Masukkan kode tracking dan NIK pemohon untuk melihat posisi pengajuan.'],
+                                    ['prefix' => 'public_pengaduan_create_hero', 'icon' => 'fas fa-comments', 'title' => 'Kirim Pengaduan', 'titlePlaceholder' => 'Sampaikan laporan warga dengan jelas dan mudah ditindaklanjuti.', 'descriptionPlaceholder' => 'Gunakan formulir untuk mengirim keluhan, aspirasi, atau laporan kejadian.'],
+                                    ['prefix' => 'public_pengaduan_track_hero', 'icon' => 'fas fa-ticket-alt', 'title' => 'Lacak Pengaduan', 'titlePlaceholder' => 'Pantau progres tindak lanjut pengaduan Anda.', 'descriptionPlaceholder' => 'Masukkan kode tiket dan NIK pelapor untuk melihat status aduan.'],
+                                    ['prefix' => 'public_verifikasi_hero', 'icon' => 'fas fa-qrcode', 'title' => 'Verifikasi Surat', 'titlePlaceholder' => 'Pastikan surat desa benar-benar diterbitkan oleh SIMADES.', 'descriptionPlaceholder' => 'Masukkan kode verifikasi dari QR atau PDF surat untuk melihat status validitas dokumen.'],
+                                    ['prefix' => 'public_pengumuman_hero', 'icon' => 'fas fa-bullhorn', 'title' => 'Pengumuman', 'titlePlaceholder' => 'Informasi resmi desa dalam satu halaman yang mudah dipantau.', 'descriptionPlaceholder' => 'Lihat pengumuman terbaru, agenda layanan, informasi kegiatan, dan kabar penting desa.'],
+                                ];
+                            @endphp
+                            @foreach($publicPages as $page)
+                                <div class="public-copy-card">
+                                    <div class="public-copy-heading">
+                                        <i class="{{ $page['icon'] }}"></i>
+                                        <strong>{{ $page['title'] }}</strong>
+                                    </div>
+                                    @if($page['prefix'] === 'public_home_hero')
+                                        <div class="form-group">
+                                            <label for="{{ $page['prefix'] }}_eyebrow">Eyebrow Beranda</label>
+                                            <input type="text" id="{{ $page['prefix'] }}_eyebrow" name="{{ $page['prefix'] }}_eyebrow" class="form-control @error($page['prefix'] . '_eyebrow') is-invalid @enderror" value="{{ old($page['prefix'] . '_eyebrow', $settings[$page['prefix'] . '_eyebrow'] ?? '') }}" placeholder="Contoh: Portal Resmi Desa" maxlength="100">
+                                            @error($page['prefix'] . '_eyebrow')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                        </div>
+                                    @endif
+                                    <div class="form-group">
+                                        <label for="{{ $page['prefix'] }}_title">Judul Hero</label>
+                                        <input type="text" id="{{ $page['prefix'] }}_title" name="{{ $page['prefix'] }}_title" class="form-control @error($page['prefix'] . '_title') is-invalid @enderror" value="{{ old($page['prefix'] . '_title', $settings[$page['prefix'] . '_title'] ?? '') }}" placeholder="{{ $page['titlePlaceholder'] }}" maxlength="150">
+                                        @error($page['prefix'] . '_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <label for="{{ $page['prefix'] }}_description">Deskripsi Hero</label>
+                                        <textarea id="{{ $page['prefix'] }}_description" name="{{ $page['prefix'] }}_description" class="form-control @error($page['prefix'] . '_description') is-invalid @enderror" rows="3" placeholder="{{ $page['descriptionPlaceholder'] }}" maxlength="300">{{ old($page['prefix'] . '_description', $settings[$page['prefix'] . '_description'] ?? '') }}</textarea>
+                                        @error($page['prefix'] . '_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-lg-6">
+                                <div class="form-group mb-lg-0">
+                                    <label for="public_home_service_title">Judul Section Layanan Beranda</label>
+                                    <input type="text" id="public_home_service_title" name="public_home_service_title" class="form-control @error('public_home_service_title') is-invalid @enderror" value="{{ old('public_home_service_title', $settings['public_home_service_title'] ?? '') }}" placeholder="Contoh: Pilih layanan sesuai kebutuhan warga" maxlength="150">
+                                    @error('public_home_service_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group mb-0">
+                                    <label for="public_home_flow_title">Judul Section Alur Beranda</label>
+                                    <input type="text" id="public_home_flow_title" name="public_home_flow_title" class="form-control @error('public_home_flow_title') is-invalid @enderror" value="{{ old('public_home_flow_title', $settings['public_home_flow_title'] ?? '') }}" placeholder="Contoh: Proses dibuat jelas dari awal sampai selesai" maxlength="150">
+                                    @error('public_home_flow_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-0 mt-3">
+                                    <label for="public_home_flow_description">Deskripsi Section Alur Beranda</label>
+                                    <textarea id="public_home_flow_description" name="public_home_flow_description" class="form-control @error('public_home_flow_description') is-invalid @enderror" rows="2" placeholder="Deskripsi alur layanan yang tampil di beranda" maxlength="300">{{ old('public_home_flow_description', $settings['public_home_flow_description'] ?? '') }}</textarea>
+                                    @error('public_home_flow_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                         </div>
@@ -526,6 +658,36 @@
         border-radius: 8px;
     }
     .setting-panel textarea.form-control { min-height: 112px; }
+    .public-copy-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .public-copy-card {
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f8fafc;
+    }
+    .public-copy-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.85rem;
+        color: #111827;
+        font-weight: 800;
+    }
+    .public-copy-heading i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        color: #ffffff;
+        background: #0f766e;
+    }
     .branding-grid,
     .asset-grid {
         display: grid;
@@ -605,6 +767,9 @@
         }
         .setting-tabs {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .public-copy-grid {
+            grid-template-columns: 1fr;
         }
         .setting-actions { grid-column: 1; }
     }

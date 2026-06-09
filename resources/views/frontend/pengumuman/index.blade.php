@@ -6,8 +6,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-megaphone"></i> Pengumuman {{ $villageName }}</span>
-        <h1>Informasi resmi desa dalam satu halaman yang mudah dipantau.</h1>
-        <p>Lihat pengumuman terbaru, agenda layanan, informasi kegiatan, dan kabar penting yang dipublikasikan oleh petugas {{ $siteName }}.</p>
+        <h1>{{ \App\Facades\Setting::get('public_pengumuman_hero_title', 'Informasi resmi desa dalam satu halaman yang mudah dipantau.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_pengumuman_hero_description', 'Lihat pengumuman terbaru, agenda layanan, informasi kegiatan, dan kabar penting yang dipublikasikan oleh petugas ' . $siteName . '.') }}</p>
         <div class="hero-actions">
           <a href="#daftar-pengumuman" class="btn btn-primary rounded-pill">
             <i class="uil uil-list-ul"></i> Lihat Daftar

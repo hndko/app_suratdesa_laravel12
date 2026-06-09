@@ -27,6 +27,29 @@ class SettingController extends Controller
             'site_name' => 'nullable|string|max:100',
             'site_description' => 'nullable|string|max:500',
             'contact_whatsapp' => 'nullable|string|max:20',
+            'public_brand_tagline' => 'nullable|string|max:100',
+            'public_footer_description' => 'nullable|string|max:500',
+            'public_footer_cta_title' => 'nullable|string|max:100',
+            'public_footer_cta_text' => 'nullable|string|max:300',
+            'public_footer_cta_button' => 'nullable|string|max:80',
+            'public_home_hero_eyebrow' => 'nullable|string|max:100',
+            'public_home_hero_title' => 'nullable|string|max:150',
+            'public_home_hero_description' => 'nullable|string|max:300',
+            'public_home_service_title' => 'nullable|string|max:150',
+            'public_home_flow_title' => 'nullable|string|max:150',
+            'public_home_flow_description' => 'nullable|string|max:300',
+            'public_surat_create_hero_title' => 'nullable|string|max:150',
+            'public_surat_create_hero_description' => 'nullable|string|max:300',
+            'public_surat_track_hero_title' => 'nullable|string|max:150',
+            'public_surat_track_hero_description' => 'nullable|string|max:300',
+            'public_pengaduan_create_hero_title' => 'nullable|string|max:150',
+            'public_pengaduan_create_hero_description' => 'nullable|string|max:300',
+            'public_pengaduan_track_hero_title' => 'nullable|string|max:150',
+            'public_pengaduan_track_hero_description' => 'nullable|string|max:300',
+            'public_verifikasi_hero_title' => 'nullable|string|max:150',
+            'public_verifikasi_hero_description' => 'nullable|string|max:300',
+            'public_pengumuman_hero_title' => 'nullable|string|max:150',
+            'public_pengumuman_hero_description' => 'nullable|string|max:300',
             'seo_title' => 'nullable|string|max:150',
             'seo_description' => 'nullable|string|max:300',
             'seo_keywords' => 'nullable|string|max:300',
@@ -100,6 +123,10 @@ class SettingController extends Controller
 
         if (str_starts_with($key, 'seo_')) {
             return 'seo';
+        }
+
+        if (str_starts_with($key, 'public_')) {
+            return 'public';
         }
 
         return 'general';

@@ -27,8 +27,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-search-alt"></i> Tracking Pengaduan {{ $villageName }}</span>
-        <h1>Pantau progres tindak lanjut pengaduan Anda.</h1>
-        <p>Masukkan kode tiket dan NIK pelapor untuk melihat status antrian, kategori laporan, isi aduan, dan tanggapan petugas bila sudah tersedia.</p>
+        <h1>{{ \App\Facades\Setting::get('public_pengaduan_track_hero_title', 'Pantau progres tindak lanjut pengaduan Anda.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_pengaduan_track_hero_description', 'Masukkan kode tiket dan NIK pelapor untuk melihat status antrian, kategori laporan, isi aduan, dan tanggapan petugas bila sudah tersedia.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.pengaduan.create') }}" class="btn btn-outline-primary rounded-pill">
             <i class="uil uil-comment-plus"></i> Kirim Aduan Baru

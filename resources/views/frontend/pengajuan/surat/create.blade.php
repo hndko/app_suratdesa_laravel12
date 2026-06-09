@@ -6,8 +6,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-file-plus-alt"></i> Layanan Surat Online</span>
-        <h1>Ajukan surat desa tanpa antre berulang.</h1>
-        <p>Isi NIK, pilih jenis surat, tulis keperluan, lalu simpan kode tracking yang diberikan sistem untuk memantau proses pengajuan.</p>
+        <h1>{{ \App\Facades\Setting::get('public_surat_create_hero_title', 'Ajukan surat desa tanpa antre berulang.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_surat_create_hero_description', 'Isi NIK, pilih jenis surat, tulis keperluan, lalu simpan kode tracking yang diberikan sistem untuk memantau proses pengajuan.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.surat.track') }}" class="btn btn-outline-primary rounded-pill">
             <i class="uil uil-search-alt"></i> Lacak Surat

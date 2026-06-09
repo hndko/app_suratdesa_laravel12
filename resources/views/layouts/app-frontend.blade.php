@@ -13,6 +13,11 @@
     $seoRobots = \App\Facades\Setting::get('seo_robots', 'index, follow');
     $favicon = \App\Facades\Setting::get('site_favicon', 'assets/img/favicon.png');
     $brandLogo = \App\Facades\Setting::get('site_logo', \App\Facades\Setting::get('village_logo', 'assets/img/favicon.png'));
+    $publicBrandTagline = \App\Facades\Setting::get('public_brand_tagline', 'Portal Layanan Desa');
+    $publicFooterDescription = \App\Facades\Setting::get('public_footer_description', 'Portal layanan mandiri untuk surat, pengaduan, verifikasi dokumen, dan informasi publik desa.');
+    $publicFooterCtaTitle = \App\Facades\Setting::get('public_footer_cta_title', 'Layanan Mandiri');
+    $publicFooterCtaText = \App\Facades\Setting::get('public_footer_cta_text', 'Ajukan surat, cek status layanan, atau kirim pengaduan langsung dari portal publik.');
+    $publicFooterCtaButton = \App\Facades\Setting::get('public_footer_cta_button', 'Mulai Pengajuan');
     $ogTitle = \App\Facades\Setting::get('seo_og_title', $seoTitle);
     $ogDescription = \App\Facades\Setting::get('seo_og_description', $seoDescription);
     $ogImage = \App\Facades\Setting::get('seo_og_image', $brandLogo);
@@ -275,7 +280,7 @@
               <img src="{{ asset($brandLogo) }}" alt="Logo {{ $siteName }}" />
               <span class="brand-text">
                 <strong>{{ $siteName }}</strong>
-                <span>Portal Layanan Desa</span>
+                <span>{{ $publicBrandTagline }}</span>
               </span>
             </a>
           </div>
@@ -351,7 +356,7 @@
                 <span>{{ \App\Facades\Setting::get('village_nama', 'Desa Kami') }}</span>
               </div>
             </div>
-            <p class="footer-muted mb-0">Portal layanan mandiri untuk surat, pengaduan, verifikasi dokumen, dan informasi publik desa.</p>
+            <p class="footer-muted mb-0">{{ $publicFooterDescription }}</p>
           </div>
           <!-- /.widget -->
         </div>
@@ -385,9 +390,9 @@
         <!-- /column -->
         <div class="col-md-6 col-lg-3">
           <div class="widget footer-cta">
-            <h4 class="widget-title text-white mb-3">Layanan Mandiri</h4>
-            <p class="footer-muted mb-4">Ajukan surat, cek status layanan, atau kirim pengaduan langsung dari portal publik.</p>
-            <a href="{{ route('public.surat.create') }}" class="btn btn-primary rounded-pill"><i class="uil uil-file-plus-alt"></i> Mulai Pengajuan</a>
+            <h4 class="widget-title text-white mb-3">{{ $publicFooterCtaTitle }}</h4>
+            <p class="footer-muted mb-4">{{ $publicFooterCtaText }}</p>
+            <a href="{{ route('public.surat.create') }}" class="btn btn-primary rounded-pill"><i class="uil uil-file-plus-alt"></i> {{ $publicFooterCtaButton }}</a>
           </div>
           <!-- /.widget -->
         </div>

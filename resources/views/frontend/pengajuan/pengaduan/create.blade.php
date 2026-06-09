@@ -6,8 +6,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-comment-message"></i> Layanan Pengaduan {{ $villageName }}</span>
-        <h1>Sampaikan laporan warga dengan jelas dan mudah ditindaklanjuti.</h1>
-        <p>Gunakan formulir ini untuk mengirim keluhan, aspirasi, atau laporan kejadian. Setelah terkirim, sistem akan membuat kode tiket yang bisa dipakai untuk melacak status aduan.</p>
+        <h1>{{ \App\Facades\Setting::get('public_pengaduan_create_hero_title', 'Sampaikan laporan warga dengan jelas dan mudah ditindaklanjuti.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_pengaduan_create_hero_description', 'Gunakan formulir ini untuk mengirim keluhan, aspirasi, atau laporan kejadian. Setelah terkirim, sistem akan membuat kode tiket yang bisa dipakai untuk melacak status aduan.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.pengaduan.track') }}" class="btn btn-outline-primary rounded-pill">
             <i class="uil uil-search-alt"></i> Lacak Status Aduan

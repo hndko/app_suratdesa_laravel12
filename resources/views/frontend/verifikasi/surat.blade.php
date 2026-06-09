@@ -11,8 +11,8 @@
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
         <span class="page-eyebrow"><i class="uil uil-shield-check"></i> Verifikasi Dokumen {{ $villageName }}</span>
-        <h1>Pastikan surat desa benar-benar diterbitkan oleh {{ $siteName }}.</h1>
-        <p>Masukkan kode verifikasi dari QR atau PDF surat untuk melihat status validitas dokumen tanpa membuka data pribadi warga secara lengkap.</p>
+        <h1>{{ \App\Facades\Setting::get('public_verifikasi_hero_title', 'Pastikan surat desa benar-benar diterbitkan oleh ' . $siteName . '.') }}</h1>
+        <p>{{ \App\Facades\Setting::get('public_verifikasi_hero_description', 'Masukkan kode verifikasi dari QR atau PDF surat untuk melihat status validitas dokumen tanpa membuka data pribadi warga secara lengkap.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.surat.track') }}" class="btn btn-outline-primary rounded-pill">
             <i class="uil uil-search-alt"></i> Lacak Pengajuan

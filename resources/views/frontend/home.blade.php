@@ -5,9 +5,9 @@
   <div class="container">
     <div class="row align-items-center gy-10">
       <div class="col-lg-7">
-        <span class="hero-eyebrow"><i class="uil uil-shield-check"></i> Portal Resmi {{ $villageName }}</span>
-        <h1>Pelayanan desa digital yang mudah dipantau dari rumah.</h1>
-        <p class="hero-copy">Ajukan surat, kirim pengaduan, lacak proses layanan, dan cek keaslian dokumen melalui satu portal publik {{ $siteName }}.</p>
+        <span class="hero-eyebrow"><i class="uil uil-shield-check"></i> {{ \App\Facades\Setting::get('public_home_hero_eyebrow', 'Portal Resmi ' . $villageName) }}</span>
+        <h1>{{ \App\Facades\Setting::get('public_home_hero_title', 'Pelayanan desa digital yang mudah dipantau dari rumah.') }}</h1>
+        <p class="hero-copy">{{ \App\Facades\Setting::get('public_home_hero_description', 'Ajukan surat, kirim pengaduan, lacak proses layanan, dan cek keaslian dokumen melalui satu portal publik ' . $siteName . '.') }}</p>
         <div class="hero-actions">
           <a href="{{ route('public.surat.create') }}" class="btn btn-primary rounded-pill">
             <i class="uil uil-file-plus-alt"></i> Ajukan Surat
@@ -64,7 +64,7 @@
   <div class="container py-12 py-md-14">
     <div class="section-heading">
       <span>Layanan Publik</span>
-      <h2>Pilih layanan sesuai kebutuhan warga</h2>
+      <h2>{{ \App\Facades\Setting::get('public_home_service_title', 'Pilih layanan sesuai kebutuhan warga') }}</h2>
     </div>
 
     <div class="service-grid">
@@ -98,9 +98,9 @@
       <div class="col-lg-5">
         <div class="section-heading text-start mb-5">
           <span>Alur Layanan</span>
-          <h2>Proses dibuat jelas dari awal sampai selesai</h2>
+          <h2>{{ \App\Facades\Setting::get('public_home_flow_title', 'Proses dibuat jelas dari awal sampai selesai') }}</h2>
         </div>
-        <p class="mb-0">Setiap layanan publik memberi kode pelacakan agar warga bisa memantau proses dan menerima informasi status layanan dengan lebih transparan.</p>
+        <p class="mb-0">{{ \App\Facades\Setting::get('public_home_flow_description', 'Setiap layanan publik memberi kode pelacakan agar warga bisa memantau proses dan menerima informasi status layanan dengan lebih transparan.') }}</p>
       </div>
       <div class="col-lg-7">
         <div class="flow-grid">
