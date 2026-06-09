@@ -75,11 +75,11 @@ class ActivityLogController extends Controller
             $event = $activity->event ?: $activity->description;
             $module = $activity->subject_type ? class_basename($activity->subject_type) : 'System';
             $properties = $activity->properties?->toArray() ?? [];
-            $propertiesJson = json_encode($properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             $attributes = data_get($properties, 'attributes');
             $old = data_get($properties, 'old');
             $summary = $this->changeSummary($attributes, $old);
             $eventClass = $this->eventClass($event);
+            $detailHtml = $this->propertiesHtml($properties);
 
             return [
                 'no' => $start + $index + 1,
@@ -88,7 +88,7 @@ class ActivityLogController extends Controller
                 'module' => '<strong>' . e($module) . '</strong><small>' . e($activity->log_name ?: 'default') . '</small>',
                 'actor' => '<div class="actor-cell"><span class="actor-avatar">' . e(Str::upper(Str::substr($activity->causer?->name ?? 'S', 0, 1))) . '</span><div><strong>' . e($activity->causer?->name ?? 'System') . '</strong><small>' . e($activity->causer?->email ?? 'Tanpa user') . '</small></div></div>',
                 'changes' => '<span class="change-pill"><i class="fas fa-exchange-alt"></i>' . e($summary) . '</span>',
-                'detail' => '<button type="button" class="btn btn-sm btn-outline-secondary js-activity-detail" title="Detail Aktivitas" data-event="' . e($event ?: '-') . '" data-module="' . e($module) . '" data-actor="' . e($activity->causer?->name ?? 'System') . '" data-description="' . e($activity->description) . '" data-properties="' . e(Str::limit($propertiesJson ?: '{}', 1800)) . '"><i class="fas fa-eye"></i></button>',
+                'detail' => '<button type="button" class="btn btn-sm btn-outline-secondary js-activity-detail" title="Detail Aktivitas" data-event="' . e($event ?: '-') . '" data-module="' . e($module) . '" data-actor="' . e($activity->causer?->name ?? 'System') . '" data-description="' . e($activity->description) . '" data-detail="' . e($detailHtml) . '"><i class="fas fa-eye"></i></button>',
             ];
         });
 
@@ -129,6 +129,108 @@ class ActivityLogController extends Controller
         }
 
         return $newCount . ' baru | ' . $oldCount . ' lama';
+    }
+
+    private function propertiesHtml(array $properties): string
+    {
+        $attributes = data_get($properties, 'attributes');
+        $old = data_get($properties, 'old');
+
+        if (is_array($attributes) || is_array($old)) {
+            $keys = collect(array_keys((array) $attributes))
+                ->merge(array_keys((array) $old))
+                ->unique()
+                ->values();
+
+            if ($keys->isEmpty()) {
+                return $this->emptyDetailHtml();
+            }
+
+            $rows = $keys->map(function (string $key) use ($attributes, $old) {
+                $oldValue = data_get($old, $key);
+                $newValue = data_get($attributes, $key);
+
+                return '<tr>'
+                    . '<td><strong>' . e($this->humanizeKey($key)) . '</strong><small>' . e($key) . '</small></td>'
+                    . '<td>' . $this->readableValue($oldValue) . '</td>'
+                    . '<td>' . $this->readableValue($newValue) . '</td>'
+                    . '</tr>';
+            })->implode('');
+
+            return '<div class="activity-detail-table table-responsive">'
+                . '<table class="table table-sm mb-0">'
+                . '<thead><tr><th>Field</th><th>Nilai Lama</th><th>Nilai Baru</th></tr></thead>'
+                . '<tbody>' . $rows . '</tbody>'
+                . '</table>'
+                . '</div>';
+        }
+
+        if ($properties === []) {
+            return $this->emptyDetailHtml();
+        }
+
+        $items = collect($properties)->map(function ($value, string $key) {
+            return '<div class="detail-kv-item">'
+                . '<span>' . e($this->humanizeKey($key)) . '</span>'
+                . '<strong>' . $this->readableValue($value) . '</strong>'
+                . '</div>';
+        })->implode('');
+
+        return '<div class="detail-kv-list">' . $items . '</div>';
+    }
+
+    private function readableValue($value): string
+    {
+        if ($value === null || $value === '') {
+            return '<span class="text-muted">Kosong</span>';
+        }
+
+        if (is_bool($value)) {
+            return e($value ? 'Ya' : 'Tidak');
+        }
+
+        if (is_array($value)) {
+            $items = collect($value)->map(function ($item, $key) {
+                $label = is_string($key) ? $this->humanizeKey($key) . ': ' : '';
+
+                return e($label . $this->plainValue($item));
+            })->implode('<br>');
+
+            return $items !== '' ? $items : '<span class="text-muted">Kosong</span>';
+        }
+
+        return e(Str::limit((string) $value, 180));
+    }
+
+    private function plainValue($value): string
+    {
+        if ($value === null || $value === '') {
+            return 'Kosong';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'Ya' : 'Tidak';
+        }
+
+        if (is_array($value)) {
+            return collect($value)->map(fn ($item, $key) => (is_string($key) ? $this->humanizeKey($key) . ': ' : '') . $this->plainValue($item))->implode(', ');
+        }
+
+        return (string) $value;
+    }
+
+    private function humanizeKey(string $key): string
+    {
+        return Str::of($key)->replace(['_', '-'], ' ')->headline()->toString();
+    }
+
+    private function emptyDetailHtml(): string
+    {
+        return '<div class="detail-empty">'
+            . '<i class="fas fa-info-circle"></i>'
+            . '<strong>Tidak ada payload perubahan</strong>'
+            . '<span>Aktivitas ini tidak membawa detail field lama atau baru.</span>'
+            . '</div>';
     }
 
     private function eventClass(?string $event): string

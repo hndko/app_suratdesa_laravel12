@@ -116,7 +116,7 @@ Daftar command operasional tersedia di [docs/04. commands.md](docs/04.%20command
 Versi aplikasi mengikuti SemVer dan dibaca dari `APP_VERSION`.
 
 ```env
-APP_VERSION=v3.0.34
+APP_VERSION=v3.0.35
 ```
 
 Jika `.env` lokal atau production masih memakai versi lama, update manual lalu jalankan:
@@ -142,7 +142,7 @@ Selalu backup database sebelum menjalankan migration atau perubahan RBAC besar d
 
 ## 📌 Status Project
 
-Project berada pada versi `v3.0.34` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, sidebar backend, dashboard operasional, modul Kartu Keluarga, Data Penduduk, Import Penduduk & KK, Data Jenis Surat, Buat Surat Baru, Arsip Surat, Pengumuman Desa, Pengaduan Warga, Laporan & Rekapitulasi, AI Assistant Internal, Uji Coba WhatsApp Gateway, AI Provider Gateway, AI Usage Logs, Manajemen User, Manajemen Role & Permission, Pengaturan Website & Desa lengkap dengan logo/favicon/SEO, serta Activity Log dengan DataTables/Select2 lazy loading sesuai kebutuhan modul. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, AI logs, user management, role management, setting website/desa, SEO, branding, activity log, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
+Project berada pada versi `v3.0.35` dan ditujukan sebagai MVP production yang sudah dilengkapi AI Gateway, import penduduk, approval surat, QR verifikasi, notifikasi queue, halaman login staff, sidebar backend, dashboard operasional, modul Kartu Keluarga, Data Penduduk, Import Penduduk & KK, Data Jenis Surat, Buat Surat Baru, Arsip Surat, Pengumuman Desa, Pengaduan Warga, Laporan & Rekapitulasi, AI Assistant Internal, Uji Coba WhatsApp Gateway, AI Provider Gateway, AI Usage Logs, Manajemen User, Manajemen Role & Permission, Pengaturan Website & Desa lengkap dengan logo/favicon/SEO, serta Activity Log dengan DataTables dan detail perubahan terbaca tanpa JSON mentah. Uji manual tetap disarankan pada modul surat, pengaduan, export, permission role, AI provider, AI logs, user management, role management, setting website/desa, SEO, branding, activity log, dan integrasi WhatsApp sebelum digunakan pada data production sebenarnya.
 
 ## 📄 Lisensi
 

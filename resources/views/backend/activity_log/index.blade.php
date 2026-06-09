@@ -262,6 +262,70 @@
         background: #0f766e;
         font-weight: 800;
     }
+    .activity-detail-table {
+        max-height: 330px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+    }
+    .activity-detail-table table {
+        min-width: 620px;
+    }
+    .activity-detail-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        color: #475569;
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .activity-detail-table td {
+        vertical-align: top;
+        border-top: 1px solid #eef2f7;
+    }
+    .activity-detail-table small {
+        display: block;
+        color: #64748b;
+    }
+    .detail-kv-list {
+        display: grid;
+        gap: 0.55rem;
+    }
+    .detail-kv-item {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+    .detail-kv-item span {
+        color: #64748b;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    .detail-kv-item strong {
+        color: #111827;
+        font-weight: 700;
+    }
+    .detail-empty {
+        display: grid;
+        place-items: center;
+        gap: 0.35rem;
+        min-height: 150px;
+        color: #64748b;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #f8fafc;
+    }
+    .detail-empty i {
+        color: #0f766e;
+        font-size: 1.6rem;
+    }
+    .detail-empty strong {
+        color: #334155;
+    }
     .activity-panel .dataTables_filter input,
     .activity-panel .dataTables_length select { border-radius: 8px; border-color: #dbe3ef; }
     .activity-panel .dataTables_length label,
@@ -362,7 +426,7 @@
             var module = escapeHtml($button.attr('data-module'));
             var actor = escapeHtml($button.attr('data-actor'));
             var description = escapeHtml($button.attr('data-description'));
-            var properties = escapeHtml($button.attr('data-properties'));
+            var detail = $button.attr('data-detail') || '';
 
             Swal.fire({
                 title: 'Detail Activity Log',
@@ -371,7 +435,7 @@
                     + '<p class="mb-2"><strong>Modul:</strong> ' + module + '</p>'
                     + '<p class="mb-2"><strong>Pelaku:</strong> ' + actor + '</p>'
                     + '<p class="mb-2"><strong>Deskripsi:</strong><br>' + description + '</p>'
-                    + '<pre class="text-left bg-light border rounded p-2 mb-0" style="max-height: 260px; overflow:auto; white-space: pre-wrap;">' + properties + '</pre>'
+                    + detail
                     + '</div>',
                 icon: 'info',
                 confirmButtonText: 'Tutup',
