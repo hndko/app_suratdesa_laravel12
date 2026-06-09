@@ -5,31 +5,123 @@ namespace App\Http\Controllers;
 use App\Models\Penduduk;
 use App\Models\KartuKeluarga;
 use App\Jobs\SendWhatsAppMessage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class PendudukController extends Controller
 {
     // NOTE: Tampilkan daftar penduduk
-    public function index(Request $request)
+    public function index(Request $request): View|JsonResponse
     {
-        $query = Penduduk::with('kartuKeluarga')->latest();
-
-        if ($request->filled('q')) {
-            $keyword = $request->q;
-            $query->where(function ($builder) use ($keyword) {
-                $builder->where('nik', 'like', '%' . $keyword . '%')
-                    ->orWhere('nama', 'like', '%' . $keyword . '%');
-            });
+        if ($request->ajax()) {
+            return $this->dataTable($request);
         }
+
+        $totalPenduduk = Penduduk::count();
+        $totalKkTerhubung = Penduduk::whereNotNull('kartu_keluarga_id')->count();
+        $totalLakiLaki = Penduduk::where('jenis_kelamin', 'L')->count();
+        $totalPerempuan = Penduduk::where('jenis_kelamin', 'P')->count();
 
         $data = [
             'title' => 'Data Penduduk',
-            'penduduks' => $query->paginate(25)->withQueryString(),
-            'q' => $request->q,
+            'totalPenduduk' => $totalPenduduk,
+            'totalKkTerhubung' => $totalKkTerhubung,
+            'totalLakiLaki' => $totalLakiLaki,
+            'totalPerempuan' => $totalPerempuan,
         ];
 
         return view('backend.penduduk.index', $data);
+    }
+
+    private function dataTable(Request $request): JsonResponse
+    {
+        $columns = [
+            0 => 'id',
+            1 => 'nik',
+            2 => 'nama',
+            3 => 'kartu_keluarga_id',
+            4 => 'jenis_kelamin',
+            5 => 'tgl_lahir',
+            6 => 'alamat',
+            7 => 'pekerjaan',
+        ];
+
+        $baseQuery = Penduduk::query()->with('kartuKeluarga');
+        $recordsTotal = (clone $baseQuery)->count();
+        $search = trim((string) $request->input('search.value'));
+
+        if ($search !== '') {
+            $baseQuery->where(function ($query) use ($search) {
+                $query->where('nik', 'like', '%' . $search . '%')
+                    ->orWhere('nama', 'like', '%' . $search . '%')
+                    ->orWhere('phone', 'like', '%' . $search . '%')
+                    ->orWhere('tempat_lahir', 'like', '%' . $search . '%')
+                    ->orWhere('alamat', 'like', '%' . $search . '%')
+                    ->orWhere('pekerjaan', 'like', '%' . $search . '%')
+                    ->orWhereHas('kartuKeluarga', function ($kkQuery) use ($search) {
+                        $kkQuery->where('no_kk', 'like', '%' . $search . '%')
+                            ->orWhere('kepala_keluarga', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $recordsFiltered = (clone $baseQuery)->count();
+        $orderColumnIndex = (int) $request->input('order.0.column', 0);
+        $orderColumn = $columns[$orderColumnIndex] ?? 'id';
+        $orderDirection = $request->input('order.0.dir') === 'asc' ? 'asc' : 'desc';
+        $length = (int) $request->input('length', 10);
+        $start = max((int) $request->input('start', 0), 0);
+        $length = $length > 0 ? min($length, 100) : 10;
+
+        $rows = $baseQuery
+            ->orderBy($orderColumn, $orderDirection)
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        $canEdit = $request->user()?->can('penduduk-edit') ?? false;
+        $canDestroy = $request->user()?->can('penduduk-destroy') ?? false;
+
+        $data = $rows->map(function (Penduduk $row, int $index) use ($start, $canEdit, $canDestroy) {
+            $actions = '<div class="action-group">';
+
+            if ($canEdit) {
+                $actions .= '<a href="' . route('penduduk.edit', $row->id) . '" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>';
+            }
+
+            if ($canDestroy) {
+                $actions .= '<form action="' . route('penduduk.destroy', $row->id) . '" method="POST" class="d-inline js-confirm-submit" data-confirm-text="Yakin ingin menghapus data penduduk ' . e($row->nama) . '?">'
+                    . csrf_field()
+                    . method_field('DELETE')
+                    . '<button type="submit" class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    . '</form>';
+            }
+
+            $actions .= '</div>';
+
+            return [
+                'no' => $start + $index + 1,
+                'nik' => '<div class="resident-id"><i class="fas fa-id-card"></i><span>' . e($row->nik) . '</span></div>',
+                'nama' => '<strong>' . e($row->nama) . '</strong><small>' . e($row->phone ?: 'Nomor HP belum diisi') . '</small>',
+                'no_kk' => $row->kartuKeluarga
+                    ? '<span>' . e($row->kartuKeluarga->no_kk) . '</span><small>' . e($row->kartuKeluarga->kepala_keluarga) . '</small>'
+                    : '<span class="text-muted">Belum ditautkan</span>',
+                'jenis_kelamin' => '<span class="gender-badge gender-' . e($row->jenis_kelamin) . '">' . ($row->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan') . '</span>',
+                'ttl' => '<span>' . e($row->tempat_lahir) . '</span><small>' . ($row->tgl_lahir ? e(\Carbon\Carbon::parse($row->tgl_lahir)->format('d-m-Y')) : '-') . '</small>',
+                'alamat' => '<span>' . e($row->alamat) . '</span><small>RT ' . e($row->rt) . ' / RW ' . e($row->rw) . '</small>',
+                'pekerjaan' => '<span>' . e($row->pekerjaan) . '</span><small>' . e($row->pendidikan ?: '-') . '</small>',
+                'aksi' => $actions,
+            ];
+        });
+
+        return response()->json([
+            'draw' => (int) $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ]);
     }
 
     // NOTE: Form tambah penduduk
