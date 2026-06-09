@@ -90,6 +90,8 @@ class PublicController extends Controller
 
         $data = [
             'title' => 'Lacak Pengajuan Surat - ' . $siteName,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
         ];
 
         return view('frontend.pengajuan.surat.track', $data);
@@ -112,6 +114,8 @@ class PublicController extends Controller
         $data = [
             'title' => 'Lacak Pengajuan Surat - ' . \App\Facades\Setting::get('site_name', 'SIMADES'),
             'surat' => $surat,
+            'siteName' => \App\Facades\Setting::get('site_name', 'SIMADES'),
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
         ];
 
         return view('frontend.pengajuan.surat.track', $data);
