@@ -366,7 +366,8 @@
             processing: true,
             serverSide: true,
             ajax: '{{ route('penduduk.index') }}',
-            responsive: true,
+            responsive: false,
+            scrollX: true,
             lengthChange: true,
             searching: true,
             paging: true,
@@ -389,9 +390,6 @@
             ],
             columnDefs: [
                 { orderable: false, searchable: false, targets: 8 },
-                { responsivePriority: 1, targets: 1 },
-                { responsivePriority: 2, targets: 2 },
-                { responsivePriority: 3, targets: 8 },
                 { className: 'text-right', targets: 8 }
             ],
             language: {
