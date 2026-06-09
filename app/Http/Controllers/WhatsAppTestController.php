@@ -9,16 +9,22 @@ class WhatsAppTestController extends Controller
 {
     public function index()
     {
+        $token = config('services.fonnte.token');
+
         return view('backend.whatsapp.test', [
-            'title' => 'Uji Coba WhatsApp Gateway'
+            'title' => 'Uji Coba WhatsApp Gateway',
+            'hasToken' => filled($token) && $token !== 'your_token_here',
+            'tokenPreview' => filled($token) && $token !== 'your_token_here'
+                ? substr((string) $token, 0, 4) . str_repeat('*', 8)
+                : null,
         ]);
     }
 
     public function send(Request $request)
     {
         $request->validate([
-            'phone' => 'required',
-            'message' => 'required'
+            'phone' => 'required|string|max:20',
+            'message' => 'required|string|max:1000'
         ]);
 
         $result = WhatsAppService::send($request->phone, $request->message);
