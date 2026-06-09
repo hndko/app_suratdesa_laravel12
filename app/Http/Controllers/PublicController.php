@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisSurat;
+use App\Models\Pengaduan;
+use App\Models\Post;
+use App\Models\Surat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -12,12 +16,20 @@ class PublicController extends Controller
 {
     public function home()
     {
-        $posts = \App\Models\Post::where('status', 'published')->latest()->take(6)->get();
+        $posts = Post::where('status', 'published')->latest()->take(6)->get();
         $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
 
         $data = [
             'title' => 'Selamat Datang di Portal Resmi ' . $siteName,
             'posts' => $posts,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'villageAddress' => \App\Facades\Setting::get('village_alamat', 'Alamat kantor desa belum diatur'),
+            'contactWhatsapp' => \App\Facades\Setting::get('contact_whatsapp'),
+            'totalJenisSurat' => JenisSurat::count(),
+            'totalSuratSelesai' => Surat::where('status', 'done')->count(),
+            'totalPengaduanSelesai' => Pengaduan::where('status', 'resolved')->count(),
+            'totalPengumuman' => Post::where('status', 'published')->count(),
         ];
 
         return view('frontend.home', $data);
