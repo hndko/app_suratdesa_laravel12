@@ -245,7 +245,7 @@
                 <li class="nav-item d-flex align-items-center">
                     <span class="navbar-version-badge" title="Versi Aplikasi">
                         <i class="fas fa-code-branch"></i>
-                        {{ config('app.version', 'v3.0.46') }}
+                        {{ config('app.version', 'v3.0.47') }}
                     </span>
                 </li>
             </ul>
