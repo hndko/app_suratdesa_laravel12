@@ -13,7 +13,30 @@
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/sandbox/css/colors/sky.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
   <link rel="preload" href="{{ asset('assets/sandbox/css/fonts/thicccboi.css') }}" as="style" onload="this.rel='stylesheet'">
+
+  <style>
+    .select2-container {
+      width: 100% !important;
+    }
+
+    .select2-container .select2-selection--single {
+      min-height: 52px;
+      border: 1px solid rgba(8, 60, 130, 0.2);
+      border-radius: 0.4rem;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+      line-height: 52px;
+      padding-left: 1rem;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__arrow {
+      height: 52px;
+      right: 0.75rem;
+    }
+  </style>
 
   @stack('styles')
 </head>
@@ -144,9 +167,18 @@
     </svg>
   </div>
   
+  <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
   <script src="{{ asset('assets/sandbox/js/plugins.js') }}"></script>
   <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
   <script src="{{ asset('assets/sandbox/js/theme.js') }}"></script>
+  <script>
+    $(function () {
+      $('form select.form-control').not('.select2-hidden-accessible').select2({
+        width: '100%'
+      });
+    });
+  </script>
   @include('partials.sweetalert')
   @stack('scripts')
 </body>

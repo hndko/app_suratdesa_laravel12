@@ -16,6 +16,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
     <style>
         .main-sidebar {
@@ -169,6 +171,19 @@
         .sidebar-mini.sidebar-collapse .brand-link .brand-text,
         .sidebar-mini.sidebar-collapse .user-panel .info {
             opacity: 0;
+        }
+
+        .select2-container--bootstrap4 .select2-selection {
+            min-height: 38px;
+        }
+
+        .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+            line-height: 36px;
+        }
+
+        .input-group .select2-container {
+            flex: 1 1 auto;
+            width: 1% !important;
         }
     </style>
 
@@ -452,7 +467,7 @@
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="float-right d-none d-sm-inline">
-                {{ config('app.version', 'v3.0.8') }}
+                {{ config('app.version', 'v3.0.9') }}
             </div>
             <strong>Copyright &copy; {{ date('Y') }} <a href="#">{{ config('app.name') }}</a>.</strong> All rights
             reserved.
@@ -467,8 +482,18 @@
     <!-- Bootstrap 4 -->
     <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+
+    <script>
+        $(function () {
+            $('form select.form-control').not('.select2-hidden-accessible').select2({
+                theme: 'bootstrap4',
+                width: '100%'
+            });
+        });
+    </script>
 
     @include('partials.sweetalert')
 

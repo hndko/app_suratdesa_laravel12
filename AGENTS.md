@@ -209,7 +209,7 @@ resources/views/
 - Halaman listing backend yang memakai tabel interaktif wajib memakai DataTables server-side untuk search, pagination, page length, info, sorting, dan responsive behavior. Jangan membuat form search/pagination manual di atas tabel kecuali ada filter bisnis khusus di luar kemampuan search DataTables.
 - Tombol utama di form sebaiknya memakai icon.
 - Form penting sebaiknya memakai input group/icon jika sudah menjadi pola modul tersebut.
-- Elemen `<select>` pada form wajib memakai class `form-control` agar konsisten dengan Bootstrap/AdminLTE yang dipakai project.
+- Elemen `<select>` pada form wajib memakai class `form-control` dan otomatis memakai Select2 dari layout agar konsisten dengan Bootstrap/AdminLTE yang dipakai project.
 - Jangan membuat alert inline manual; gunakan toast SweetAlert.
 - Jaga tampilan tetap responsif dan tidak memuat data besar sekaligus.
 

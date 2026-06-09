@@ -1,10 +1,5 @@
 @extends('layouts.app-backend')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('assets/plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-@endpush
-
 @section('content')
 <!-- Content Header -->
 <div class="content-header ps-0 pe-0">
@@ -117,14 +112,8 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('.select2').select2({
-            theme: 'bootstrap4',
-            width: '100%'
-        });
-
         $('#btnPreview').click(function() {
             var form = $('#formSurat');
             var data = form.serialize();
