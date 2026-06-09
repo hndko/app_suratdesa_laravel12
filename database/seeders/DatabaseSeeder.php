@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             SuratSeeder::class,
             PostSeeder::class,
+            PengaduanSeeder::class,
         ]);
     }
 }
