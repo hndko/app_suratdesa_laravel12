@@ -37,12 +37,15 @@ class PublicController extends Controller
 
     public function suratCreate()
     {
-        $jenisSurats = \App\Models\JenisSurat::all();
+        $jenisSurats = JenisSurat::orderBy('nama_surat')->get();
         $siteName = \App\Facades\Setting::get('site_name', 'SIMADES');
 
         $data = [
             'title' => 'Pengajuan Surat Online - ' . $siteName,
             'jenisSurats' => $jenisSurats,
+            'siteName' => $siteName,
+            'villageName' => \App\Facades\Setting::get('village_nama', 'Desa Kami'),
+            'contactWhatsapp' => \App\Facades\Setting::get('contact_whatsapp'),
         ];
 
         return view('frontend.pengajuan.surat.create', $data);
