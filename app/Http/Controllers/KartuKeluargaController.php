@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KartuKeluarga;
+use App\Models\Penduduk;
 use Illuminate\Http\Request;
 
 class KartuKeluargaController extends Controller
@@ -10,6 +11,9 @@ class KartuKeluargaController extends Controller
     public function index(Request $request)
     {
         $query = KartuKeluarga::withCount('penduduks')->latest();
+        $totalKartuKeluarga = KartuKeluarga::count();
+        $totalAnggota = Penduduk::whereNotNull('kartu_keluarga_id')->count();
+        $kkKosong = KartuKeluarga::doesntHave('penduduks')->count();
 
         if ($request->filled('q')) {
             $keyword = $request->q;
@@ -22,6 +26,10 @@ class KartuKeluargaController extends Controller
         $data = [
             'title' => 'Data Kartu Keluarga',
             'kartuKeluargas' => $query->paginate(25)->withQueryString(),
+            'totalKartuKeluarga' => $totalKartuKeluarga,
+            'totalAnggota' => $totalAnggota,
+            'kkKosong' => $kkKosong,
+            'rataRataAnggota' => $totalKartuKeluarga > 0 ? round($totalAnggota / $totalKartuKeluarga, 1) : 0,
             'q' => $request->q,
         ];
 
@@ -59,7 +67,7 @@ class KartuKeluargaController extends Controller
 
     public function show(string $id)
     {
-        $kartuKeluarga = KartuKeluarga::with('penduduks')->findOrFail($id);
+        $kartuKeluarga = KartuKeluarga::with(['penduduks' => fn ($query) => $query->orderBy('shdk')->orderBy('nama')])->findOrFail($id);
 
         $data = [
             'title' => 'Detail Kartu Keluarga',
