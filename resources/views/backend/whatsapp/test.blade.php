@@ -42,59 +42,131 @@
     </div>
 
     <div class="wa-grid">
-        <form action="{{ route('whatsapp.test.send') }}" method="POST" class="wa-form-panel">
-            @csrf
-            <div class="panel-heading">
-                <div>
-                    <span>Pesan Uji</span>
-                    <h2>Kirim WhatsApp</h2>
+        <div class="wa-stack">
+            <form action="{{ route('whatsapp.test.send') }}" method="POST" class="wa-form-panel">
+                @csrf
+                <div class="panel-heading">
+                    <div>
+                        <span>Pesan Uji</span>
+                        <h2>Kirim WhatsApp</h2>
+                    </div>
+                    <i class="fas fa-paper-plane"></i>
                 </div>
-                <i class="fas fa-paper-plane"></i>
-            </div>
 
-            <div class="form-group">
-                <label for="phone">Nomor WhatsApp Tujuan <span class="text-danger">*</span></label>
-                <div class="input-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-phone-alt"></i></span></div>
-                    <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="Contoh: 08123456789 atau 628123456789" required maxlength="20" inputmode="tel">
-                    @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <div class="form-group">
+                    <label for="phone">Nomor WhatsApp Tujuan <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-phone-alt"></i></span></div>
+                        <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="Contoh: 08123456789 atau 628123456789" required maxlength="20" inputmode="tel">
+                        @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <small class="form-text text-muted">Gunakan nomor aktif. Akun trial Fonnte biasanya hanya bisa mengirim ke nomor yang sudah terdaftar.</small>
                 </div>
-                <small class="form-text text-muted">Gunakan nomor aktif. Akun trial Fonnte biasanya hanya bisa mengirim ke nomor yang sudah terdaftar.</small>
-            </div>
 
-            <div class="form-group">
-                <label for="message">Pesan <span class="text-danger">*</span></label>
-                <div class="input-group textarea-group">
-                    <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment-dots"></i></span></div>
-                    <textarea name="message" id="message" rows="7" class="form-control @error('message') is-invalid @enderror" required maxlength="1000" placeholder="Tulis pesan uji coba WhatsApp...">{{ old('message', 'Halo! Ini adalah pesan uji coba dari sistem SIMADES.') }}</textarea>
-                    @error('message')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <div class="form-group">
+                    <label for="message">Pesan <span class="text-danger">*</span></label>
+                    <div class="input-group textarea-group">
+                        <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-comment-dots"></i></span></div>
+                        <textarea name="message" id="message" rows="7" class="form-control @error('message') is-invalid @enderror" required maxlength="1000" placeholder="Tulis pesan uji coba WhatsApp...">{{ old('message', 'Halo! Ini adalah pesan uji coba dari sistem SIMADES.') }}</textarea>
+                        @error('message')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <small class="form-text text-muted"><span id="messageCounter">0</span>/1000 karakter</small>
                 </div>
-                <small class="form-text text-muted"><span id="messageCounter">0</span>/1000 karakter</small>
-            </div>
 
-            <div class="quick-messages">
-                <button type="button" class="btn btn-light js-message-template" data-message="Halo! Ini adalah pesan uji coba dari sistem SIMADES.">
-                    <i class="fas fa-vial mr-1"></i> Pesan Test
-                </button>
-                <button type="button" class="btn btn-light js-message-template" data-message="Halo, pengajuan surat Anda telah diterima oleh sistem SIMADES dan akan segera diproses oleh operator desa.">
-                    <i class="fas fa-file-signature mr-1"></i> Template Surat
-                </button>
-                <button type="button" class="btn btn-light js-message-template" data-message="Halo, pengaduan Anda telah kami terima. Tim desa akan menindaklanjuti laporan sesuai antrean dan prioritas.">
-                    <i class="fas fa-comments mr-1"></i> Template Pengaduan
-                </button>
-            </div>
+                <div class="quick-messages">
+                    <button type="button" class="btn btn-light js-message-template" data-message="Halo! Ini adalah pesan uji coba dari sistem SIMADES.">
+                        <i class="fas fa-vial mr-1"></i> Pesan Test
+                    </button>
+                    <button type="button" class="btn btn-light js-message-template" data-message="Halo, pengajuan surat Anda telah diterima oleh sistem SIMADES dan akan segera diproses oleh operator desa.">
+                        <i class="fas fa-file-signature mr-1"></i> Template Surat
+                    </button>
+                    <button type="button" class="btn btn-light js-message-template" data-message="Halo, pengaduan Anda telah kami terima. Tim desa akan menindaklanjuti laporan sesuai antrean dan prioritas.">
+                        <i class="fas fa-comments mr-1"></i> Template Pengaduan
+                    </button>
+                </div>
 
-            <div class="form-actions">
-                <button type="reset" class="btn btn-light" id="btnResetMessage">
-                    <i class="fas fa-eraser mr-1"></i> Bersihkan
-                </button>
-                @can('whatsapp-test-send')
-                <button type="submit" class="btn btn-primary" id="btnSendWhatsapp" {{ $hasToken ? '' : 'disabled' }}>
-                    <i class="fas fa-paper-plane mr-1"></i> Kirim Sekarang
-                </button>
-                @endcan
-            </div>
-        </form>
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-light" id="btnResetMessage">
+                        <i class="fas fa-eraser mr-1"></i> Bersihkan
+                    </button>
+                    @can('whatsapp-test-send')
+                    <button type="submit" class="btn btn-primary" id="btnSendWhatsapp" {{ $hasToken ? '' : 'disabled' }}>
+                        <i class="fas fa-paper-plane mr-1"></i> Kirim Sekarang
+                    </button>
+                    @endcan
+                </div>
+            </form>
+
+            <form action="{{ route('whatsapp.test.validate') }}" method="POST" class="wa-form-panel wa-validate-panel">
+                @csrf
+                <div class="panel-heading">
+                    <div>
+                        <span>Validasi Nomor</span>
+                        <h2>Cek Nomor WhatsApp</h2>
+                    </div>
+                    <i class="fas fa-user-check"></i>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="targets">Nomor Tujuan <span class="text-danger">*</span></label>
+                            <div class="input-group textarea-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-list-ol"></i></span></div>
+                                <textarea name="targets" id="targets" rows="4" class="form-control @error('targets') is-invalid @enderror" required maxlength="7000" placeholder="Contoh: 08123456789, 08987654321">{{ old('targets') }}</textarea>
+                                @error('targets')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <small class="form-text text-muted">Pisahkan banyak nomor dengan koma. Maksimal 500 nomor per validasi.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="country_code">Country Code</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-globe-asia"></i></span></div>
+                                <input type="text" name="country_code" id="country_code" class="form-control @error('country_code') is-invalid @enderror" value="{{ old('country_code', '62') }}" placeholder="62" maxlength="5" inputmode="numeric">
+                                @error('country_code')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <small class="form-text text-muted">Default Indonesia: 62.</small>
+                        </div>
+                    </div>
+                </div>
+
+                @if(session('validationResult'))
+                    @php
+                        $validationResult = session('validationResult');
+                        $registered = $validationResult['registered'] ?? [];
+                        $notRegistered = $validationResult['not_registered'] ?? [];
+                    @endphp
+                    <div class="validation-result">
+                        <div class="result-column is-valid">
+                            <strong><i class="fas fa-check-circle mr-1"></i> Registered ({{ count($registered) }})</strong>
+                            <span>{{ count($registered) ? implode(', ', $registered) : 'Tidak ada nomor terdaftar pada hasil validasi.' }}</span>
+                        </div>
+                        <div class="result-column is-invalid">
+                            <strong><i class="fas fa-times-circle mr-1"></i> Not Registered ({{ count($notRegistered) }})</strong>
+                            <span>{{ count($notRegistered) ? implode(', ', $notRegistered) : 'Tidak ada nomor tidak terdaftar pada hasil validasi.' }}</span>
+                        </div>
+                    </div>
+                @endif
+
+                <div class="guide-box guide-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Gunakan validasi secara manual</strong>
+                        <span>Fonnte membatasi 500 nomor per request dan validasi paralel bisa mengganggu pengecekan sebelumnya.</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    @can('whatsapp-test-validate')
+                    <button type="submit" class="btn btn-info" id="btnValidateWhatsapp" {{ $hasToken ? '' : 'disabled' }}>
+                        <i class="fas fa-user-check mr-1"></i> Validasi Nomor
+                    </button>
+                    @endcan
+                </div>
+            </form>
+        </div>
 
         <div class="wa-info-panel">
             <div class="panel-heading">
@@ -247,6 +319,10 @@
         gap: 1rem;
         align-items: start;
     }
+    .wa-stack {
+        display: grid;
+        gap: 1rem;
+    }
     .wa-form-panel,
     .wa-info-panel {
         padding: 1rem;
@@ -342,6 +418,7 @@
     }
     .guide-success { color: #047857; background: #d1fae5; }
     .guide-danger { color: #991b1b; background: #fee2e2; }
+    .guide-warning { color: #92400e; background: #fef3c7; }
     .guide-box strong {
         display: block;
         color: #0f172a;
@@ -366,6 +443,33 @@
         margin: 0;
         padding-left: 1.1rem;
     }
+    .validation-result {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .result-column {
+        padding: 0.85rem;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+    .result-column strong,
+    .result-column span {
+        display: block;
+    }
+    .result-column span {
+        margin-top: 0.35rem;
+        word-break: break-word;
+    }
+    .result-column.is-valid {
+        color: #047857;
+        background: #d1fae5;
+    }
+    .result-column.is-invalid {
+        color: #991b1b;
+        background: #fee2e2;
+    }
     @media (max-width: 1199.98px) {
         .wa-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .wa-grid { grid-template-columns: 1fr; }
@@ -379,7 +483,8 @@
         .wa-hero h1 { font-size: 1.5rem; }
         .hero-badge { justify-content: center; }
         .wa-metric-grid,
-        .quick-messages {
+        .quick-messages,
+        .validation-result {
             grid-template-columns: 1fr;
         }
         .form-actions .btn { width: 100%; }
@@ -409,9 +514,20 @@
         });
 
         $('.wa-form-panel').on('submit', function () {
-            $('#btnSendWhatsapp')
-                .prop('disabled', true)
-                .html('<i class="fas fa-spinner fa-spin mr-1"></i> Mengirim...');
+            var validateButton = $(this).find('#btnValidateWhatsapp');
+            var sendButton = $(this).find('#btnSendWhatsapp');
+
+            if (validateButton.length) {
+                validateButton
+                    .prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin mr-1"></i> Memvalidasi...');
+            }
+
+            if (sendButton.length) {
+                sendButton
+                    .prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin mr-1"></i> Mengirim...');
+            }
         });
     });
 </script>

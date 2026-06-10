@@ -166,6 +166,7 @@ Route::middleware('auth')->group(function () {
     // WhatsApp Test
     Route::get('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'index'])->name('whatsapp.test.index')->middleware('permission:whatsapp-test-index');
     Route::post('/whatsapp-test', [App\Http\Controllers\WhatsAppTestController::class, 'send'])->name('whatsapp.test.send')->middleware('permission:whatsapp-test-send');
+    Route::post('/whatsapp-test/validate', [App\Http\Controllers\WhatsAppTestController::class, 'validateNumber'])->name('whatsapp.test.validate')->middleware('permission:whatsapp-test-validate');
 
     Route::get('/activity-log', [App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-log.index')->middleware('permission:activity-log-index');
 

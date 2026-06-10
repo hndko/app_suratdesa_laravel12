@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class WhatsAppService
 {
-    public const ENDPOINT = 'https://api.fonnte.com/send';
+    public const SEND_ENDPOINT = 'https://api.fonnte.com/send';
+
+    public const VALIDATE_ENDPOINT = 'https://api.fonnte.com/validate';
 
     public static function send(string $target, ?string $message = null, array $options = []): array|false
     {
@@ -35,7 +37,7 @@ class WhatsAppService
         try {
             $payload = self::buildPayload($target, $message, $options);
             $response = self::request($token, $payload, $options)
-                ->post(self::ENDPOINT, self::payloadWithoutFile($payload));
+                ->post(self::SEND_ENDPOINT, self::payloadWithoutFile($payload));
 
             if ($response->failed()) {
                 Log::warning('Failed to send WhatsApp message via Fonnte.', [
@@ -51,6 +53,77 @@ class WhatsAppService
         } catch (\Throwable $e) {
             Log::error('WhatsApp service error.', [
                 'target' => $target,
+                'message' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
+    }
+
+    public static function validateNumbers(string|array $targets, string $countryCode = '62', array $options = []): array|false
+    {
+        $targetList = is_array($targets) ? $targets : explode(',', $targets);
+        $targetList = array_values(array_filter(array_map(
+            static fn ($target) => self::normalizeTarget((string) $target),
+            $targetList
+        )));
+
+        if ($targetList === []) {
+            return [
+                'status' => false,
+                'reason' => 'target required',
+            ];
+        }
+
+        if (count($targetList) > 500) {
+            return [
+                'status' => false,
+                'reason' => 'Maksimal 500 nomor per validasi.',
+            ];
+        }
+
+        $token = config('services.fonnte.token');
+
+        if (empty($token) || $token === 'your_token_here') {
+            Log::info('WhatsApp number validation skipped because Fonnte token is not set.', [
+                'total_target' => count($targetList),
+            ]);
+
+            return [
+                'status' => false,
+                'reason' => 'Fonnte token is not set.',
+            ];
+        }
+
+        $target = implode(',', $targetList);
+
+        try {
+            $response = Http::timeout((int) ($options['timeout'] ?? 15))
+                ->connectTimeout((int) ($options['connect_timeout'] ?? 5))
+                ->retry((int) ($options['retry'] ?? 1), (int) ($options['retry_delay'] ?? 750), throw: false)
+                ->withHeaders([
+                    'Authorization' => $token,
+                ])
+                ->asForm()
+                ->post(self::VALIDATE_ENDPOINT, [
+                    'target' => $target,
+                    'countryCode' => (string) $countryCode,
+                ]);
+
+            if ($response->failed()) {
+                Log::warning('Failed to validate WhatsApp numbers via Fonnte.', [
+                    'total_target' => count($targetList),
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                return false;
+            }
+
+            return self::handleResponse($response, $target, 'validate');
+        } catch (\Throwable $e) {
+            Log::error('WhatsApp number validation service error.', [
+                'total_target' => count($targetList),
                 'message' => $e->getMessage(),
             ]);
 
@@ -143,12 +216,13 @@ class WhatsAppService
         return $value;
     }
 
-    private static function handleResponse(Response $response, string $target): array|false
+    private static function handleResponse(Response $response, string $target, string $context = 'send'): array|false
     {
         $body = $response->json();
 
         if (!is_array($body)) {
             Log::warning('Fonnte returned non JSON response.', [
+                'context' => $context,
                 'target' => $target,
                 'status' => $response->status(),
                 'body' => $response->body(),
@@ -160,7 +234,8 @@ class WhatsAppService
         $isSuccess = (bool) ($body['status'] ?? $body['Status'] ?? false);
 
         if (!$isSuccess) {
-            Log::warning('Fonnte rejected WhatsApp message.', [
+            Log::warning('Fonnte rejected WhatsApp request.', [
+                'context' => $context,
                 'target' => $target,
                 'reason' => $body['reason'] ?? $body['detail'] ?? 'Unknown provider error.',
                 'requestid' => $body['requestid'] ?? null,

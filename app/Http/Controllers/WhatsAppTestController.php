@@ -45,4 +45,39 @@ class WhatsAppTestController extends Controller
 
         return back()->with('error', 'Gagal mengirim pesan: ' . $error);
     }
+
+    public function validateNumber(Request $request)
+    {
+        $request->validate([
+            'targets' => 'required|string|max:7000',
+            'country_code' => 'nullable|string|max:5',
+        ]);
+
+        $targets = array_filter(array_map('trim', explode(',', $request->targets)));
+
+        if (count($targets) > 500) {
+            return back()
+                ->withInput()
+                ->with('error', 'Validasi Fonnte maksimal 500 nomor dalam satu request.');
+        }
+
+        $result = WhatsAppService::validateNumbers($targets, $request->country_code ?: '62');
+        $isSuccess = $result && (bool) ($result['status'] ?? $result['Status'] ?? false);
+
+        if ($isSuccess) {
+            return back()
+                ->withInput()
+                ->with('success', 'Validasi nomor WhatsApp berhasil.')
+                ->with('validationResult', [
+                    'registered' => $result['registered'] ?? [],
+                    'not_registered' => $result['not_registered'] ?? [],
+                ]);
+        }
+
+        $error = $result['reason'] ?? $result['detail'] ?? 'Terjadi kesalahan saat validasi nomor. Pastikan token dan device Fonnte aktif.';
+
+        return back()
+            ->withInput()
+            ->with('error', 'Gagal validasi nomor: ' . $error);
+    }
 }

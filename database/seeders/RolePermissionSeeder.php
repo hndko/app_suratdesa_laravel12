@@ -104,6 +104,7 @@ class RolePermissionSeeder extends Seeder
             'whatsapp-test',
             'whatsapp-test-index',
             'whatsapp-test-send',
+            'whatsapp-test-validate',
 
             'report-index',
             'report-export',
